@@ -11,16 +11,20 @@ import java.text.DateFormat
 fun setPriority(view: TextView, priority: Int){
     when(priority){
         0 -> {
-            view.text = "High Priority"
+            view.text = "Meat"
             view.setTextColor(Color.RED)
         }
         1 -> {
-            view.text = "Medium Priority"
-            view.setTextColor(Color.BLUE)
+            view.text = "Vegetable"
+            view.setTextColor(Color.GREEN)
+        }
+        2 -> {
+            view.text = "Egg and Milk"
+            view.setTextColor(Color.DKGRAY)
         }
         else -> {
-            view.text = "Low Priority"
-            view.setTextColor(Color.GREEN)
+            view.text = "Other"
+            view.setTextColor(Color.BLUE)
         }
     }
 }

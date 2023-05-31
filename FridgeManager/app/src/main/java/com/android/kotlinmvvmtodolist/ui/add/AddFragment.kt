@@ -29,14 +29,17 @@ class AddFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        // fragment_add.xml binding
         _binding = FragmentAddBinding.inflate(inflater, container, false)
 
+        // adapt results of database to ui, 每一条item
         val myAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             resources.getStringArray(R.array.priorities)
         )
 
+        // 给view绑定数据
         binding.apply {
             spinner.adapter = myAdapter
             btnAdd.setOnClickListener {
