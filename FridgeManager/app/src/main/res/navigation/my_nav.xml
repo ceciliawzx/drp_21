@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/taskFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.task.TaskFragment"
-        android:label="Kotlin MVVM ToDo List"
+        android:label="Fridge Manager"
         tools:layout="@layout/fragment_task" >
         <action
             android:id="@+id/action_taskFragment_to_addFragment"
