@@ -5,6 +5,8 @@ plugins {
     id 'kotlin-parcelize'
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.firebase.appdistribution'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -27,9 +29,34 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            firebaseAppDistribution {
+                releaseNotesFile="C:\\Users\\Leo Li\\Desktop\\CICD.txt"
+                testers="yangqinxue333@163.com"
+            }
+        }
+    }
+    flavorDimensions "version"
+    productFlavors {
+        demo {
+            dimension "version"
+            firebaseAppDistribution {
+                releaseNotes = "Release notes for demo version"
+                testers = "yangqinxue333@163.com"
+            }
+        }
+        full {
+            dimension "version"
+            firebaseAppDistribution {
+                releaseNotes = "Release notes for full version"
+                testers = "yangqinxue333@163.com"
+            }
         }
     }
     compileOptions {
