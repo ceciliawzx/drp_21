@@ -30,17 +30,29 @@
 
         <EditText
             android:id="@+id/edt_task1"
-            android:layout_width="200dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:ems="10"
             android:hint="Enter Food Amount"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edt_task"
             tools:ignore="Autofill" />
+
+        <Spinner
+            android:id="@+id/unitSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/units"
+            app:layout_constraintBaseline_toBaselineOf="@id/edt_task1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintStart_toEndOf="@+id/edt_task1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edt_task" />
 
         <Spinner
             android:id="@+id/spinner"

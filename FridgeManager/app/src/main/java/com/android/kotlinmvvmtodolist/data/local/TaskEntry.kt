@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.android.kotlinmvvmtodolist.util.Constants.TASK_TABLE
 import kotlinx.parcelize.Parcelize
+import java.time.LocalDate
 
 @Parcelize
 @Entity(tableName = TASK_TABLE)
@@ -13,5 +14,8 @@ data class TaskEntry(
     var id: Int,
     var title: String,
     var priority: Int,
-    var timestamp: Long
+    var timestamp: Long,
+//    var expireDate: LocalDate,
+//    var amount: Int,
+//    var unit: Int
 ):Parcelable

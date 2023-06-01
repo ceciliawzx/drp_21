@@ -13,4 +13,10 @@
         <item>Egg and Milk</item>
         <item>Other</item>
     </string-array>
+    <string-array name="units">
+        <item>gram</item>
+        <item>unit</item>
+        <item>ml</item>
+        <item>L</item>
+    </string-array>
 </resources>

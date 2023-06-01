@@ -39,9 +39,16 @@ class AddFragment : Fragment() {
             resources.getStringArray(R.array.priorities)
         )
 
+        val unitAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            resources.getStringArray(R.array.units)
+        )
+
         // 给view绑定数据
         binding.apply {
             spinner.adapter = myAdapter
+            unitSpinner.adapter = unitAdapter
             btnAdd.setOnClickListener {
                 if(TextUtils.isEmpty((edtTask.text))){
                     Toast.makeText(requireContext(), "It's empty!", Toast.LENGTH_SHORT).show()
