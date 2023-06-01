@@ -7,11 +7,8 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
 import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import java.util.Calendar
-import java.util.Locale
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("setType")
@@ -80,14 +77,6 @@ fun setDate(view: TextView, date: String){
 //    val yearsDifference = ChronoUnit.YEARS.between(startDate, endDate)
 //
 //    view.text = daysDifference.toString()
-
-//    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-//    val currentDate = Calendar.getInstance().time
-////    val startDate = dateFormat.parse(currentDate)
-//    val endDate = dateFormat.parse(date)
-//    val timeDifference = currentDate.time - endDate.time
-//    val minutesDifference = timeDifference / (1000 * 60)
-
     view.text = date
 }
 
