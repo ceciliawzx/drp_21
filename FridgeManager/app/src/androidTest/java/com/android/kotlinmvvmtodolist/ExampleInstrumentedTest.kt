@@ -15,6 +15,7 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
+
     @Test
     fun useAppContext() {
         // Context of the app under test.
@@ -22,13 +23,4 @@ class ExampleInstrumentedTest {
         assertEquals("com.android.kotlinmvvmtodolist", appContext.packageName)
     }
 
-    @Test
-    fun addition_isCorrect4() {
-        assertEquals(4, 2 + 2)
-    }
-
-    @Test
-    fun addition_isCorrect6() {
-        assertEquals(6, 3 + 3)
-    }
 }
