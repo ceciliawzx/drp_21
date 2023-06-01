@@ -1,13 +1,19 @@
 package com.android.kotlinmvvmtodolist.ui.add
 
+import android.app.DatePickerDialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.helper.widget.MotionEffect.TAG
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.android.kotlinmvvmtodolist.R
@@ -15,14 +21,17 @@ import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentAddBinding
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Calendar
 
 @AndroidEntryPoint
 class AddFragment : Fragment() {
 
     private val viewModel: TaskViewModel by viewModels()
-
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
+
+    private var mDisplayDate: TextView? = null
+    private var mDateSetListener: DatePickerDialog.OnDateSetListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +40,8 @@ class AddFragment : Fragment() {
 
         // fragment_add.xml binding
         _binding = FragmentAddBinding.inflate(inflater, container, false)
+        mDisplayDate = binding.root.findViewById(R.id.choose_date)
+        var expireDate: String
 
         // adapt results of database to ui, 每一条item
         val myAdapter = ArrayAdapter(
@@ -49,6 +60,34 @@ class AddFragment : Fragment() {
         binding.apply {
             spinner.adapter = myAdapter
             unitSpinner.adapter = unitAdapter
+
+            chooseDate.setOnClickListener {
+                val cal = Calendar.getInstance()
+                val year = cal[Calendar.YEAR]
+                val month = cal[Calendar.MONTH]
+                val day = cal[Calendar.DAY_OF_MONTH]
+                val dialog = DatePickerDialog(
+                    requireContext(),
+                    android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                    mDateSetListener,
+                    year,
+                    month,
+                    day
+                )
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialog.show()
+            }
+
+            mDateSetListener =
+                DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
+                    var month = month
+                    month += 1
+                    Log.d(TAG, "onDateSet: yyyy-mm-dd: $year-$month-$day")
+                    val date = "$month/$day/$year"
+                    expireDate = "$year-$month-$day"
+                    mDisplayDate!!.text = date
+                }
+
             btnAdd.setOnClickListener {
                 if(TextUtils.isEmpty((edtTask.text))){
                     Toast.makeText(requireContext(), "It's empty!", Toast.LENGTH_SHORT).show()
