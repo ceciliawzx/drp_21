@@ -97,7 +97,19 @@ class UpdateFragment : Fragment() {
 
             btnUpdate.setOnClickListener {
                 if(TextUtils.isEmpty((updateFoodName.text))){
-                    Toast.makeText(requireContext(), "It's empty!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                if(TextUtils.isEmpty((updateFoodAmount.text))){
+                    Toast.makeText(requireContext(), "Please enter the amount!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val foodAmountText = updateFoodAmount.text.toString()
+                val isAllNumeric = foodAmountText.matches(Regex("\\d+"))
+                if(!isAllNumeric){
+                    Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
 
