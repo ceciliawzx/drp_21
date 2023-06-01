@@ -3,6 +3,7 @@ package com.android.kotlinmvvmtodolist.ui.add
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -13,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.helper.widget.MotionEffect.TAG
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -21,6 +23,7 @@ import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentAddBinding
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -41,9 +44,8 @@ class AddFragment : Fragment() {
         // fragment_add.xml binding
         _binding = FragmentAddBinding.inflate(inflater, container, false)
         mDisplayDate = binding.root.findViewById(R.id.choose_date)
-        var expireDate: String
+        var expireDate: String = ""
 
-        // adapt results of database to ui, 每一条item
         val myAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
@@ -89,19 +91,24 @@ class AddFragment : Fragment() {
                 }
 
             btnAdd.setOnClickListener {
-                if(TextUtils.isEmpty((edtTask.text))){
+                if(TextUtils.isEmpty((foodName.text))){
                     Toast.makeText(requireContext(), "It's empty!", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
 
-                val titleTitle = edtTask.text.toString()
-                val priority = spinner.selectedItemPosition
+                val titleTitle = foodName.text.toString()
+                val type = spinner.selectedItemPosition
+                val unit = unitSpinner.selectedItemPosition
+                val amount = foodAmount.text.toString().toInt()
 
                 val taskEntry = TaskEntry(
                     0,
                     titleTitle,
-                    priority,
-                    System.currentTimeMillis()
+                    type,
+                    System.currentTimeMillis(),
+                    expireDate,
+                    amount,
+                    unit
                 )
 
                 viewModel.insert(taskEntry)

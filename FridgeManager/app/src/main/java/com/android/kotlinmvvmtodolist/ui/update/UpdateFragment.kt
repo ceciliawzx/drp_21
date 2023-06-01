@@ -1,20 +1,32 @@
 package com.android.kotlinmvvmtodolist.ui.update
 
+import android.app.DatePickerDialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.constraintlayout.helper.widget.MotionEffect
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
+import com.android.kotlinmvvmtodolist.databinding.FragmentAddBinding
 import com.android.kotlinmvvmtodolist.databinding.FragmentUpdateBinding
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
+import java.util.Calendar
 
 @AndroidEntryPoint
 class UpdateFragment : Fragment() {
@@ -24,31 +36,84 @@ class UpdateFragment : Fragment() {
     private val binding get() = _binding!!
     private val args by navArgs<UpdateFragmentArgs>()
 
+    private var mDisplayDate: TextView? = null
+    private var mDateSetListener: DatePickerDialog.OnDateSetListener? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
+        mDisplayDate = binding.root.findViewById(R.id.update_choose_date)
+        var expireDate: String = ""
 
+        // adapt results of database to ui, 每一条item
+        val myAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            resources.getStringArray(R.array.priorities)
+        )
+
+        val unitAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            resources.getStringArray(R.array.units)
+        )
+
+        // 给view绑定数据
         binding.apply {
-            updateEdtTask.setText(args.task.title)
-            updateSpinner.setSelection(args.task.priority)
+            updateSpinner.adapter = myAdapter
+            updateUnitSpinner.adapter = unitAdapter
+//            updateFoodName.setText(args.task.title)
+//            updateFoodAmount.setSelection(args.task.)
+
+            updateChooseDate.setOnClickListener {
+                val cal = Calendar.getInstance()
+                val year = cal[Calendar.YEAR]
+                val month = cal[Calendar.MONTH]
+                val day = cal[Calendar.DAY_OF_MONTH]
+                val dialog = DatePickerDialog(
+                    requireContext(),
+                    android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                    mDateSetListener,
+                    year,
+                    month,
+                    day
+                )
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialog.show()
+            }
+
+            mDateSetListener =
+                DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
+                    var month = month
+                    month += 1
+                    Log.d(MotionEffect.TAG, "onDateSet: yyyy-mm-dd: $year-$month-$day")
+                    val date = "$month/$day/$year"
+                    expireDate = "$year-$month-$day"
+                    mDisplayDate!!.text = date
+                }
 
             btnUpdate.setOnClickListener {
-                if(TextUtils.isEmpty(updateEdtTask.text)){
+                if(TextUtils.isEmpty((updateFoodName.text))){
                     Toast.makeText(requireContext(), "It's empty!", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
 
-                val taskTitle = updateEdtTask.text.toString()
-                val priority = updateSpinner.selectedItemPosition
+                val titleTitle = updateFoodName.text.toString()
+                val type = updateSpinner.selectedItemPosition
+                val unit = updateUnitSpinner.selectedItemPosition
+                val amount = updateFoodAmount.text.toString().toInt()
 
                 val taskEntry = TaskEntry(
-                    args.task.id,
-                    taskTitle,
-                    priority,
-                    args.task.timestamp
+                    0,
+                    titleTitle,
+                    type,
+                    System.currentTimeMillis(),
+                    expireDate,
+                    amount,
+                    unit
                 )
 
                 viewModel.update(taskEntry)

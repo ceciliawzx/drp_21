@@ -10,7 +10,7 @@
         app:showAsAction="ifRoom|collapseActionView"/>
     <item
         android:id="@+id/action_priority"
-        android:title="@string/sort_by_high_priority"
+        android:title="@string/sort_by_type"
         app:showAsAction="never"/>
     <item
         android:id="@+id/action_delete_all"

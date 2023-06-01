@@ -13,9 +13,9 @@ data class TaskEntry(
     @PrimaryKey(autoGenerate = true)
     var id: Int,
     var title: String,
-    var priority: Int,
+    var type: Int,
     var timestamp: Long,
-//    var expireDate: LocalDate,
-//    var amount: Int,
-//    var unit: Int
+    var expireDate: String,
+    var amount: Int,
+    var unit: Int
 ):Parcelable

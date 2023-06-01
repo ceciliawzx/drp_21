@@ -22,7 +22,7 @@ interface TaskDao {
     @Query("SELECT * FROM task_table ORDER BY timestamp DESC")
     fun getAllTasks(): Flow<List<TaskEntry>>
 
-    @Query("SELECT * FROM task_table ORDER BY priority ASC")
+    @Query("SELECT * FROM task_table ORDER BY type ASC")
     fun getAllPriorityTasks(): Flow<List<TaskEntry>>
 
     @Query("SELECT * FROM task_table WHERE title LIKE :searchQuery ORDER BY timestamp DESC")
