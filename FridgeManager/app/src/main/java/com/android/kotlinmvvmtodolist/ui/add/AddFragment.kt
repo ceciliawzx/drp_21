@@ -92,7 +92,19 @@ class AddFragment : Fragment() {
 
             btnAdd.setOnClickListener {
                 if(TextUtils.isEmpty((foodName.text))){
-                    Toast.makeText(requireContext(), "It's empty!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                if(TextUtils.isEmpty((foodAmount.text))){
+                    Toast.makeText(requireContext(), "Please enter the amount!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val foodAmountText = foodAmount.text.toString()
+                val isAllNumeric = foodAmountText.matches(Regex("\\d+"))
+                if(!isAllNumeric){
+                    Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
 
