@@ -65,8 +65,12 @@ class UpdateFragment : Fragment() {
         binding.apply {
             updateSpinner.adapter = myAdapter
             updateUnitSpinner.adapter = unitAdapter
-//            updateFoodName.setText(args.task.title)
-//            updateFoodAmount.setSelection(args.task.)
+
+            updateFoodName.setText(args.task.title)
+            updateFoodAmount.setText(args.task.amount.toString())
+            updateUnitSpinner.setSelection(args.task.unit)
+            updateChooseDate.text = args.task.expireDate
+
 
             updateChooseDate.setOnClickListener {
                 val cal = Calendar.getInstance()
@@ -119,7 +123,7 @@ class UpdateFragment : Fragment() {
                 val amount = updateFoodAmount.text.toString().toInt()
 
                 val taskEntry = TaskEntry(
-                    0,
+                    args.task.id,
                     titleTitle,
                     type,
                     System.currentTimeMillis(),
