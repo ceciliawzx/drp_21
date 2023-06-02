@@ -117,6 +117,7 @@ class UpdateFragment : Fragment() {
                     return@setOnClickListener
                 }
 
+
                 val titleTitle = updateFoodName.text.toString()
                 val type = updateSpinner.selectedItemPosition
                 val unit = updateUnitSpinner.selectedItemPosition
