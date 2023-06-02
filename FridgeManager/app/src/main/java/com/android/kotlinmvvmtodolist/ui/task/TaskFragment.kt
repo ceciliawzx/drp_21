@@ -8,8 +8,10 @@ import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -19,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.R
+import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentTaskBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,11 +77,21 @@ class TaskFragment : Fragment() {
                 return false
             }
 
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val taskEntry = mAdapter.currentList[position]
                 viewModel.delete(taskEntry)
 
+                // Define different actions depends on swipe direction
+                when (direction) {
+                    ItemTouchHelper.LEFT -> swipeLeftHelper(taskEntry)
+                    ItemTouchHelper.RIGHT -> swipeRightHelper(taskEntry)
+                }
+
+            }
+
+            private fun swipeLeftHelper(taskEntry: TaskEntry) {
                 Snackbar.make(binding.root, "Deleted!", Snackbar.LENGTH_LONG).apply {
                     setAction("Undo"){
                         viewModel.insert(taskEntry)
@@ -86,7 +99,22 @@ class TaskFragment : Fragment() {
                     show()
                 }
             }
+
+            private fun swipeRightHelper(taskEntry: TaskEntry) {
+                Snackbar.make(binding.root, "Food Used!", Snackbar.LENGTH_LONG).apply {
+//                    setActionTextColor(ContextCompat.getColor(context, R.color.white))
+//                    view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+//                        .setTextColor(ContextCompat.getColor(context, R.color.white))
+                    setAction("Undo"){
+                        viewModel.insert(taskEntry)
+                    }
+                    show()
+                }
+            }
+
         }).attachToRecyclerView(binding.recyclerView)
+
+
 
         setHasOptionsMenu(true)
 
