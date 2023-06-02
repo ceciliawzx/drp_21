@@ -12,6 +12,7 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 @SuppressLint("SetTextI18n")
@@ -70,36 +71,66 @@ fun setAmount(view: TextView, amount: Int){
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("setDate")
-fun setDate(view: TextView, date: String){
+//fun setDate(view: TextView, date: String){
+//
+//    val currentDate = Calendar.getInstance().time.toString()
+//    val dateFormat1 = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+//    val parsedDate = dateFormat1.parse(currentDate)
+//    // start date in the format yyyy-mm-dd
+//    val endDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(parsedDate)
+//
+//    val dateFormat2 = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+//
+//    val date1 = dateFormat2.parse(date)
+//    val date2 = dateFormat2.parse(endDate)
+//
+//    val differenceInMillis = date1.time - date2.time
+//    val differenceInDays = differenceInMillis / (1000 * 60 * 60 * 24)
+//
+//    if (differenceInDays in 1..1) {
+//        view.text = "Expire in $differenceInDays days"
+//        view.setTextColor(Color.RED)
+//    } else if (differenceInDays > 0){
+//        view.text = "Expire in $differenceInDays days"
+//    } else if (differenceInDays < 0) {
+//        val dif = abs(differenceInDays)
+//        view.text = "Expired $dif days ago!!!"
+//        view.setTextColor(Color.DKGRAY)
+//    } else {
+//        view.text = "Expire today!!!"
+//        view.setTextColor(Color.RED)
+//    }
+//
+//}
+fun setDate(view: TextView, date: String?) {
+    if (date != null && date.isNotEmpty()) {
+        val currentDate = Calendar.getInstance().time.toString()
+        val dateFormat1 = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+        val parsedDate = dateFormat1.parse(currentDate)
 
-    val currentDate = Calendar.getInstance().time.toString()
-    val dateFormat1 = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
-    val parsedDate = dateFormat1.parse(currentDate)
-    // start date in the format yyyy-mm-dd
-    val endDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(parsedDate)
+        val dateFormat2 = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-    val dateFormat2 = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date1 = dateFormat2.parse(date)
+        val date2 = dateFormat2.parse(dateFormat2.format(parsedDate))
 
-    val date1 = dateFormat2.parse(date)
-    val date2 = dateFormat2.parse(endDate)
+        val differenceInMillis = date1.time - date2.time
+        val differenceInDays = TimeUnit.MILLISECONDS.toDays(differenceInMillis)
 
-    val differenceInMillis = date1.time - date2.time
-    val differenceInDays = differenceInMillis / (1000 * 60 * 60 * 24)
-
-    if (differenceInDays in 1..1) {
-        view.text = "Expire in $differenceInDays days"
-        view.setTextColor(Color.RED)
-    } else if (differenceInDays > 0){
-        view.text = "Expire in $differenceInDays days"
-    } else if (differenceInDays < 0) {
-        val dif = abs(differenceInDays)
-        view.text = "Expired $dif days ago!!!"
-        view.setTextColor(Color.DKGRAY)
+        if (differenceInDays in 1..1) {
+            view.text = "Expire in $differenceInDays day"
+            view.setTextColor(Color.RED)
+        } else if (differenceInDays > 0) {
+            view.text = "Expire in $differenceInDays days"
+        } else {
+            val dif = abs(differenceInDays)
+            view.text = if (dif == 0L) "Expire today!!!" else "Expired $dif days ago!!!"
+            view.setTextColor(if (dif == 0L) Color.RED else Color.DKGRAY)
+        }
     } else {
-        view.text = "Expire today!!!"
-        view.setTextColor(Color.RED)
+        // Handle case when date is empty or null
+        view.text = "No date specified"
+        view.setTextColor(Color.BLACK)
     }
-
 }
 
 @BindingAdapter("setTimestamp")

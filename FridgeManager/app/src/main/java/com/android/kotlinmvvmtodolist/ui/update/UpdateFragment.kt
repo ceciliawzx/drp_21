@@ -65,7 +65,7 @@ class UpdateFragment : Fragment() {
             updateFoodName.setText(args.task.title)
             updateFoodAmount.setText(args.task.amount.toString())
             updateUnitSpinner.setSelection(args.task.unit)
-            updateChooseDate.text = args.task.expireDate
+            updateChooseDate.setText(args.task.expireDate)
 
 
             updateChooseDate.setOnClickListener {
