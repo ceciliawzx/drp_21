@@ -124,7 +124,7 @@ fun setDate(view: TextView, date: String?) {
         } else {
             val dif = abs(differenceInDays)
             view.text = if (dif == 0L) "Expire today!!!" else "Expired $dif days ago!!!"
-            view.setTextColor(if (dif == 0L) Color.RED else Color.DKGRAY)
+            view.setTextColor(if (dif == 0L) Color.BLUE else Color.DKGRAY)
         }
     } else {
         // Handle case when date is empty or null
