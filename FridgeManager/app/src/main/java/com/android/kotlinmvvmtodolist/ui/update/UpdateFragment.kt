@@ -3,7 +3,6 @@ package com.android.kotlinmvvmtodolist.ui.update
 import android.app.DatePickerDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -13,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.helper.widget.MotionEffect
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -21,11 +19,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
-import com.android.kotlinmvvmtodolist.databinding.FragmentAddBinding
 import com.android.kotlinmvvmtodolist.databinding.FragmentUpdateBinding
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
 import java.util.Calendar
 
 @AndroidEntryPoint
@@ -99,6 +95,7 @@ class UpdateFragment : Fragment() {
                     mDisplayDate!!.text = date
                 }
 
+            // Limits check
             btnUpdate.setOnClickListener {
                 if(TextUtils.isEmpty((updateFoodName.text))){
                     Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT).show()
@@ -111,9 +108,12 @@ class UpdateFragment : Fragment() {
                 }
 
                 val foodAmountText = updateFoodAmount.text.toString()
-                val isAllNumeric = foodAmountText.matches(Regex("\\d+"))
-                if(!isAllNumeric){
+                val amountNum = foodAmountText.toIntOrNull()
+                if(amountNum == null){
                     Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                } else if(amountNum <= 0 || amountNum > 10000) {
+                    Toast.makeText(requireContext(), "Number out of bound!", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
 

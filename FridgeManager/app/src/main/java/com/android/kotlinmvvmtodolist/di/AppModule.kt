@@ -23,6 +23,5 @@ object AppModule {
             TaskDatabase::class.java,
             TASK_DATABASE
         ).build().taskDao()
-//            .fallbackToDestructiveMigration()
 
 }

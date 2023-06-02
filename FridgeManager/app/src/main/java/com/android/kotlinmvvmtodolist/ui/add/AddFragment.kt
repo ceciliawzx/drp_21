@@ -90,6 +90,7 @@ class AddFragment : Fragment() {
                     mDisplayDate!!.text = date
                 }
 
+            // Limits check
             btnAdd.setOnClickListener {
                 if(TextUtils.isEmpty((foodName.text))){
                     Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT).show()
@@ -102,9 +103,12 @@ class AddFragment : Fragment() {
                 }
 
                 val foodAmountText = foodAmount.text.toString()
-                val isAllNumeric = foodAmountText.matches(Regex("\\d+"))
-                if(!isAllNumeric){
+                val amountNum = foodAmountText.toIntOrNull()
+                if(amountNum == null){
                     Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                } else if(amountNum <= 0 || amountNum > 10000) {
+                    Toast.makeText(requireContext(), "Number out of bound!", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
 
