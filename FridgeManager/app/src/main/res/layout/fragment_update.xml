@@ -48,7 +48,7 @@
             app:layout_constraintBaseline_toBaselineOf="@id/update_food_amount"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.75"
-            app:layout_constraintStart_toEndOf="@+id/food_amount"
+            app:layout_constraintStart_toEndOf="@+id/update_food_amount"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/update_food_name" />
 

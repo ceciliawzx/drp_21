@@ -45,6 +45,7 @@ class AddFragment : Fragment() {
         _binding = FragmentAddBinding.inflate(inflater, container, false)
         mDisplayDate = binding.root.findViewById(R.id.choose_date)
         var expireDate: String = ""
+        var dateChosen: Boolean = false
 
         val myAdapter = ArrayAdapter(
             requireContext(),
@@ -88,8 +89,10 @@ class AddFragment : Fragment() {
                     val date = "$month/$day/$year"
                     expireDate = "$year-$month-$day"
                     mDisplayDate!!.text = date
+                    dateChosen = true
                 }
 
+            // Limits check
             btnAdd.setOnClickListener {
                 if(TextUtils.isEmpty((foodName.text))){
                     Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT).show()
@@ -102,9 +105,17 @@ class AddFragment : Fragment() {
                 }
 
                 val foodAmountText = foodAmount.text.toString()
-                val isAllNumeric = foodAmountText.matches(Regex("\\d+"))
-                if(!isAllNumeric){
+                val amountNum = foodAmountText.toIntOrNull()
+                if(amountNum == null){
                     Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                } else if(amountNum <= 0 || amountNum > 10000) {
+                    Toast.makeText(requireContext(), "Number out of bound!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                if(!dateChosen) {
+                    Toast.makeText(requireContext(), "Please Enter Date!", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
 
