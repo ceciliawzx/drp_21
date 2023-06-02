@@ -42,7 +42,7 @@ class UpdateFragment : Fragment() {
 
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
         mDisplayDate = binding.root.findViewById(R.id.update_choose_date)
-        var expireDate: String = ""
+        var expireDate: String = args.task.expireDate
 
         // adapt results of database to ui, 每一条item
         val myAdapter = ArrayAdapter(
