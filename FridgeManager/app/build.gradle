@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "com.android.kotlinmvvmtodolist"
-        minSdk 24
+        minSdk 26
         //noinspection OldTargetApi
         targetSdk 32
         versionCode 1

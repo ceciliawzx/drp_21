@@ -17,5 +17,6 @@ data class TaskEntry(
     var timestamp: Long,
     var expireDate: String,
     var amount: Int,
-    var unit: Int
+    var unit: Int,
+    var notificationID: Int
 ):Parcelable

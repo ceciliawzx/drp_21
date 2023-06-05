@@ -21,6 +21,7 @@ import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentUpdateBinding
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
+import com.android.kotlinmvvmtodolist.util.notificationID
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -131,7 +132,8 @@ class UpdateFragment : Fragment() {
                     System.currentTimeMillis(),
                     expireDate,
                     amount,
-                    unit
+                    unit,
+                    notificationID
                 )
 
                 viewModel.update(taskEntry)
