@@ -133,6 +133,8 @@ fun setDate(view: TextView, date: String?) {
     }
 }
 
+
+
 @BindingAdapter("setTimestamp")
 fun setTimestamp(view: TextView, timestamp: Long){
     view.text = DateFormat.getInstance().format(timestamp)

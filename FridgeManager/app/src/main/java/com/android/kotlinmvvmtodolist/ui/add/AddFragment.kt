@@ -22,9 +22,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.constraintlayout.helper.widget.MotionEffect.TAG
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.android.kotlinmvvmtodolist.R
@@ -36,9 +34,12 @@ import com.android.kotlinmvvmtodolist.util.channelID
 import com.android.kotlinmvvmtodolist.util.messageExtra
 import com.android.kotlinmvvmtodolist.util.titleExtra
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class AddFragment : Fragment() {
@@ -157,7 +158,12 @@ class AddFragment : Fragment() {
 
                 viewModel.insert(taskEntry)
                 val notificationTime = getNotificationTime(expireDate)
-                scheduleNotification(titleTitle, expireDate, notificationTime)
+                val daysLeft = calculateDaysLeft(expireDate)
+                val title = "$titleTitle expire soon"
+                // TODO: notify ? days before expiration
+                val message1 = "Your $titleTitle will expire in $daysLeft days!"
+                val message = "Your $titleTitle will expire tomorrow!!!"
+                scheduleNotification(title, message, notificationTime)
                 Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_addFragment_to_taskFragment)
             }
@@ -201,22 +207,26 @@ class AddFragment : Fragment() {
 
 }
 
+
+// Calculate when to notify the expiring item. For now notify one day before
 fun getNotificationTime(expirationDate: String): Long {
     val times = expirationDate.split('-')
     val year = times[0].toInt()
     val month = times[1].toInt() - 1
-    val day = times[2].toInt()
+    val day = times[2].toInt() - 1
 
     /* TODO: This is for the sake of the test. When you run the test,
         set the hour and minute to be the time you expect the notification to happen */
-    val hour = 20
-    val minute = 27
+    val hour = 9  // 0 ~ 23
+    val minute = 0
 
     val calendar: Calendar = Calendar.getInstance()
     calendar.set(year, month, day, hour, minute)
     return calendar.timeInMillis
 }
 
+// Show an alert to users that a notification has been scheduled
+// TODO: maybe delete this later, based on user feedback
 fun showAlert(time: Long, title: String, message: String, context: Context) {
     val date = Date(time)
     val dateFormat = DateFormat.getLongDateFormat(context)
@@ -230,4 +240,13 @@ fun showAlert(time: Long, title: String, message: String, context: Context) {
         )
         .setPositiveButton("Okay") { _, _ -> }
         .show()
+}
+
+// Calculate days left between now and expirationDate
+fun calculateDaysLeft(expirationDate: String): Int {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val currentDate = Date()
+    val expiryDate = dateFormat.parse(expirationDate)
+    val diff = (expiryDate?.time ?: currentDate.time) - currentDate.time
+    return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
 }
