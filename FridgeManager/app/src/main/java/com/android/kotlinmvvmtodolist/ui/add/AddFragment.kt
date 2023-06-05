@@ -11,10 +11,9 @@ import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import androidx.core.content.ContextCompat
+import android.text.format.DateFormat
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -35,15 +34,11 @@ import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.util.Notification
 import com.android.kotlinmvvmtodolist.util.channelID
 import com.android.kotlinmvvmtodolist.util.messageExtra
-import com.android.kotlinmvvmtodolist.util.notificationID
 import com.android.kotlinmvvmtodolist.util.titleExtra
-import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
-import java.sql.Time
-import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
-import kotlin.math.min
+import java.util.UUID
 
 @AndroidEntryPoint
 class AddFragment : Fragment() {
@@ -54,6 +49,9 @@ class AddFragment : Fragment() {
 
     private var mDisplayDate: TextView? = null
     private var mDateSetListener: DatePickerDialog.OnDateSetListener? = null
+
+    // Create a unique notificationID for each item
+    private val notificationID = UUID.randomUUID().hashCode()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -198,38 +196,38 @@ class AddFragment : Fragment() {
             notificationTime,
             pendingIntent
         )
-        showAlert(notificationTime, title, message)
+        showAlert(notificationTime, title, message, requireContext())
     }
 
-    private fun showAlert(time: Long, title: String, message: String) {
-        val date = Date(time)
-        val dateFormat = android.text.format.DateFormat.getLongDateFormat(requireContext())
-        val timeFormat = android.text.format.DateFormat.getTimeFormat(requireContext())
-        AlertDialog.Builder(requireContext())
-            .setTitle("Notification scheduled")
-            .setMessage(
-                "Title: " + title
-                        + "\nMessage: " + message
-                        + "\nAt: " + dateFormat.format(date) + " " + timeFormat.format(date)
-            )
-            .setPositiveButton("Okay"){_,_ ->}
-            .show()
-    }
+}
 
-    private fun getNotificationTime(expirationDate: String): Long {
-        val times = expirationDate.split('-')
-        val year = times[0].toInt()
-        val month = times[1].toInt() - 1
-        val day = times[2].toInt()
+fun getNotificationTime(expirationDate: String): Long {
+    val times = expirationDate.split('-')
+    val year = times[0].toInt()
+    val month = times[1].toInt() - 1
+    val day = times[2].toInt()
 
-        /* TODO: This is for the sake of the test. When you run the test,
-            set the hour and minute to be the time you expect the notification to happen */
-        val hour = 20
-        val minute = 5
+    /* TODO: This is for the sake of the test. When you run the test,
+        set the hour and minute to be the time you expect the notification to happen */
+    val hour = 20
+    val minute = 27
 
-        val calendar: Calendar = Calendar.getInstance()
-        calendar.set(year, month, day, hour, minute)
-        return calendar.timeInMillis
-    }
+    val calendar: Calendar = Calendar.getInstance()
+    calendar.set(year, month, day, hour, minute)
+    return calendar.timeInMillis
+}
 
+fun showAlert(time: Long, title: String, message: String, context: Context) {
+    val date = Date(time)
+    val dateFormat = DateFormat.getLongDateFormat(context)
+    val timeFormat = DateFormat.getTimeFormat(context)
+    AlertDialog.Builder(context)
+        .setTitle("Notification scheduled")
+        .setMessage(
+            "Title: " + title
+                    + "\nMessage: " + message
+                    + "\nAt: " + dateFormat.format(date) + " " + timeFormat.format(date)
+        )
+        .setPositiveButton("Okay") { _, _ -> }
+        .show()
 }

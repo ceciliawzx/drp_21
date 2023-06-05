@@ -224,13 +224,12 @@ class TaskFragment : Fragment() {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null && result.contents != null) {
             val scannedBarcode = result.contents
+            // Process the scanned barcode
             processScannedBarcode(scannedBarcode)
-            // Process the scanned barcode as needed
-            // You can use the scannedBarcode here
         }
     }
 
     private fun processScannedBarcode(scannedBarcode: String) {
-        // TODO
+        // TODO: need a database, probably cannot implement before ddl :(
     }
 }

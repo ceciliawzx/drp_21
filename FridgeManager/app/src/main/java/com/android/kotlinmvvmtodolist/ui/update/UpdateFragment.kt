@@ -1,6 +1,10 @@
 package com.android.kotlinmvvmtodolist.ui.update
 
+import android.app.AlarmManager
 import android.app.DatePickerDialog
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -20,8 +24,12 @@ import androidx.navigation.fragment.navArgs
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentUpdateBinding
+import com.android.kotlinmvvmtodolist.ui.add.getNotificationTime
+import com.android.kotlinmvvmtodolist.ui.add.showAlert
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
-import com.android.kotlinmvvmtodolist.util.notificationID
+import com.android.kotlinmvvmtodolist.util.Notification
+import com.android.kotlinmvvmtodolist.util.messageExtra
+import com.android.kotlinmvvmtodolist.util.titleExtra
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -133,10 +141,17 @@ class UpdateFragment : Fragment() {
                     expireDate,
                     amount,
                     unit,
-                    notificationID
+                    args.task.notificationID
                 )
 
                 viewModel.update(taskEntry)
+
+                // If the expiration date changed, update the notification
+                if (args.task.expireDate != expireDate) {
+                    val notificationTime = getNotificationTime(expireDate)
+                    rescheduleNotification(titleTitle, expireDate, notificationTime)
+                }
+
                 Toast.makeText(requireContext(), "Updated!", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_updateFragment_to_taskFragment)
             }
@@ -148,5 +163,28 @@ class UpdateFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun rescheduleNotification(title: String, message: String, notificationTime: Long) {
+        val intent = Intent(requireContext(), Notification::class.java)
+        intent.putExtra(titleExtra, title)
+        intent.putExtra(messageExtra, message)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            args.task.notificationID,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(pendingIntent) // Cancel the previous notification
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            notificationTime,
+            pendingIntent
+        )
+        showAlert(notificationTime, title, message, requireContext())
+    }
+
 
 }
