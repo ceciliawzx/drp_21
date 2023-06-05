@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.android.kotlinmvvmtodolist.util.Constants.TASK_TABLE
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDate
 
 @Parcelize
 @Entity(tableName = TASK_TABLE)

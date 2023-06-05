@@ -3,11 +3,8 @@ package com.android.kotlinmvvmtodolist.ui.add
 import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -23,14 +20,13 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.helper.widget.MotionEffect.TAG
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentAddBinding
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.util.Notification
-import com.android.kotlinmvvmtodolist.util.channelID
 import com.android.kotlinmvvmtodolist.util.messageExtra
 import com.android.kotlinmvvmtodolist.util.titleExtra
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,21 +34,19 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import java.util.UUID
 import java.util.concurrent.TimeUnit
+
+
 
 @AndroidEntryPoint
 class AddFragment : Fragment() {
 
-    private val viewModel: TaskViewModel by viewModels()
+    private val viewModel: TaskViewModel by activityViewModels()
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
 
     private var mDisplayDate: TextView? = null
     private var mDateSetListener: DatePickerDialog.OnDateSetListener? = null
-
-    // Create a unique notificationID for each item
-    private val notificationID = UUID.randomUUID().hashCode()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -142,8 +136,8 @@ class AddFragment : Fragment() {
                 val unit = unitSpinner.selectedItemPosition
                 val amount = foodAmount.text.toString().toInt()
 
-                val notification =
-                    createNotification("Exp notification", "An expiration date notification")
+                // Ensure every notificationID is unique
+                val notificationID = viewModel.getNextNotificationID()
 
                 val taskEntry = TaskEntry(
                     0,
@@ -155,15 +149,15 @@ class AddFragment : Fragment() {
                     unit,
                     notificationID
                 )
-
                 viewModel.insert(taskEntry)
+
                 val notificationTime = getNotificationTime(expireDate)
                 val daysLeft = calculateDaysLeft(expireDate)
                 val title = "$titleTitle expire soon"
                 // TODO: notify ? days before expiration
                 val message1 = "Your $titleTitle will expire in $daysLeft days!"
                 val message = "Your $titleTitle will expire tomorrow!!!"
-                scheduleNotification(title, message, notificationTime)
+                scheduleNotification(title, message, notificationTime, notificationID)
                 Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_addFragment_to_taskFragment)
             }
@@ -176,24 +170,17 @@ class AddFragment : Fragment() {
         _binding = null
     }
 
-    private fun createNotification(name: String, des: String) {
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(channelID, name, importance)
-        channel.description = des
-        val notificationManager = requireContext().getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-    }
-
-    private fun scheduleNotification(title: String, message: String, notificationTime: Long) {
+    private fun scheduleNotification(title: String, message: String, notificationTime: Long, notificationID: Int) {
         val intent = Intent(requireContext(), Notification::class.java)
         intent.putExtra(titleExtra, title)
         intent.putExtra(messageExtra, message)
+        intent.putExtra("notificationId", notificationID)
 
         val pendingIntent = PendingIntent.getBroadcast(
             requireContext(),
             notificationID,
             intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+            PendingIntent.FLAG_IMMUTABLE
         )
 
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -204,7 +191,6 @@ class AddFragment : Fragment() {
         )
         showAlert(notificationTime, title, message, requireContext())
     }
-
 }
 
 
@@ -219,9 +205,10 @@ fun getNotificationTime(expirationDate: String): Long {
         set the hour and minute to be the time you expect the notification to happen */
     val hour = 9  // 0 ~ 23
     val minute = 0
+    val second = 0
 
     val calendar: Calendar = Calendar.getInstance()
-    calendar.set(year, month, day, hour, minute)
+    calendar.set(year, month, day, hour, minute, second)
     return calendar.timeInMillis
 }
 

@@ -1,5 +1,6 @@
 package com.android.kotlinmvvmtodolist.ui.task
 
+import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +14,8 @@ import javax.inject.Inject
 class TaskViewModel @Inject constructor(
     private val repository : TaskRepository
 ) : ViewModel(){
+
+    private var nextNotificationID = 1
 
     val getAllTasks = repository.getAllTasks()
     val getAllPriorityTasks = repository.getAllPriorityTasks()
@@ -35,6 +38,10 @@ class TaskViewModel @Inject constructor(
 
     fun searchDatabase(searchQuery: String): LiveData<List<TaskEntry>> {
         return repository.searchDatabase(searchQuery)
+    }
+
+    fun getNextNotificationID(): Int {
+        return nextNotificationID++
     }
 
 }
