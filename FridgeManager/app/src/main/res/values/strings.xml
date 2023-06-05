@@ -12,6 +12,7 @@
     <string name="enter_food_name">Enter Food Name</string>
     <string name="enter_amount">Enter Amount</string>
     <string name="update_string">Update</string>
+    <string name="scan_barcode">Scan</string>
     <string-array name="priorities">
         <item>Meat</item>
         <item>Vegetables</item>

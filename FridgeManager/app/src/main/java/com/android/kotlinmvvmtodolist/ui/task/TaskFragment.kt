@@ -5,10 +5,12 @@ package com.android.kotlinmvvmtodolist.ui.task
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -27,6 +29,14 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.google.zxing.Result
+import com.google.zxing.ResultPoint
+import com.google.zxing.integration.android.IntentIntegrator
+import com.journeyapps.barcodescanner.BarcodeCallback
+import com.journeyapps.barcodescanner.BarcodeResult
+import com.journeyapps.barcodescanner.CaptureManager
+import com.journeyapps.barcodescanner.DecoratedBarcodeView
+
 
 @AndroidEntryPoint
 class TaskFragment : Fragment() {
@@ -36,12 +46,16 @@ class TaskFragment : Fragment() {
 
     private var _binding: FragmentTaskBinding? = null
     private val binding get() = _binding!!
+    private var savedInstanceState: Bundle? = null
+
 
     @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        this.savedInstanceState = savedInstanceState
 
         _binding = FragmentTaskBinding.inflate(inflater, container, false)
 
@@ -120,6 +134,7 @@ class TaskFragment : Fragment() {
 
         hideKeyboard(requireActivity())
 
+
         return binding.root
     }
 
@@ -137,8 +152,11 @@ class TaskFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.task_menu, menu)
+
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem.actionView as SearchView
+        val barcodeItem = menu.findItem(R.id.action_barcode)
+
         searchView.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
@@ -151,6 +169,20 @@ class TaskFragment : Fragment() {
                 return true
             }
         })
+
+        barcodeItem.setOnMenuItemClickListener {
+            startBarcodeScanner(savedInstanceState)
+            true
+        }
+    }
+
+    private fun startBarcodeScanner(savedInstanceState: Bundle?) {
+
+        val integrator = IntentIntegrator.forSupportFragment(this)
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
+        integrator.setPrompt("Scan a barcode")
+        integrator.setOrientationLocked(false)
+        integrator.initiateScan()
     }
 
     fun runQuery(query: String){
@@ -193,4 +225,53 @@ class TaskFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null && result.contents != null) {
+            val scannedBarcode = result.contents
+            processScannedBarcode(scannedBarcode)
+            // Process the scanned barcode as needed
+            // You can use the scannedBarcode here
+        }
+    }
+
+    private fun processScannedBarcode(scannedBarcode: String) {
+        // Implement the logic to extract expiration date, food name, and amount
+        val expirationDate = extractExpirationDate(scannedBarcode)
+        val foodName = extractFoodName(scannedBarcode)
+        val amount = extractAmount(scannedBarcode)
+
+        // Show the extracted information to the user (e.g., using Toast or a TextView)
+//        val extractedInfo = "Expiration Date: $expirationDate\nFood Name: $foodName\nAmount: $amount"
+        // TODO: Implement this function to extract information, and write to database
+        val extractedInfo = scannedBarcode
+        Toast.makeText(requireContext(), extractedInfo, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun extractExpirationDate(scannedBarcode: String): String {
+        // Example: Assume the expiration date is in the format "EXP: 2023-06-30"
+        val regex = Regex("""EXP: (\d{4}-\d{2}-\d{2})""")
+        val matchResult = regex.find(scannedBarcode)
+        return matchResult?.groupValues?.get(1) ?: ""
+    }
+
+    private fun extractFoodName(scannedBarcode: String): String {
+        // Example: Assume the food name is enclosed in square brackets: "[Food Name]"
+        val regex = Regex("""\[(.*?)\]""")
+        val matchResult = regex.find(scannedBarcode)
+        return matchResult?.groupValues?.get(1) ?: ""
+    }
+
+    private fun extractAmount(scannedBarcode: String): String {
+        // Example: Assume the amount is specified after "Amount: "
+        val regex = Regex("""Amount: (\d+)""")
+        val matchResult = regex.find(scannedBarcode)
+        return matchResult?.groupValues?.get(1) ?: ""
+    }
+
+
 }
