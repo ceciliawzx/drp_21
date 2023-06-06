@@ -82,11 +82,24 @@
             android:id="@+id/btn_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:text="@string/update_string"
+            android:layout_marginTop="164dp"
+            android:text="@string/update"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/update_spinner" />
+
+        <Switch
+            android:id="@+id/update_buying"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/continuous_buying"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_choose_date"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

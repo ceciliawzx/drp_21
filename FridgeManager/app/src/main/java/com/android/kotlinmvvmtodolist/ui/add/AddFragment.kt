@@ -93,6 +93,13 @@ class AddFragment : Fragment() {
                 dialog.show()
             }
 
+
+            var continuousBuying = false
+
+            buyingSwitch.setOnCheckedChangeListener { _, isChecked ->
+                continuousBuying = isChecked
+            }
+
             mDateSetListener =
                 DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
                     var month = month
@@ -103,6 +110,7 @@ class AddFragment : Fragment() {
                     mDisplayDate!!.text = date
                     dateChosen = true
                 }
+
 
             // Limits check
             btnAdd.setOnClickListener {
@@ -136,8 +144,11 @@ class AddFragment : Fragment() {
                 val unit = unitSpinner.selectedItemPosition
                 val amount = foodAmount.text.toString().toInt()
 
+
                 // Ensure every notificationID is unique
                 val notificationID = viewModel.getNextNotificationID()
+
+                val continuous = if (continuousBuying) 1 else 0
 
                 val taskEntry = TaskEntry(
                     0,
@@ -147,8 +158,10 @@ class AddFragment : Fragment() {
                     expireDate,
                     amount,
                     unit,
-                    notificationID
+                    notificationID,
+                    continuous
                 )
+
                 viewModel.insert(taskEntry)
 
                 val notificationTime = getNotificationTime(expireDate)

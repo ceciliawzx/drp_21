@@ -76,6 +76,7 @@ class UpdateFragment : Fragment() {
             updateUnitSpinner.setSelection(args.task.unit)
             updateSpinner.setSelection(args.task.type)
             updateChooseDate.setText(args.task.expireDate)
+            updateBuying.isChecked = args.task.continuousBuying == 1
 
 
             updateChooseDate.setOnClickListener {
@@ -105,6 +106,12 @@ class UpdateFragment : Fragment() {
                     mDisplayDate!!.text = date
                 }
 
+            var continuousBuying = args.task.continuousBuying == 1
+
+            updateBuying.setOnCheckedChangeListener { _, isChecked ->
+                continuousBuying = isChecked
+            }
+
             // Limits check
             btnUpdate.setOnClickListener {
                 if(TextUtils.isEmpty((updateFoodName.text))){
@@ -132,6 +139,7 @@ class UpdateFragment : Fragment() {
                 val type = updateSpinner.selectedItemPosition
                 val unit = updateUnitSpinner.selectedItemPosition
                 val amount = updateFoodAmount.text.toString().toInt()
+                var continuous = if (continuousBuying) 1 else 0
 
                 val taskEntry = TaskEntry(
                     args.task.id,
@@ -141,7 +149,8 @@ class UpdateFragment : Fragment() {
                     expireDate,
                     amount,
                     unit,
-                    args.task.notificationID
+                    args.task.notificationID,
+                    continuous
                 )
 
                 viewModel.update(taskEntry)
