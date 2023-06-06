@@ -9,6 +9,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -18,11 +21,11 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import android.text.format.DateFormat
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,6 +33,7 @@ import androidx.constraintlayout.helper.widget.MotionEffect.TAG
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.android.kotlinmvvmtodolist.R
@@ -47,7 +51,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-
 
 
 @AndroidEntryPoint
@@ -211,13 +214,35 @@ class AddFragment : Fragment() {
     private val REQUEST_IMAGE_CAPTURE = 1
     private lateinit var currentPhotoPath: String
 
-    private val takePictureLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                // Photo capture was successful
-                Toast.makeText(requireContext(), "Photo taken and saved.", Toast.LENGTH_SHORT).show()
+//    private val takePictureLauncher =
+//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//            if (result.resultCode == RESULT_OK) {
+//                // Photo capture was successful
+//                Toast.makeText(requireContext(), "Photo taken and saved.", Toast.LENGTH_SHORT).show()
+//                val imageBitmap = result.data?.extras?.get("data") as Bitmap
+//                val imageView = ImageView(context)
+//                imageView.setImageBitmap(imageBitmap)
+//            }
+//
+//        }
+
+    val takePictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val imageBitmap = BitmapFactory.decodeFile(currentPhotoPath)
+            if (imageBitmap != null) {
+
+                val imageView = binding.imagePreview
+                val resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 150, 150, true)
+                imageView.visibility = View.VISIBLE
+                imageView.setImageBitmap(resizedBitmap)
+
+            } else {
+                Toast.makeText(requireContext(), "Failed to capture photo.", Toast.LENGTH_SHORT).show()
             }
+        } else {
+            Toast.makeText(requireContext(), "Photo capture cancelled.", Toast.LENGTH_SHORT).show()
         }
+    }
 
     // Take photo when click camera button
     fun takePhoto(view: View) {

@@ -11,7 +11,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".ui.add.AddFragment">
 
         <EditText
@@ -69,16 +69,27 @@
             android:id="@+id/choose_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/choose_exp_date"
-            android:textColor="@android:color/black"
             android:background="@android:color/transparent"
+            android:text="@string/choose_exp_date"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@android:color/black"
             app:layout_constraintBottom_toTopOf="@+id/btn_add"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner"
             app:layout_constraintVertical_bias="0.326" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.828"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
 
         <Button
             android:id="@+id/btn_add"
@@ -91,16 +102,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
+        <ImageView
+            android:id="@+id/imagePreview"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.828"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_add"
+            app:srcCompat="@drawable/ic_launcher_background"
+            android:visibility="gone" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
