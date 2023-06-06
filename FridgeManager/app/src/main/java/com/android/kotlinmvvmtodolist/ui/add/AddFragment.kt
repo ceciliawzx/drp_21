@@ -104,6 +104,8 @@ class AddFragment : Fragment() {
                     dateChosen = true
                 }
 
+
+
             // Limits check
             btnAdd.setOnClickListener {
                 if(TextUtils.isEmpty((foodName.text))){
