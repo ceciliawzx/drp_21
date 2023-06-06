@@ -63,26 +63,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/update_food_amount" />
 
+
         <Button
             android:id="@+id/update_choose_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/choose_exp_date"
-            android:textColor="@android:color/black"
             android:background="@android:color/transparent"
+            android:text="@string/choose_exp_date"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@android:color/black"
             app:layout_constraintBottom_toTopOf="@+id/btn_update"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/update_spinner"
-            app:layout_constraintVertical_bias="0.326" />
+            app:layout_constraintVertical_bias="0.208" />
 
         <Button
             android:id="@+id/btn_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="164dp"
+            android:layout_marginTop="144dp"
             android:text="@string/update"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -93,12 +94,14 @@
             android:id="@+id/update_buying"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10dp"
             android:text="@string/continuous_buying"
+            android:textColor="#009688"
+            app:layout_constraintBottom_toTopOf="@+id/btn_update"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/update_choose_date"
+            app:layout_constraintVertical_bias="0.0"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
