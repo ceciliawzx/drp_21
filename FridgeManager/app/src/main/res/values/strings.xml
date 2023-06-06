@@ -13,6 +13,8 @@
     <string name="enter_amount">Enter Amount</string>
     <string name="update_string">Update</string>
     <string name="scan_barcode">Scan</string>
+    <string name="storage">Storage</string>
+    <string name="shopping_cart">Shopping Cart</string>
     <string-array name="priorities">
         <item>Meat</item>
         <item>Vegetables</item>
