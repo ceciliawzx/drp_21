@@ -219,7 +219,9 @@ class AddFragment : Fragment() {
             }
         }
 
+    // Take photo when click camera button
     fun takePhoto(view: View) {
+        // Grant permission
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.CAMERA
@@ -231,6 +233,7 @@ class AddFragment : Fragment() {
                 REQUEST_IMAGE_CAPTURE
             )
         } else {
+            // Dispatch
             dispatchTakePictureIntent()
         }
     }
@@ -239,6 +242,7 @@ class AddFragment : Fragment() {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
                 val photoFile: File? = try {
+                    // Create temporary file
                     createImageFile()
                 } catch (ex: IOException) {
                     Log.e("DispatchTakePicture", "Error creating image file: ${ex.message}")
@@ -254,14 +258,17 @@ class AddFragment : Fragment() {
                     )
 
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    // Close temporary file
                     val outputStream = requireActivity().contentResolver.openOutputStream(photoURI)
                     outputStream?.close()
+                    // Get result
                     takePictureLauncher.launch(takePictureIntent)
                 }
             }
         }
     }
 
+    // Create temporary image file
     private fun createImageFile(): File? {
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir: File? = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
