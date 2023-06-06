@@ -1,18 +1,16 @@
 package com.android.kotlinmvvmtodolist.data
 
-import androidx.lifecycle.LiveData
 import com.android.kotlinmvvmtodolist.data.local.ShopItemDao
-import com.android.kotlinmvvmtodolist.data.local.TaskDao
-import com.android.kotlinmvvmtodolist.data.local.TaskEntry
+import com.android.kotlinmvvmtodolist.data.local.ShopItemEntry
 import javax.inject.Inject
 
 class ShopItemRepository @Inject constructor(private val shopItemDao: ShopItemDao) {
 
-    suspend fun insert(taskEntry: TaskEntry) = shopItemDao.insert(taskEntry)
+    suspend fun insert(shopItemEntry: ShopItemEntry) = shopItemDao.insert(shopItemEntry)
 
-    suspend fun updateData(taskEntry: TaskEntry) = shopItemDao.update(taskEntry)
+    suspend fun updateData(shopItemEntry: ShopItemEntry) = shopItemDao.update(shopItemEntry)
 
-    suspend fun deleteItem(taskEntry: TaskEntry) = shopItemDao.delete(taskEntry)
+    suspend fun deleteItem(shopItemEntry: ShopItemEntry) = shopItemDao.delete(shopItemEntry)
 
     suspend fun deleteAll() {
         shopItemDao.deleteAll()

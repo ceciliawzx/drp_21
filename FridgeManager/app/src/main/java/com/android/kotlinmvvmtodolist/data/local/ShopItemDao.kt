@@ -13,13 +13,13 @@ import kotlinx.coroutines.flow.Flow
 interface ShopItemDao {
 
     @Insert
-    suspend fun insert(taskEntry: TaskEntry)
+    suspend fun insert(shopItemEntry: ShopItemEntry)
 
     @Delete
-    suspend fun delete(taskEntry: TaskEntry)
+    suspend fun delete(shopItemEntry: ShopItemEntry)
 
     @Update
-    suspend fun update(taskEntry: TaskEntry)
+    suspend fun update(shopItemEntry: ShopItemEntry)
 
     @Query("SELECT * FROM shopping_list_table ORDER BY timestamp DESC")
     fun getAllItems(): LiveData<List<ShopItemEntry>>
