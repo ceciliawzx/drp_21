@@ -183,11 +183,9 @@ class TaskFragment : Fragment() {
     }
 
     private fun startBarcodeScanner(savedInstanceState: Bundle?) {
-
         val integrator = IntentIntegrator.forSupportFragment(this)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
         integrator.setPrompt("Scan a barcode")
-        integrator.setOrientationLocked(false)
         integrator.initiateScan()
     }
 
@@ -240,7 +238,11 @@ class TaskFragment : Fragment() {
         if (result != null && result.contents != null) {
             val scannedBarcode = result.contents
             // Process the scanned barcode
-            processScannedBarcode(scannedBarcode)
+            try {
+                processScannedBarcode(scannedBarcode)
+            } catch (_: Exception) {
+
+            }
         }
     }
 
