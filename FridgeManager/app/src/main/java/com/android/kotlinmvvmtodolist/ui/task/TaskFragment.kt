@@ -254,8 +254,6 @@ class TaskFragment : Fragment() {
             .url(apiUrl)
             .build()
 
-//        val client = OkHttpClient()
-
         val client = OkHttpClient.Builder()
             .sslSocketFactory(TrustAllCerts.createSSLSocketFactory(), TrustAllCerts)
             .hostnameVerifier { _, _ -> true }
@@ -303,8 +301,8 @@ class TaskFragment : Fragment() {
                         ""
                     }
 
-                    val number = productUnit?.split(Regex("\\D+"))
-                    val unit = productUnit?.split(Regex("\\d+"))?.get(0)
+                    val number = productUnit.split(Regex("\\D+"))
+                    val unit = productUnit.split(Regex("\\d+")).get(0)
 
                     val expirationDateString: String = try {
                         product?.getString("expiration_date") ?: ""
