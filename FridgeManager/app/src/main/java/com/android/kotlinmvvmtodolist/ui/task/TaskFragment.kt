@@ -2,13 +2,18 @@
 
 package com.android.kotlinmvvmtodolist.ui.task
 
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.*
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -22,11 +27,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentTaskBinding
+import com.android.kotlinmvvmtodolist.ui.add.calculateDaysLeft
+import com.android.kotlinmvvmtodolist.ui.add.getNotificationTime
+import com.android.kotlinmvvmtodolist.ui.add.scheduleNotification
+import com.android.kotlinmvvmtodolist.util.TrustAllCerts
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import com.google.zxing.integration.android.IntentIntegrator
+import okhttp3.*
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.IOException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class TaskFragment : Fragment() {
@@ -230,6 +245,147 @@ class TaskFragment : Fragment() {
     }
 
     private fun processScannedBarcode(scannedBarcode: String) {
-        // TODO: need a database, probably cannot implement before ddl :(
+        println(scannedBarcode)
+        val apiUrl = "https://world.openfoodfacts.org/api/v0/product/$scannedBarcode.json"
+
+        val request = Request.Builder()
+            .url(apiUrl)
+            .build()
+
+//        val client = OkHttpClient()
+
+        val client = OkHttpClient.Builder()
+            .sslSocketFactory(TrustAllCerts.createSSLSocketFactory(), TrustAllCerts)
+            .hostnameVerifier { _, _ -> true }
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                // Handle network failure or error
+                Log.d("Requesting", "Request fails")
+                e.printStackTrace()
+                // Print the error message
+                Log.d("Requesting", "Error: ${e.message}")
+            }
+
+            var fail = false
+
+            override fun onResponse(call: Call, response: Response) {
+                Log.d("Requesting", "Requesting http request")
+                val responseBody = response.body?.string()
+                // Process the response body
+                if (response.isSuccessful && responseBody != null) {
+                    // Parse the response JSON
+                    val product = parseProductFromJson(responseBody)
+
+
+//                    val failed = product?.getString("product not found") != null
+                    // Retrieve the food name
+                    val productName: String = try {
+                        product?.getString("product_name") ?: ""
+                    } catch (e: JSONException) {
+                        ""
+                    }
+
+                    // Retrieve the serving quantity
+
+                    val productAmount: Int = try {
+                        product?.getString("product_quantity")?.toInt() ?: 1
+                    } catch (e: JSONException) {
+                        1
+                    }
+
+                    val productUnit: String = try {
+                        product?.getString("quantity") ?: ""
+                    } catch (e: JSONException) {
+                        ""
+                    }
+
+                    val number = productUnit?.split(Regex("\\D+"))
+                    val unit = productUnit?.split(Regex("\\d+"))?.get(0)
+
+                    val expirationDateString: String = try {
+                        product?.getString("expiration_date") ?: ""
+                    } catch (e: JSONException) {
+                        ""
+                    }
+
+                    val expirationDate: String
+                    if (expirationDateString != "") {
+                        Log.d("Requesting", "default date problem")
+                        val day = expirationDateString.split(' ')[0]
+                        val month: Int = when (expirationDateString.split(' ')[1]) {
+                            "Jan" -> 1
+                            "Feb" -> 2
+                            "Mar" -> 3
+                            "Apr" -> 4
+                            "May" -> 5
+                            "Jun" -> 6
+                            "Jul" -> 7
+                            "Aug" -> 8
+                            "Sep" -> 9
+                            "Oct" -> 10
+                            "Nov" -> 11
+                            "Dec" -> 12
+                            else -> 0
+                        }
+                        val year = expirationDateString.split(' ')[2]
+                        expirationDate = "$year-$month-$day"
+                    } else {
+                        val defaultDateString = LocalDate.now().plusDays(1)
+                        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                        expirationDate = defaultDateString.format(formatter)
+                    }
+
+                    val notificationID = viewModel.getNextNotificationID()
+
+                    fail = product == null || productName == "" || expirationDate == ""
+
+                    if (fail) {
+                        Toast.makeText(requireContext(), "Scan failed", Toast.LENGTH_SHORT).show()
+                        // TODO: handle the failure
+                        Log.d("Requesting", "fail because of some contents")
+                    } else {
+                        Log.d("Requesting", "contents success, other reasons")
+                            val taskEntry = TaskEntry(
+                                0,
+                                productName,
+                                3, // TODO
+                                System.currentTimeMillis(),
+                                expirationDate,
+                                productAmount,
+                                0, // TODO
+                                notificationID,
+                                0
+                            )
+
+                            viewModel.insert(taskEntry)
+                            Log.d("Requesting", "added success")
+
+                            val notificationTime = getNotificationTime(expirationDate)
+                            val daysLeft = calculateDaysLeft(expirationDate)
+                            val title = "$productName expire soon"
+                            // TODO: notify ? days before expiration
+                            val message1 = "Your $productName will expire in $daysLeft days!"
+                            val message = "Your $productName will expire tomorrow!!!"
+                            scheduleNotification(requireContext(), title, message, notificationTime, notificationID)
+                            Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Log.d("Requesting", "http request is failed")
+                    Toast.makeText(requireContext(), "Scan failed", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        )
     }
+
+    private fun parseProductFromJson(json: String): JSONObject? {
+        return try {
+            JSONObject(json).optJSONObject("product")
+        } catch (e: Exception) {
+            null
+        }
+    }
+    
 }

@@ -170,7 +170,7 @@ class AddFragment : Fragment() {
                 // TODO: notify ? days before expiration
                 val message1 = "Your $titleTitle will expire in $daysLeft days!"
                 val message = "Your $titleTitle will expire tomorrow!!!"
-                scheduleNotification(title, message, notificationTime, notificationID)
+                scheduleNotification(requireContext(), title, message, notificationTime, notificationID)
                 Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
                 findNavController().navigate(R.id.action_addFragment_to_taskFragment)
             }
@@ -182,28 +182,30 @@ class AddFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+}
 
-    private fun scheduleNotification(title: String, message: String, notificationTime: Long, notificationID: Int) {
-        val intent = Intent(requireContext(), Notification::class.java)
-        intent.putExtra(titleExtra, title)
-        intent.putExtra(messageExtra, message)
-        intent.putExtra("notificationId", notificationID)
 
-        val pendingIntent = PendingIntent.getBroadcast(
-            requireContext(),
-            notificationID,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
+// Schedule a notification based on notificationID
+fun scheduleNotification(context: Context, title: String, message: String, notificationTime: Long, notificationID: Int) {
+    val intent = Intent(context, Notification::class.java)
+    intent.putExtra(titleExtra, title)
+    intent.putExtra(messageExtra, message)
+    intent.putExtra("notificationId", notificationID)
 
-        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            notificationTime,
-            pendingIntent
-        )
-        showAlert(notificationTime, title, message, requireContext())
-    }
+    val pendingIntent = PendingIntent.getBroadcast(
+        context,
+        notificationID,
+        intent,
+        PendingIntent.FLAG_IMMUTABLE
+    )
+
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    alarmManager.setExactAndAllowWhileIdle(
+        AlarmManager.RTC_WAKEUP,
+        notificationTime,
+        pendingIntent
+    )
+    showAlert(notificationTime, title, message, context)
 }
 
 
