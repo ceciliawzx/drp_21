@@ -26,6 +26,7 @@ import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentUpdateBinding
 import com.android.kotlinmvvmtodolist.ui.add.getNotificationTime
 import com.android.kotlinmvvmtodolist.ui.add.showAlert
+import com.android.kotlinmvvmtodolist.ui.camera.CameraFunc
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.util.Notification
 import com.android.kotlinmvvmtodolist.util.messageExtra
@@ -52,6 +53,9 @@ class UpdateFragment : Fragment() {
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
         mDisplayDate = binding.root.findViewById(R.id.update_choose_date)
         var expireDate: String = args.task.expireDate
+
+        // Camera
+        val cameraUtils = CameraFunc(this@UpdateFragment, R.id.update_imagePreview)
 
         // adapt results of database to ui, 每一条item
         val myAdapter = ArrayAdapter(
@@ -104,6 +108,10 @@ class UpdateFragment : Fragment() {
                     expireDate = "$year-$month-$day"
                     mDisplayDate!!.text = date
                 }
+
+            updateCamera.setOnClickListener {
+                cameraUtils.takePhoto()
+            }
 
             // Limits check
             btnUpdate.setOnClickListener {
