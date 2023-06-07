@@ -33,12 +33,12 @@ class CameraFunc(
 ) {
 
     private val REQUEST_IMAGE_CAPTURE = 1
-    private lateinit var currentPhotoPath: String
+    private var currentPhotoPath: String = ""
 
     private val activity = fragment.requireActivity()
     private val context = fragment.requireContext()
 
-    private lateinit var takePictureLauncher: ActivityResultLauncher<Intent>
+    private var takePictureLauncher: ActivityResultLauncher<Intent>
 
     init {
         takePictureLauncher =

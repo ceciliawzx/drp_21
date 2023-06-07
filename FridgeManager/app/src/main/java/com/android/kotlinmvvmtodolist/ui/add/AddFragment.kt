@@ -168,7 +168,8 @@ class AddFragment : Fragment() {
                     expireDate,
                     amount,
                     unit,
-                    notificationID
+                    notificationID,
+                    currentPhotoPath
                 )
                 viewModel.insert(taskEntry)
 

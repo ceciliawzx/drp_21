@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -15,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.helper.widget.MotionEffect
@@ -58,7 +60,7 @@ class UpdateFragment : Fragment() {
 
         // Camera
         val cameraUtils = CameraFunc(this@UpdateFragment, R.id.update_imagePreview)
-        var currentPhotoPath: String = ""
+        var currentPhotoPath: String = args.task.imagePath
 
         // adapt results of database to ui, 每一条item
         val myAdapter = ArrayAdapter(
@@ -84,6 +86,17 @@ class UpdateFragment : Fragment() {
             updateSpinner.setSelection(args.task.type)
             updateChooseDate.setText(args.task.expireDate)
 
+            // Show stored image preview
+            val imageBitmap = BitmapFactory.decodeFile(currentPhotoPath)
+            if (imageBitmap != null) {
+                val imageView = binding.updateImagePreview
+                val newWidth = (imageBitmap.width * 0.3).toInt()
+                val newHeight = (imageBitmap.height * 0.3).toInt()
+                val resizedBitmap =
+                    Bitmap.createScaledBitmap(imageBitmap, newWidth, newHeight, true)
+                imageView.visibility = View.VISIBLE
+                imageView.setImageBitmap(resizedBitmap)
+            }
 
             updateChooseDate.setOnClickListener {
                 val cal = Calendar.getInstance()
@@ -158,7 +171,8 @@ class UpdateFragment : Fragment() {
                     expireDate,
                     amount,
                     unit,
-                    args.task.notificationID
+                    args.task.notificationID,
+                    currentPhotoPath
                 )
 
                 viewModel.update(taskEntry)

@@ -17,5 +17,6 @@ data class TaskEntry(
     var expireDate: String,
     var amount: Int,
     var unit: Int,
-    var notificationID: Int
+    var notificationID: Int,
+    var imagePath: String
 ):Parcelable
