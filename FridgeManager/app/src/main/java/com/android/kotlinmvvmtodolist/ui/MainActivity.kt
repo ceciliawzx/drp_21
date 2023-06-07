@@ -32,9 +32,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.action_shopping_cart -> {
-                    // Navigate to the shopping cart fragment
-                    // Replace "YourShoppingCartFragment" with the actual fragment you want to navigate to
-                    navController.navigate(R.id.addFragment)
+                    navController.navigate(R.id.shopListFragment)
                     true
                 }
                 else -> false

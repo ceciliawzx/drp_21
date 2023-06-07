@@ -22,7 +22,7 @@ interface ShopItemDao {
     suspend fun update(shopItemEntry: ShopItemEntry)
 
     @Query("SELECT * FROM shopping_list_table ORDER BY timestamp DESC")
-    fun getAllItems(): LiveData<List<ShopItemEntry>>
+    fun getAllItems(): Flow<List<ShopItemEntry>>
 
     @Query("DELETE FROM task_table")
     suspend fun deleteAll()
