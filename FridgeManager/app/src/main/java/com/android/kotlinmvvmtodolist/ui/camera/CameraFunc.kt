@@ -20,7 +20,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import com.android.kotlinmvvmtodolist.R
+import com.android.kotlinmvvmtodolist.util.ShowImage.HORIZONTAL_PREVIEW_SCALE
+import com.android.kotlinmvvmtodolist.util.ShowImage.VERTICLE_PREVIEW_SCALE
+import com.android.kotlinmvvmtodolist.util.ShowImage.showImage
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -44,23 +46,11 @@ class CameraFunc(
         takePictureLauncher =
             fragment.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    val imageBitmap = BitmapFactory.decodeFile(currentPhotoPath)
-                    if (imageBitmap != null) {
 
-                        val view = fragment.requireView()
+                    val view = fragment.requireView()
+                    val imageView = view.findViewById<ImageView>(previewID)
 
-                        val imageView = view.findViewById<ImageView>(previewID)
-                        val newWidth = (imageBitmap.width * 0.3).toInt()
-                        val newHeight = (imageBitmap.height * 0.3).toInt()
-                        val resizedBitmap =
-                            Bitmap.createScaledBitmap(imageBitmap, newWidth, newHeight, true)
-                        imageView.visibility = View.VISIBLE
-                        imageView.setImageBitmap(resizedBitmap)
-
-                    } else {
-                        Toast.makeText(context, "Failed to capture photo.", Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                    showImage(imageView, currentPhotoPath, HORIZONTAL_PREVIEW_SCALE, VERTICLE_PREVIEW_SCALE)
                 } else {
                     Toast.makeText(context, "Photo capture cancelled.", Toast.LENGTH_SHORT).show()
                 }

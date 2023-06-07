@@ -33,6 +33,9 @@ import com.android.kotlinmvvmtodolist.ui.add.showAlert
 import com.android.kotlinmvvmtodolist.ui.camera.CameraFunc
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.util.Notification
+import com.android.kotlinmvvmtodolist.util.ShowImage.HORIZONTAL_PREVIEW_SCALE
+import com.android.kotlinmvvmtodolist.util.ShowImage.VERTICLE_PREVIEW_SCALE
+import com.android.kotlinmvvmtodolist.util.ShowImage.showImage
 import com.android.kotlinmvvmtodolist.util.messageExtra
 import com.android.kotlinmvvmtodolist.util.titleExtra
 import dagger.hilt.android.AndroidEntryPoint
@@ -87,16 +90,12 @@ class UpdateFragment : Fragment() {
             updateChooseDate.setText(args.task.expireDate)
 
             // Show stored image preview
-            val imageBitmap = BitmapFactory.decodeFile(currentPhotoPath)
-            if (imageBitmap != null) {
-                val imageView = binding.updateImagePreview
-                val newWidth = (imageBitmap.width * 0.3).toInt()
-                val newHeight = (imageBitmap.height * 0.3).toInt()
-                val resizedBitmap =
-                    Bitmap.createScaledBitmap(imageBitmap, newWidth, newHeight, true)
-                imageView.visibility = View.VISIBLE
-                imageView.setImageBitmap(resizedBitmap)
-            }
+            showImage(
+                binding.updateImagePreview,
+                currentPhotoPath,
+                HORIZONTAL_PREVIEW_SCALE,
+                VERTICLE_PREVIEW_SCALE
+            )
 
             updateChooseDate.setOnClickListener {
                 val cal = Calendar.getInstance()
@@ -137,23 +136,27 @@ class UpdateFragment : Fragment() {
 
             // Limits check
             btnUpdate.setOnClickListener {
-                if(TextUtils.isEmpty((updateFoodName.text))){
-                    Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT).show()
+                if (TextUtils.isEmpty((updateFoodName.text))) {
+                    Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
                 }
 
-                if(TextUtils.isEmpty((updateFoodAmount.text))){
-                    Toast.makeText(requireContext(), "Please enter the amount!", Toast.LENGTH_SHORT).show()
+                if (TextUtils.isEmpty((updateFoodAmount.text))) {
+                    Toast.makeText(requireContext(), "Please enter the amount!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
                 }
 
                 val foodAmountText = updateFoodAmount.text.toString()
                 val amountNum = foodAmountText.toIntOrNull()
-                if(amountNum == null){
-                    Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT).show()
+                if (amountNum == null) {
+                    Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
-                } else if(amountNum <= 0 || amountNum > 10000) {
-                    Toast.makeText(requireContext(), "Number out of bound!", Toast.LENGTH_SHORT).show()
+                } else if (amountNum <= 0 || amountNum > 10000) {
+                    Toast.makeText(requireContext(), "Number out of bound!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
                 }
 
