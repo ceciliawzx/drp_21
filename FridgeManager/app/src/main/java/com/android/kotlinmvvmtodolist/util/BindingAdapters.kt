@@ -1,12 +1,19 @@
 package com.android.kotlinmvvmtodolist.util
 
 import android.annotation.SuppressLint
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
+import android.view.View
+import android.view.ViewParent
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.findFragment
+import com.android.kotlinmvvmtodolist.ui.add.PreviewDialog
 import com.android.kotlinmvvmtodolist.util.ShowImage.HORIZONTAL_PREVIEW_SCALE
 import com.android.kotlinmvvmtodolist.util.ShowImage.VERTICLE_PREVIEW_SCALE
 import com.android.kotlinmvvmtodolist.util.ShowImage.showImage
@@ -142,8 +149,15 @@ fun setDate(view: TextView, date: String?) {
 fun setImageView(view: ImageView, imagePath: String) {
     if (imagePath != "") {
         showImage(view, imagePath, HORIZONTAL_PREVIEW_SCALE, VERTICLE_PREVIEW_SCALE)
+
+        view.setOnClickListener {
+            val imageBitmap = BitmapFactory.decodeFile(imagePath)
+            val dialogFragment = PreviewDialog(imageBitmap)
+            dialogFragment.show(view.findFragment<Fragment>().parentFragmentManager, "ImageDialogFragment")
+        }
     }
 }
+
 
 @BindingAdapter("setTimestamp")
 fun setTimestamp(view: TextView, timestamp: Long){
