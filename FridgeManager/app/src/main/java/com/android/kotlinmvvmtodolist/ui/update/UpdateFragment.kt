@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -24,6 +25,7 @@ import androidx.navigation.fragment.navArgs
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentUpdateBinding
+import com.android.kotlinmvvmtodolist.ui.add.PreviewDialog
 import com.android.kotlinmvvmtodolist.ui.add.getNotificationTime
 import com.android.kotlinmvvmtodolist.ui.add.showAlert
 import com.android.kotlinmvvmtodolist.ui.camera.CameraFunc
@@ -56,6 +58,7 @@ class UpdateFragment : Fragment() {
 
         // Camera
         val cameraUtils = CameraFunc(this@UpdateFragment, R.id.update_imagePreview)
+        var currentPhotoPath: String = ""
 
         // adapt results of database to ui, 每一条item
         val myAdapter = ArrayAdapter(
@@ -110,7 +113,13 @@ class UpdateFragment : Fragment() {
                 }
 
             updateCamera.setOnClickListener {
-                cameraUtils.takePhoto()
+                currentPhotoPath = cameraUtils.takePhoto()
+            }
+
+            updateImagePreview.setOnClickListener {
+                val imageBitmap = BitmapFactory.decodeFile(currentPhotoPath)
+                val dialogFragment = PreviewDialog(imageBitmap)
+                dialogFragment.show(parentFragmentManager, "ImageDialogFragment")
             }
 
             // Limits check
