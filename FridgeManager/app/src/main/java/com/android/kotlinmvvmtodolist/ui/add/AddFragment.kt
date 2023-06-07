@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -62,6 +63,7 @@ class AddFragment : Fragment() {
         // Camera
         val cameraUtils =
             CameraFunc(this@AddFragment, R.id.imagePreview)
+        var currentPhotoPath: String = ""
 
         val myAdapter = ArrayAdapter(
             requireContext(),
@@ -109,7 +111,13 @@ class AddFragment : Fragment() {
                 }
 
             btnCamera.setOnClickListener {
-                cameraUtils.takePhoto()
+                currentPhotoPath = cameraUtils.takePhoto()
+            }
+
+            imagePreview.setOnClickListener {
+                val imageBitmap = BitmapFactory.decodeFile(currentPhotoPath)
+                val dialogFragment = PreviewDialog(imageBitmap)
+                dialogFragment.show(parentFragmentManager, "ImageDialogFragment")
             }
 
             // Limits check

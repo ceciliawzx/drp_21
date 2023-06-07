@@ -68,7 +68,7 @@ class CameraFunc(
     }
 
     // Take photo when click camera button
-    fun takePhoto() {
+    fun takePhoto(): String {
         // Grant permission
         if (ContextCompat.checkSelfPermission(
                 context,
@@ -84,6 +84,7 @@ class CameraFunc(
             // Dispatch
             dispatchTakePictureIntent()
         }
+        return currentPhotoPath
     }
 
     private fun dispatchTakePictureIntent() {
