@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
+import com.android.kotlinmvvmtodolist.util.ShowImage.HORIZONTAL_PREVIEW_SCALE
+import com.android.kotlinmvvmtodolist.util.ShowImage.VERTICLE_PREVIEW_SCALE
 import com.android.kotlinmvvmtodolist.util.ShowImage.showImage
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -139,7 +141,7 @@ fun setDate(view: TextView, date: String?) {
 @BindingAdapter("setImageView")
 fun setImageView(view: ImageView, imagePath: String) {
     if (imagePath != "") {
-        showImage(view, imagePath, 0.1, 0.1)
+        showImage(view, imagePath, HORIZONTAL_PREVIEW_SCALE, VERTICLE_PREVIEW_SCALE)
     }
 }
 
