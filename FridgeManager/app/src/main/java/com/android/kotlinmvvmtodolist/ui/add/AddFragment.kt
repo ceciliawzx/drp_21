@@ -119,7 +119,7 @@ class AddFragment : Fragment() {
                     dateChosen = true
                 }
 
-            imageButton.setOnClickListener {
+            btnCamera.setOnClickListener {
                 takePhoto(requireView())
             }
 
@@ -214,25 +214,15 @@ class AddFragment : Fragment() {
     private val REQUEST_IMAGE_CAPTURE = 1
     private lateinit var currentPhotoPath: String
 
-//    private val takePictureLauncher =
-//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-//            if (result.resultCode == RESULT_OK) {
-//                // Photo capture was successful
-//                Toast.makeText(requireContext(), "Photo taken and saved.", Toast.LENGTH_SHORT).show()
-//                val imageBitmap = result.data?.extras?.get("data") as Bitmap
-//                val imageView = ImageView(context)
-//                imageView.setImageBitmap(imageBitmap)
-//            }
-//
-//        }
-
     val takePictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val imageBitmap = BitmapFactory.decodeFile(currentPhotoPath)
             if (imageBitmap != null) {
 
                 val imageView = binding.imagePreview
-                val resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, 150, 150, true)
+                val newWidth = (imageBitmap.width * 0.3).toInt()
+                val newHeight = (imageBitmap.height * 0.3).toInt()
+                val resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, newWidth, newHeight, true)
                 imageView.visibility = View.VISIBLE
                 imageView.setImageBitmap(resizedBitmap)
 

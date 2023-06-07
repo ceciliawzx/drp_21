@@ -81,7 +81,7 @@
             app:layout_constraintVertical_bias="0.326" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/btn_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
