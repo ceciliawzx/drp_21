@@ -356,7 +356,8 @@ class TaskFragment : Fragment() {
                                 productAmount,
                                 0, // TODO
                                 notificationID,
-                                0
+                                0,
+                                ""
                             )
 
                             viewModel.insert(taskEntry)

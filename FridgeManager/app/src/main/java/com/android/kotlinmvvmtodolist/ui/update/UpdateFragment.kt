@@ -5,6 +5,8 @@ import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -14,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.helper.widget.MotionEffect
@@ -24,10 +27,15 @@ import androidx.navigation.fragment.navArgs
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentUpdateBinding
+import com.android.kotlinmvvmtodolist.ui.add.PreviewDialog
 import com.android.kotlinmvvmtodolist.ui.add.getNotificationTime
 import com.android.kotlinmvvmtodolist.ui.add.showAlert
+import com.android.kotlinmvvmtodolist.ui.camera.CameraFunc
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.util.Notification
+import com.android.kotlinmvvmtodolist.util.ShowImage.HORIZONTAL_PREVIEW_SCALE
+import com.android.kotlinmvvmtodolist.util.ShowImage.VERTICLE_PREVIEW_SCALE
+import com.android.kotlinmvvmtodolist.util.ShowImage.showImage
 import com.android.kotlinmvvmtodolist.util.messageExtra
 import com.android.kotlinmvvmtodolist.util.titleExtra
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,6 +60,10 @@ class UpdateFragment : Fragment() {
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
         mDisplayDate = binding.root.findViewById(R.id.update_choose_date)
         var expireDate: String = args.task.expireDate
+
+        // Camera
+        val cameraUtils = CameraFunc(this@UpdateFragment, R.id.update_imagePreview)
+        var currentPhotoPath: String = args.task.imagePath
 
         // adapt results of database to ui, 每一条item
         val myAdapter = ArrayAdapter(
@@ -78,6 +90,13 @@ class UpdateFragment : Fragment() {
             updateChooseDate.setText(args.task.expireDate)
             updateBuying.isChecked = args.task.continuousBuying == 1
 
+            // Show stored image preview
+            showImage(
+                binding.updateImagePreview,
+                currentPhotoPath,
+                HORIZONTAL_PREVIEW_SCALE,
+                VERTICLE_PREVIEW_SCALE
+            )
 
             updateChooseDate.setOnClickListener {
                 val cal = Calendar.getInstance()
@@ -112,25 +131,39 @@ class UpdateFragment : Fragment() {
                 continuousBuying = isChecked
             }
 
+            updateCamera.setOnClickListener {
+                currentPhotoPath = cameraUtils.takePhoto()
+            }
+
+            updateImagePreview.setOnClickListener {
+                val imageBitmap = BitmapFactory.decodeFile(currentPhotoPath)
+                val dialogFragment = PreviewDialog(imageBitmap)
+                dialogFragment.show(parentFragmentManager, "ImageDialogFragment")
+            }
+
             // Limits check
             btnUpdate.setOnClickListener {
-                if(TextUtils.isEmpty((updateFoodName.text))){
-                    Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT).show()
+                if (TextUtils.isEmpty((updateFoodName.text))) {
+                    Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
                 }
 
-                if(TextUtils.isEmpty((updateFoodAmount.text))){
-                    Toast.makeText(requireContext(), "Please enter the amount!", Toast.LENGTH_SHORT).show()
+                if (TextUtils.isEmpty((updateFoodAmount.text))) {
+                    Toast.makeText(requireContext(), "Please enter the amount!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
                 }
 
                 val foodAmountText = updateFoodAmount.text.toString()
                 val amountNum = foodAmountText.toIntOrNull()
-                if(amountNum == null){
-                    Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT).show()
+                if (amountNum == null) {
+                    Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
-                } else if(amountNum <= 0 || amountNum > 10000) {
-                    Toast.makeText(requireContext(), "Number out of bound!", Toast.LENGTH_SHORT).show()
+                } else if (amountNum <= 0 || amountNum > 10000) {
+                    Toast.makeText(requireContext(), "Number out of bound!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
                 }
 
@@ -150,7 +183,8 @@ class UpdateFragment : Fragment() {
                     amount,
                     unit,
                     args.task.notificationID,
-                    continuous
+                    continuous,
+                    currentPhotoPath
                 )
 
                 viewModel.update(taskEntry)
@@ -158,6 +192,8 @@ class UpdateFragment : Fragment() {
                 // If the expiration date changed, update the notification
                 if (args.task.expireDate != expireDate) {
                     val notificationTime = getNotificationTime(expireDate)
+                    val title = "$titleTitle expire soon"
+                    val message = "Your $titleTitle will expire tomorrow!!!"
                     rescheduleNotification(titleTitle, expireDate, notificationTime)
                 }
 
@@ -194,6 +230,5 @@ class UpdateFragment : Fragment() {
         )
         showAlert(notificationTime, title, message, requireContext())
     }
-
 
 }

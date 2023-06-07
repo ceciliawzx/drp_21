@@ -6,13 +6,13 @@ import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.text.format.DateFormat
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.helper.widget.MotionEffect.TAG
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.android.kotlinmvvmtodolist.R
@@ -29,13 +30,13 @@ import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.util.Notification
 import com.android.kotlinmvvmtodolist.util.messageExtra
 import com.android.kotlinmvvmtodolist.util.titleExtra
+import com.android.kotlinmvvmtodolist.ui.camera.CameraFunc
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-
 
 
 @AndroidEntryPoint
@@ -58,6 +59,11 @@ class AddFragment : Fragment() {
         mDisplayDate = binding.root.findViewById(R.id.choose_date)
         var expireDate: String = ""
         var dateChosen: Boolean = false
+
+        // Camera
+        val cameraUtils =
+            CameraFunc(this@AddFragment, R.id.imagePreview)
+        var currentPhotoPath: String = ""
 
         val myAdapter = ArrayAdapter(
             requireContext(),
@@ -111,31 +117,45 @@ class AddFragment : Fragment() {
                     dateChosen = true
                 }
 
+            btnCamera.setOnClickListener {
+                currentPhotoPath = cameraUtils.takePhoto()
+            }
+
+            imagePreview.setOnClickListener {
+                val imageBitmap = BitmapFactory.decodeFile(currentPhotoPath)
+                val dialogFragment = PreviewDialog(imageBitmap)
+                dialogFragment.show(parentFragmentManager, "ImageDialogFragment")
+            }
 
             // Limits check
             btnAdd.setOnClickListener {
-                if(TextUtils.isEmpty((foodName.text))){
-                    Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT).show()
+                if (TextUtils.isEmpty((foodName.text))) {
+                    Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
                 }
 
-                if(TextUtils.isEmpty((foodAmount.text))){
-                    Toast.makeText(requireContext(), "Please enter the amount!", Toast.LENGTH_SHORT).show()
+                if (TextUtils.isEmpty((foodAmount.text))) {
+                    Toast.makeText(requireContext(), "Please enter the amount!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
                 }
 
                 val foodAmountText = foodAmount.text.toString()
                 val amountNum = foodAmountText.toIntOrNull()
-                if(amountNum == null){
-                    Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT).show()
+                if (amountNum == null) {
+                    Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
-                } else if(amountNum <= 0 || amountNum > 10000) {
-                    Toast.makeText(requireContext(), "Number out of bound!", Toast.LENGTH_SHORT).show()
+                } else if (amountNum <= 0 || amountNum > 10000) {
+                    Toast.makeText(requireContext(), "Number out of bound!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
                 }
 
-                if(!dateChosen) {
-                    Toast.makeText(requireContext(), "Please Enter Date!", Toast.LENGTH_SHORT).show()
+                if (!dateChosen) {
+                    Toast.makeText(requireContext(), "Please Enter Date!", Toast.LENGTH_SHORT)
+                        .show()
                     return@setOnClickListener
                 }
 
@@ -159,7 +179,8 @@ class AddFragment : Fragment() {
                     amount,
                     unit,
                     notificationID,
-                    continuous
+                    continuous,
+                    currentPhotoPath
                 )
 
                 viewModel.insert(taskEntry)
@@ -178,12 +199,12 @@ class AddFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
-
 
 // Schedule a notification based on notificationID
 fun scheduleNotification(context: Context, title: String, message: String, notificationTime: Long, notificationID: Int) {
@@ -208,16 +229,15 @@ fun scheduleNotification(context: Context, title: String, message: String, notif
     showAlert(notificationTime, title, message, context)
 }
 
-
 // Calculate when to notify the expiring item. For now notify one day before
 fun getNotificationTime(expirationDate: String): Long {
     val times = expirationDate.split('-')
     val year = times[0].toInt()
     val month = times[1].toInt() - 1
-    val day = times[2].toInt() - 1
+    val day = times[2].toInt() - 1 // default: notify the day before expiration
 
     /* TODO: This is for the sake of the test. When you run the test,
-        set the hour and minute to be the time you expect the notification to happen */
+    set the hour and minute to be the time you expect the notification to happen */
     val hour = 9  // 0 ~ 23
     val minute = 0
     val second = 0
@@ -252,3 +272,4 @@ fun calculateDaysLeft(expirationDate: String): Int {
     val diff = (expiryDate?.time ?: currentDate.time) - currentDate.time
     return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
 }
+
