@@ -1,9 +1,6 @@
 @file:Suppress("DEPRECATION")
 
 package com.android.kotlinmvvmtodolist.ui.task
-
-import java.security.SecureRandom
-import java.security.cert.X509Certificate
 import javax.net.ssl.*
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -27,10 +24,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentTaskBinding
-import com.android.kotlinmvvmtodolist.ui.add.calculateDaysLeft
-import com.android.kotlinmvvmtodolist.ui.add.getNotificationTime
-import com.android.kotlinmvvmtodolist.ui.add.scheduleNotification
-import com.android.kotlinmvvmtodolist.ui.add.showAlert
+import com.android.kotlinmvvmtodolist.util.NotificationAlert.calculateDaysLeft
+import com.android.kotlinmvvmtodolist.util.NotificationAlert.getNotificationTime
+import com.android.kotlinmvvmtodolist.util.NotificationAlert.scheduleNotification
+import com.android.kotlinmvvmtodolist.util.NotificationAlert.showAlert
 import com.android.kotlinmvvmtodolist.util.TrustAllCerts
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint

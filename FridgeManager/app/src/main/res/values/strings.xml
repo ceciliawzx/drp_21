@@ -16,7 +16,7 @@
     <string name="storage">Storage</string>
     <string name="shopping_cart">Shopping Cart</string>
     <string name="continuous_buying"><u>Want to buy continuously?</u>  </string>
-    <string name="bought">Bought</string>
+    <string name="bought">Bought </string>
     <string name="add_item">Add item</string>
     <string-array name="priorities">
         <item>Meat</item>

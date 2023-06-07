@@ -5,7 +5,6 @@ import android.app.DatePickerDialog
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -16,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.helper.widget.MotionEffect
@@ -28,8 +26,6 @@ import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentUpdateBinding
 import com.android.kotlinmvvmtodolist.ui.add.PreviewDialog
-import com.android.kotlinmvvmtodolist.ui.add.getNotificationTime
-import com.android.kotlinmvvmtodolist.ui.add.showAlert
 import com.android.kotlinmvvmtodolist.ui.camera.CameraFunc
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.util.Notification
@@ -40,6 +36,9 @@ import com.android.kotlinmvvmtodolist.util.messageExtra
 import com.android.kotlinmvvmtodolist.util.titleExtra
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
+import com.android.kotlinmvvmtodolist.util.NotificationAlert.getNotificationTime
+import com.android.kotlinmvvmtodolist.util.NotificationAlert.showAlert
+
 
 @AndroidEntryPoint
 class UpdateFragment : Fragment() {
@@ -222,7 +221,8 @@ class UpdateFragment : Fragment() {
         )
 
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.cancel(pendingIntent) // Cancel the previous notification
+        // Cancel the previous notification
+        alarmManager.cancel(pendingIntent)
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             notificationTime,
