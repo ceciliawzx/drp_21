@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Fridge Manager</string>
+    <string name="app_name">Date the Date</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search">Search</string>
     <string name="sort_by_type">Sort by Type</string>
