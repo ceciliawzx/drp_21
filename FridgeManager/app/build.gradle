@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace 'com.android.kotlinmvvmtodolist'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.android.kotlinmvvmtodolist"
@@ -53,12 +53,12 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // Navigation Component
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.6.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.6.0'
 
     // Room
-    kapt 'androidx.room:room-compiler:2.4.3'
-    implementation 'androidx.room:room-ktx:2.4.3'
+    kapt 'androidx.room:room-compiler:2.5.1'
+    implementation 'androidx.room:room-ktx:2.5.1'
 
     // Coroutine
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
@@ -83,6 +83,6 @@ dependencies {
 
     // Food barcode database
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
-
-
 }
+
+

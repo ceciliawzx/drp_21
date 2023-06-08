@@ -44,7 +44,16 @@
             app:exitAnim="@anim/to_right"
             app:popUpTo="@id/taskFragment"
             app:popUpToInclusive="true" />
-    </fragment>
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="item" />
+
+        <argument
+            android:name="type"
+            app:argType="integer"
+            android:defaultValue="-1" />
+</fragment>
     <fragment
         android:id="@+id/updateFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.update.UpdateFragment"

@@ -52,9 +52,15 @@ class ShopListFragment: Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        mAdapter = ShopItemAdapter(ShopItemClickListener {
-//            findNavController().navigate(ShopListFragmentDirections.actionShopListFragmentToAddFragment())
-        })
+        mAdapter = ShopItemAdapter(
+            ShopItemClickListener { shopItemEntry ->
+                val action = ShopListFragmentDirections.actionShopListFragmentToAddFragment(
+                    shopItemEntry.title,
+                    shopItemEntry.type
+                )
+                findNavController().navigate(action)
+            }
+        )
 
         lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -138,79 +144,6 @@ class ShopListFragment: Fragment() {
             )
         }
     }
-
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-//        inflater.inflate(R.menu.task_menu, menu)
-//
-//        val searchItem = menu.findItem(R.id.action_search)
-//        val searchView = searchItem.actionView as SearchView
-//        val barcodeItem = menu.findItem(R.id.action_barcode)
-//
-//        searchView.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                return true
-//            }
-
-//            override fun onQueryTextChange(newText: String?): Boolean {
-//                if(newText != null){
-//                    runQuery(newText)
-//                }
-//                return true
-//            }
-//        })
-//
-//        barcodeItem.setOnMenuItemClickListener {
-//            startBarcodeScanner(savedInstanceState)
-//            true
-//        }
-    }
-
-    private fun startBarcodeScanner(savedInstanceState: Bundle?) {
-
-        val integrator = IntentIntegrator.forSupportFragment(this)
-        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
-        integrator.setPrompt("Scan a barcode")
-        integrator.setOrientationLocked(false)
-        integrator.initiateScan()
-    }
-//
-//    fun runQuery(query: String){
-//        val searchQuery = "%$query%"
-//        viewModel.searchDatabase(searchQuery).observe(viewLifecycleOwner) { tasks ->
-//            mAdapter.submitList(tasks)
-//        }
-//    }
-
-//    @Deprecated("Deprecated in Java")
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when(item.itemId){
-//            R.id.action_priority -> {
-//                lifecycleScope.launch{
-//                    repeatOnLifecycle(Lifecycle.State.STARTED){
-//                        viewModel.getAllPriorityTasks.collectLatest { tasks ->
-//                            mAdapter.submitList(tasks)
-//                        }
-//                    }
-//                }
-//            }
-//            R.id.action_delete_all -> deleteAllItem()
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
-
-//    private fun deleteAllItem() {
-//        AlertDialog.Builder(requireContext())
-//            .setTitle("Delete All")
-//            .setMessage("Are you sure?")
-//            .setPositiveButton("Yes"){dialog, _ ->
-//                viewModel.deleteAll()
-//                dialog.dismiss()
-//            }.setNegativeButton("No"){dialog, _ ->
-//                dialog.dismiss()
-//            }.create().show()
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -44,6 +44,10 @@ class AddFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        val args = AddFragmentArgs.fromBundle(requireArguments())
+        val autofillTitle = args.title
+        val autofillType = args.type
+
         // fragment_add.xml binding
         _binding = FragmentAddBinding.inflate(inflater, container, false)
         mDisplayDate = binding.root.findViewById(R.id.choose_date)
@@ -71,6 +75,11 @@ class AddFragment : Fragment() {
         binding.apply {
             spinner.adapter = myAdapter
             unitSpinner.adapter = unitAdapter
+
+            if (autofillType != -1) {
+                foodName.setText(autofillTitle)
+                spinner.setSelection(autofillType)
+            }
 
             chooseDate.setOnClickListener {
                 val cal = Calendar.getInstance()
@@ -119,8 +128,8 @@ class AddFragment : Fragment() {
 
             // Limits check
             btnAdd.setOnClickListener {
-                if (TextUtils.isEmpty((foodName.text))) {
-                    Toast.makeText(requireContext(), "Please enter food name!", Toast.LENGTH_SHORT)
+                if (TextUtils.isEmpty((foodName.text)) && currentPhotoPath == "") {
+                    Toast.makeText(requireContext(), "Please enter food name or take a photo!", Toast.LENGTH_SHORT)
                         .show()
                     return@setOnClickListener
                 }
@@ -149,10 +158,10 @@ class AddFragment : Fragment() {
                     return@setOnClickListener
                 }
 
-                val titleTitle = foodName.text.toString()
+                val titleTitle: String = foodName.text.toString()
                 val type = spinner.selectedItemPosition
                 val unit = unitSpinner.selectedItemPosition
-                val amount = foodAmount.text.toString().toInt()
+                val amount: Int = foodAmount.text.toString().toInt()
 
 
                 // Ensure every notificationID is unique
@@ -183,7 +192,11 @@ class AddFragment : Fragment() {
                 val message = "Your $titleTitle will expire tomorrow!!!"
                 scheduleNotification(requireContext(), title, message, notificationTime, notificationID)
                 Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_addFragment_to_taskFragment)
+                if (autofillType == -1) {
+                    findNavController().navigate(R.id.action_addFragment_to_taskFragment)
+                } else {
+                    findNavController().navigate(R.id.shopListFragment)
+                }
             }
         }
         return binding.root

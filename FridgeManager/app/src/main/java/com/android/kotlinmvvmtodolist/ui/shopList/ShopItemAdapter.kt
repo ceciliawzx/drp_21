@@ -3,6 +3,7 @@ package com.android.kotlinmvvmtodolist.ui.shopList
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.CheckBox
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ class ShopItemAdapter(private val clickListener: ShopItemClickListener):
 
     class ViewHolder(private val binding: ShoplistRowLayoutBinding):
         RecyclerView.ViewHolder(binding.root) {
+        val checkBox: CheckBox = binding.checkBox
         fun bind(shopItemEntry: ShopItemEntry, clickListener: ShopItemClickListener){
             binding.shopItemEntry = shopItemEntry
             binding.shopClickListener = clickListener
@@ -31,6 +33,16 @@ class ShopItemAdapter(private val clickListener: ShopItemClickListener):
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val shopItemEntry = getItem(position)
+
+        holder.bind(shopItemEntry, clickListener)
+
+        holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                clickListener.onCheck(shopItemEntry)
+            }
+        }
+
         val current = getItem(position)
         if(current != null){
             holder.bind(current, clickListener)
@@ -38,6 +50,6 @@ class ShopItemAdapter(private val clickListener: ShopItemClickListener):
     }
 }
 
-class ShopItemClickListener(val clickListener: (shopItemEntry: ShopItemEntry) -> Unit){
-    fun onClick(shopItemEntry: ShopItemEntry) = clickListener(shopItemEntry)
+class ShopItemClickListener(val clickListener: (shopItemEntry: ShopItemEntry) -> Unit) {
+    fun onCheck(shopItemEntry: ShopItemEntry) = clickListener(shopItemEntry)
 }

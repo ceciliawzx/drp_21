@@ -1,19 +1,16 @@
 package com.android.kotlinmvvmtodolist.ui
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.android.kotlinmvvmtodolist.R
-import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val taskViewModel: TaskViewModel by viewModels()
     private lateinit var navController: NavController
     private lateinit var bottomNavigationView: BottomNavigationView
 

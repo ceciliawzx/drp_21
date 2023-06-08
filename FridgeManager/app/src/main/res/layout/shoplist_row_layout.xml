@@ -18,8 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="4dp"
-        android:onClick="@{() -> shopClickListener.onClick(shopItemEntry)}">
+        app:cardElevation="4dp">
+<!--        android:onClick="@{() -> shopClickListener.onCheck(shopItemEntry)}">-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/row_background"

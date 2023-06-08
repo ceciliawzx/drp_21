@@ -82,6 +82,7 @@ class UpdateFragment : Fragment() {
             updateSpinner.adapter = myAdapter
             updateUnitSpinner.adapter = unitAdapter
 
+            // Reserve the original information
             updateFoodName.setText(args.task.title)
             updateFoodAmount.setText(args.task.amount.toString())
             updateUnitSpinner.setSelection(args.task.unit)
