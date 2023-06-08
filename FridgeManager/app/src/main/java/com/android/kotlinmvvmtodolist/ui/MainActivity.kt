@@ -28,10 +28,12 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_storage -> {
+                    supportActionBar?.title = "Storage"
                     navController.navigate(R.id.taskFragment)
                     true
                 }
                 R.id.action_shopping_cart -> {
+                    supportActionBar?.title = "Shopping List"
                     navController.navigate(R.id.shopListFragment)
                     true
                 }
