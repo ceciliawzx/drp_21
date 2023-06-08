@@ -14,7 +14,7 @@
     <string name="update_string">Update</string>
     <string name="scan_barcode">Scan</string>
     <string name="storage">Storage</string>
-    <string name="shopping_cart">Shopping Cart</string>
+    <string name="shopping_list">Shopping Cart</string>
     <string name="continuous_buying"><u>Want to buy continuously?</u>  </string>
     <string name="bought">Bought </string>
     <string name="add_item">Add item</string>

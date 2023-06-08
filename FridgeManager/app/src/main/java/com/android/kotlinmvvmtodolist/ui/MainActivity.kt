@@ -5,7 +5,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,6 +20,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        supportActionBar?.title = getString(R.string.storage)
+
 
         navController = findNavController(R.id.nav_host_fragment)
         bottomNavigationView = findViewById(R.id.bottom_bar)
@@ -28,12 +29,12 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_storage -> {
-                    supportActionBar?.title = "Storage"
+                    supportActionBar?.title = getString(R.string.storage)
                     navController.navigate(R.id.taskFragment)
                     true
                 }
                 R.id.action_shopping_cart -> {
-                    supportActionBar?.title = "Shopping List"
+                    supportActionBar?.title = getString(R.string.shopping_list)
                     navController.navigate(R.id.shopListFragment)
                     true
                 }

@@ -217,19 +217,4 @@ class ShopListFragment: Fragment() {
         _binding = null
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
-        if (result != null && result.contents != null) {
-            val scannedBarcode = result.contents
-            // Process the scanned barcode
-            processScannedBarcode(scannedBarcode)
-        }
-    }
-
-    private fun processScannedBarcode(scannedBarcode: String) {
-        // TODO: need a database, probably cannot implement before ddl :(
-    }
 }
