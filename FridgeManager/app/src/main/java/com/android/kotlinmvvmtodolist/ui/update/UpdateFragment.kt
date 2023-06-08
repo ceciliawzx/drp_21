@@ -193,7 +193,7 @@ class UpdateFragment : Fragment() {
                     val notificationTime = getNotificationTime(expireDate)
                     val title = "$titleTitle expire soon"
                     val message = "Your $titleTitle will expire tomorrow!!!"
-                    rescheduleNotification(titleTitle, expireDate, notificationTime)
+                    rescheduleNotification(title, message, notificationTime)
                 }
 
                 Toast.makeText(requireContext(), "Updated!", Toast.LENGTH_SHORT).show()
