@@ -172,14 +172,15 @@ object Barcode {
                                 0, // TODO
                                 notificationID,
                                 0,
-                                ""
+                                "",
+                                "1"
                             )
 
                             viewModel.insert(taskEntry)
                             Log.d("Requesting", "added success")
 
                             val notificationTime =
-                                NotificationAlert.getNotificationTime(expirationDate)
+                                NotificationAlert.getNotificationTime(expirationDate, "")
                             val daysLeft = NotificationAlert.calculateDaysLeft(expirationDate)
                             val title = "$productName expire soon"
                             // TODO: notify ? days before expiration

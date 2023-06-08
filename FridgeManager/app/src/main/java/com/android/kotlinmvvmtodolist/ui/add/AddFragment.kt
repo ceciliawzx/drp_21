@@ -158,10 +158,12 @@ class AddFragment : Fragment() {
                     return@setOnClickListener
                 }
 
-                val titleTitle: String = foodName.text.toString()
+                val days = if (!TextUtils.isEmpty(notifyDays.text)) notifyDays.text.toString() else "1"
+                val titleTitle = foodName.text.toString()
                 val type = spinner.selectedItemPosition
                 val unit = unitSpinner.selectedItemPosition
                 val amount: Int = foodAmount.text.toString().toInt()
+
 
 
                 // Ensure every notificationID is unique
@@ -179,17 +181,19 @@ class AddFragment : Fragment() {
                     unit,
                     notificationID,
                     continuous,
-                    currentPhotoPath
+                    currentPhotoPath,
+                    days
                 )
 
                 viewModel.insert(taskEntry)
 
-                val notificationTime = getNotificationTime(expireDate)
+                val notificationTime = getNotificationTime(expireDate, days)
                 val daysLeft = calculateDaysLeft(expireDate)
                 val title = "$titleTitle expire soon"
                 // TODO: notify ? days before expiration
                 val message1 = "Your $titleTitle will expire in $daysLeft days!"
-                val message = "Your $titleTitle will expire tomorrow!!!"
+                // val message = "Your $titleTitle will expire tomorrow!!!"
+                val message = "Your $titleTitle will expire $days days later!!!"
                 scheduleNotification(requireContext(), title, message, notificationTime, notificationID)
                 Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
                 if (autofillType == -1) {
