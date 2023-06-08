@@ -54,11 +54,14 @@ class ShopListFragment: Fragment() {
 
         mAdapter = ShopItemAdapter(
             ShopItemClickListener { shopItemEntry ->
+
+
                 val action = ShopListFragmentDirections.actionShopListFragmentToAddFragment(
                     shopItemEntry.title,
                     shopItemEntry.type
                 )
                 findNavController().navigate(action)
+
             }
         )
 
@@ -78,7 +81,7 @@ class ShopListFragment: Fragment() {
 
         }
 
-        ItemTouchHelper(object  : ItemTouchHelper.SimpleCallback(0,
+        ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -124,10 +127,6 @@ class ShopListFragment: Fragment() {
             }
 
         }).attachToRecyclerView(binding.recyclerShoplistView)
-
-
-
-        setHasOptionsMenu(true)
 
         hideKeyboard(requireActivity())
 

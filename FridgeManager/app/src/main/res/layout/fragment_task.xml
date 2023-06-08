@@ -36,7 +36,7 @@
             android:layout_marginBottom="24dp"
             android:clickable="true"
             android:src="@drawable/ic_add"
-            android:text="@string/add_food"
+            android:text="@string/add_item"
             app:tint="@android:color/white"
             app:icon="@drawable/ic_add"
             app:layout_constraintBottom_toBottomOf="parent"

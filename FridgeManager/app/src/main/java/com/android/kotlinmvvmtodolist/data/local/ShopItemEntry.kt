@@ -14,5 +14,7 @@ data class ShopItemEntry(
     var id: Int,
     var title: String,
     var type: Int,
-    var timestamp: Long
+    var timestamp: Long,
+    var continuous: Int,
+    var bought: Int
     ):Parcelable
