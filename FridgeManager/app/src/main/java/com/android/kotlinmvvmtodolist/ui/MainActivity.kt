@@ -1,10 +1,14 @@
 package com.android.kotlinmvvmtodolist.ui
 
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.android.kotlinmvvmtodolist.R
+import com.android.kotlinmvvmtodolist.ui.shopList.ShopListFragment
+import com.android.kotlinmvvmtodolist.ui.task.TaskFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,6 +17,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private lateinit var bottomNavigationView: BottomNavigationView
+    private var activeFragment: Fragment? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +44,11 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        activeFragment?.onCreateOptionsMenu(menu, menuInflater) ?: super.onCreateOptionsMenu(menu)
+        return true
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -121,8 +121,6 @@ class TaskFragment : Fragment() {
 
         }).attachToRecyclerView(binding.recyclerView)
 
-
-
         setHasOptionsMenu(true)
 
         hideKeyboard(requireActivity())
@@ -219,7 +217,6 @@ class TaskFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
 
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result != null && result.contents != null) {

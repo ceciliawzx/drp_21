@@ -24,7 +24,13 @@ interface ShopItemDao {
     @Query("SELECT * FROM shopping_list_table ORDER BY timestamp DESC")
     fun getAllItems(): Flow<List<ShopItemEntry>>
 
-    @Query("DELETE FROM task_table")
+    @Query("SELECT * FROM shopping_list_table WHERE title LIKE :searchQuery ORDER BY timestamp DESC")
+    fun searchDatabase(searchQuery: String): LiveData<List<ShopItemEntry>>
+
+    @Query("DELETE FROM shopping_list_table")
     suspend fun deleteAll()
+
+    @Query("DELETE FROM shopping_list_table WHERE bought = 1")
+    suspend fun deleteAllBought()
 
 }

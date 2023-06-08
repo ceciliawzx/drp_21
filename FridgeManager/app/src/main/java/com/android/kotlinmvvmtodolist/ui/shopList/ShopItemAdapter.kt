@@ -3,8 +3,6 @@ package com.android.kotlinmvvmtodolist.ui.shopList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CheckBox
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView

@@ -1,9 +1,11 @@
 package com.android.kotlinmvvmtodolist.ui.shopList
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.kotlinmvvmtodolist.data.ShopItemRepository
 import com.android.kotlinmvvmtodolist.data.local.ShopItemEntry
+import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,8 +30,16 @@ class ShopListViewModel @Inject constructor(
         repository.updateData(shopItemEntry)
     }
 
+    fun searchDatabase(searchQuery: String): LiveData<List<ShopItemEntry>> {
+        return repository.searchDatabase(searchQuery)
+    }
+
     fun deleteAll() = viewModelScope.launch{
         repository.deleteAll()
+    }
+
+    fun deleteAllBought() = viewModelScope.launch {
+        repository.deleteAllBought()
     }
 
 }

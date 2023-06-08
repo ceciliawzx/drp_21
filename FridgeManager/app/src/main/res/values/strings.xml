@@ -18,6 +18,7 @@
     <string name="continuous_buying"><u>Want to buy continuously?</u>  </string>
     <string name="bought">Bought </string>
     <string name="add_item">Add item</string>
+    <string name="delete_all_bought">Delete bought</string>
     <string-array name="priorities">
         <item>Meat</item>
         <item>Vegetable</item>
