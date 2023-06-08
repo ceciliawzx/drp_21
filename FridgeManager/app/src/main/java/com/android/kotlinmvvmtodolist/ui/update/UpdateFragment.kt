@@ -197,7 +197,8 @@ class UpdateFragment : Fragment() {
                 if (args.task.expireDate != expireDate || args.task.notifyDaysBefore != days) {
                     val notificationTime = getNotificationTime(expireDate, days)
                     val title = "$titleTitle expire soon"
-                    val message = "Your $titleTitle will expire tomorrow!!!"
+                    // val message = "Your $titleTitle will expire tomorrow!!!"
+                    val message = "Your $titleTitle will expire $days days later!!!"
                     rescheduleNotification(title, message, notificationTime)
                 }
 
