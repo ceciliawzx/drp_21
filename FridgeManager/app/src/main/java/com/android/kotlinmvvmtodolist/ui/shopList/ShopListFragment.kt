@@ -54,14 +54,13 @@ class ShopListFragment: Fragment() {
 
         mAdapter = ShopItemAdapter(
             ShopItemClickListener { shopItemEntry ->
-
                 val action = ShopListFragmentDirections.actionShopListFragmentToAddFragment(
                     shopItemEntry.title,
                     shopItemEntry.type
                 )
                 findNavController().navigate(action)
-
-            }
+            },
+            viewModel
         )
 
         lifecycleScope.launch{
@@ -98,7 +97,7 @@ class ShopListFragment: Fragment() {
                 // Define different actions depends on swipe direction
                 when (direction) {
                     ItemTouchHelper.LEFT -> swipeLeftHelper(shopItemEntry)
-                    ItemTouchHelper.RIGHT -> swipeRightHelper(shopItemEntry)
+                    ItemTouchHelper.RIGHT -> swipeLeftHelper(shopItemEntry) // TODO
                 }
 
             }
@@ -114,10 +113,6 @@ class ShopListFragment: Fragment() {
 
             private fun swipeRightHelper(shopItemEntry: ShopItemEntry) {
                 Snackbar.make(binding.root, "Food Used!", Snackbar.LENGTH_LONG).apply {
-                    // TODO: define another action for right swipe?
-//                    setActionTextColor(ContextCompat.getColor(context, R.color.white))
-//                    view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-//                        .setTextColor(ContextCompat.getColor(context, R.color.white))
                     setAction("Undo"){
                         viewModel.insert(shopItemEntry)
                     }
@@ -128,7 +123,6 @@ class ShopListFragment: Fragment() {
         }).attachToRecyclerView(binding.recyclerShoplistView)
 
         hideKeyboard(requireActivity())
-
 
         return binding.root
     }

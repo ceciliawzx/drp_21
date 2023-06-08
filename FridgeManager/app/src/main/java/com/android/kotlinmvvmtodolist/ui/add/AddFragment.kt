@@ -199,7 +199,7 @@ class AddFragment : Fragment() {
                 if (autofillType == -1) {
                     findNavController().navigate(R.id.action_addFragment_to_taskFragment)
                 } else {
-                    findNavController().navigate(R.id.shopListFragment)
+                    findNavController().navigate(R.id.action_addFragment_to_shopListFragment)
                 }
             }
         }

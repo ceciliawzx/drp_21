@@ -1,16 +1,19 @@
 package com.android.kotlinmvvmtodolist.ui.shopList
 
-
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CheckBox
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.data.local.ShopItemEntry
 import com.android.kotlinmvvmtodolist.databinding.ShoplistRowLayoutBinding
 
-class ShopItemAdapter(private val clickListener: ShopItemClickListener):
+class ShopItemAdapter(
+    private val clickListener: ShopItemClickListener,
+    private val viewModel: ShopListViewModel):
     ListAdapter<ShopItemEntry, ShopItemAdapter.ViewHolder>(ShopItemDiffCallback) {
 
     companion object ShopItemDiffCallback : DiffUtil.ItemCallback<ShopItemEntry>(){
@@ -25,6 +28,7 @@ class ShopItemAdapter(private val clickListener: ShopItemClickListener):
             binding.shopItemEntry = shopItemEntry
             binding.shopClickListener = clickListener
             binding.executePendingBindings()
+            checkBox.isChecked = shopItemEntry.bought == 1
         }
     }
 
@@ -40,7 +44,11 @@ class ShopItemAdapter(private val clickListener: ShopItemClickListener):
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 shopItemEntry.bought = 1
+                viewModel.update(shopItemEntry)
                 clickListener.onCheck(shopItemEntry)
+            } else {
+                shopItemEntry.bought = 0
+                viewModel.update(shopItemEntry)
             }
         }
 
@@ -53,5 +61,7 @@ class ShopItemAdapter(private val clickListener: ShopItemClickListener):
 }
 
 class ShopItemClickListener(val clickListener: (shopItemEntry: ShopItemEntry) -> Unit) {
-    fun onCheck(shopItemEntry: ShopItemEntry) = clickListener(shopItemEntry)
+    fun onCheck(shopItemEntry: ShopItemEntry) {
+        clickListener(shopItemEntry)
+    }
 }
