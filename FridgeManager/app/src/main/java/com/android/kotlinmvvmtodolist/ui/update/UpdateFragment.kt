@@ -88,6 +88,7 @@ class UpdateFragment : Fragment() {
             updateSpinner.setSelection(args.task.type)
             updateChooseDate.setText(args.task.expireDate)
             updateBuying.isChecked = args.task.continuousBuying == 1
+            updateNotifyDays.setText(args.task.notifyDaysBefore)
 
             // Show stored image preview
             showImage(
@@ -167,6 +168,7 @@ class UpdateFragment : Fragment() {
                 }
 
 
+                val days = if (!TextUtils.isEmpty(updateNotifyDays.text)) updateNotifyDays.text.toString() else "1"
                 val titleTitle = updateFoodName.text.toString()
                 val type = updateSpinner.selectedItemPosition
                 val unit = updateUnitSpinner.selectedItemPosition
@@ -183,14 +185,17 @@ class UpdateFragment : Fragment() {
                     unit,
                     args.task.notificationID,
                     continuous,
-                    currentPhotoPath
+                    currentPhotoPath,
+                    days
                 )
 
                 viewModel.update(taskEntry)
 
+
+
                 // If the expiration date changed, update the notification
-                if (args.task.expireDate != expireDate) {
-                    val notificationTime = getNotificationTime(expireDate)
+                if (args.task.expireDate != expireDate || args.task.notifyDaysBefore != days) {
+                    val notificationTime = getNotificationTime(expireDate, days)
                     val title = "$titleTitle expire soon"
                     val message = "Your $titleTitle will expire tomorrow!!!"
                     rescheduleNotification(title, message, notificationTime)

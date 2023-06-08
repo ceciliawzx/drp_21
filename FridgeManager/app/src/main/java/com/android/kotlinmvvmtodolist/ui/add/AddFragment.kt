@@ -149,10 +149,12 @@ class AddFragment : Fragment() {
                     return@setOnClickListener
                 }
 
+                val days = if (!TextUtils.isEmpty(notifyDays.text)) notifyDays.text.toString() else "1"
                 val titleTitle = foodName.text.toString()
                 val type = spinner.selectedItemPosition
                 val unit = unitSpinner.selectedItemPosition
                 val amount = foodAmount.text.toString().toInt()
+
 
 
                 // Ensure every notificationID is unique
@@ -170,12 +172,13 @@ class AddFragment : Fragment() {
                     unit,
                     notificationID,
                     continuous,
-                    currentPhotoPath
+                    currentPhotoPath,
+                    days
                 )
 
                 viewModel.insert(taskEntry)
 
-                val notificationTime = getNotificationTime(expireDate)
+                val notificationTime = getNotificationTime(expireDate, days)
                 val daysLeft = calculateDaysLeft(expireDate)
                 val title = "$titleTitle expire soon"
                 // TODO: notify ? days before expiration

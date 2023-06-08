@@ -11,6 +11,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
+import java.time.LocalDate
 
 object NotificationAlert {
 
@@ -39,11 +40,40 @@ object NotificationAlert {
     }
 
     // Calculate when to notify the expiring item. For now notify one day before
-    fun getNotificationTime(expirationDate: String): Long {
+    fun getNotificationTime(expirationDate: String, daysBefore: String): Long {
+        var offset: Long
+        try {
+            offset = daysBefore.toLong()
+        } catch (e: Exception) {
+            offset = 1
+        }
+
         val times = expirationDate.split('-')
-        val year = times[0].toInt()
-        val month = times[1].toInt() - 1
-        val day = times[2].toInt() - 1 // default: notify the day before expiration
+        val tempMonth = times[1].toInt()
+        var construction = ""
+        if (tempMonth < 10) {
+            construction += times[0] + "-0" + times[1]
+        } else {
+            construction += times[0] + "-" + times[1]
+        }
+        val tempDays = times[2].toInt()
+        if (tempDays < 10) {
+            construction += "-0" + times[2]
+        } else {
+            construction += "-" + times[2]
+        }
+
+        val expiryDate = LocalDate.parse(construction)
+        val notifyDate = expiryDate.minusDays(offset)
+
+        val year = notifyDate.year
+        val month = notifyDate.monthValue - 1
+        val day = notifyDate.dayOfMonth  // default: notify the day before expiration
+
+//        val times = expirationDate.split('-')
+//        val year = times[0].toInt()
+//        val month = times[1].toInt() - 1
+//        val day = times[2].toInt() - 1  // default: notify the day before expiration
 
         /* TODO: This is for the sake of the test. When you run the test,
         set the hour and minute to be the time you expect the notification to happen */

@@ -19,5 +19,6 @@ data class TaskEntry(
     var unit: Int,
     var notificationID: Int,
     var continuousBuying: Int,
-    var imagePath: String
+    var imagePath: String,
+    var notifyDaysBefore: String
 ):Parcelable
