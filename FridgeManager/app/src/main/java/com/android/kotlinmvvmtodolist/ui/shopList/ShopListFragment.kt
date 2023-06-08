@@ -55,7 +55,6 @@ class ShopListFragment: Fragment() {
         mAdapter = ShopItemAdapter(
             ShopItemClickListener { shopItemEntry ->
 
-
                 val action = ShopListFragmentDirections.actionShopListFragmentToAddFragment(
                     shopItemEntry.title,
                     shopItemEntry.type

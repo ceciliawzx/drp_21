@@ -39,12 +39,20 @@ fun setType(view: TextView, type: Int){
             view.setTextColor(Color.GREEN)
         }
         2 -> {
-            view.text = "Egg and Milk"
+            view.text = "Fruit"
             view.setTextColor(Color.DKGRAY)
+        }
+        3 -> {
+            view.text = "Medicine"
+            view.setTextColor(Color.BLUE)
+        }
+        4 -> {
+            view.text = "Makeup"
+            view.setTextColor(Color.CYAN)
         }
         else -> {
             view.text = "Other"
-            view.setTextColor(Color.BLUE)
+            view.setTextColor(Color.BLACK)
         }
     }
 }

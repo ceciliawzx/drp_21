@@ -39,6 +39,7 @@ class ShopItemAdapter(private val clickListener: ShopItemClickListener):
 
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
+                shopItemEntry.bought = 1
                 clickListener.onCheck(shopItemEntry)
             }
         }
@@ -47,6 +48,7 @@ class ShopItemAdapter(private val clickListener: ShopItemClickListener):
         if(current != null){
             holder.bind(current, clickListener)
         }
+
     }
 }
 

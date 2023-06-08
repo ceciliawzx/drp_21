@@ -21,6 +21,7 @@
     <string-array name="priorities">
         <item>Meat</item>
         <item>Vegetable</item>
+        <item>Fruit</item>
         <item>Medicine</item>
         <item>Makeup</item>
         <item>Other</item>
