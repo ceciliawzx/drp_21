@@ -109,8 +109,11 @@ class AddFragment : Fragment() {
                 DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
                     var month = month
                     month += 1
-                    Log.d(TAG, "onDateSet: yyyy-mm-dd: $year-$month-$day")
+//                    Log.d(TAG, "onDateSet: yyyy-mm-dd: $year-$month-$day")
                     val date = "$month/$day/$year"
+//                    val monthString = if (month < 10) "0$month" else "$month"
+//                    val dayString = if (day < 10) "0$day" else "$day"
+//                    expireDate = "$year-$monthString-$dayString"
                     expireDate = "$year-$month-$day"
                     mDisplayDate!!.text = date
                     dateChosen = true

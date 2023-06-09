@@ -19,12 +19,14 @@
     <string name="bought">Bought </string>
     <string name="add_item">Add item</string>
     <string name="delete_all_bought">Delete bought</string>
+    <string name="recently_uploaded">Recently Uploaded</string>
     <string-array name="priorities">
         <item>Meat</item>
         <item>Vegetable</item>
         <item>Fruit</item>
         <item>Medicine</item>
         <item>Makeup</item>
+        <item>Skincare</item>
         <item>Other</item>
     </string-array>
     <string-array name="units">

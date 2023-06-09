@@ -48,6 +48,10 @@ fun setType(view: TextView, type: Int){
         }
         4 -> {
             view.text = "Makeup"
+            view.setTextColor(Color.MAGENTA)
+        }
+        5 -> {
+            view.text = "Skincare"
             view.setTextColor(Color.CYAN)
         }
         else -> {
@@ -134,6 +138,7 @@ fun setDate(view: TextView, date: String?) {
 
         val differenceInMillis = date1.time - date2.time
         val differenceInDays = TimeUnit.MILLISECONDS.toDays(differenceInMillis)
+//        val sj = LocalDate.now()
 
         if (differenceInDays in 1..1) {
             view.text = "Expire in $differenceInDays day"

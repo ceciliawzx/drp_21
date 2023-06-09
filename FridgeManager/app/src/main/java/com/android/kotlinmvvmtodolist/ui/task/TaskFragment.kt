@@ -193,6 +193,15 @@ class TaskFragment : Fragment() {
                     }
                 }
             }
+            R.id.action_recently_uploaded -> {
+                lifecycleScope.launch{
+                    repeatOnLifecycle(Lifecycle.State.STARTED){
+                        viewModel.getAllTasks.collectLatest { tasks ->
+                            mAdapter.submitList(tasks)
+                        }
+                    }
+                }
+            }
             R.id.action_delete_all -> deleteAllItem()
         }
         return super.onOptionsItemSelected(item)
