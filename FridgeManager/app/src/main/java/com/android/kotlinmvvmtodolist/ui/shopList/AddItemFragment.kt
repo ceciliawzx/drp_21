@@ -1,6 +1,7 @@
 package com.android.kotlinmvvmtodolist.ui.shopList
 
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -41,7 +42,12 @@ class AddItemFragment : Fragment() {
             // Limits check
             shopListBtnAdd.setOnClickListener {
 
-                val titleTitle = shopListFoodName.text.toString()
+                if (TextUtils.isEmpty((shopListItemName.text))) {
+                    Toast.makeText(requireContext(), "Please enter item name!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val titleTitle = shopListItemName.text.toString()
                 val type = shopListSpinner.selectedItemPosition
 
                 val shopItemEntry = ShopItemEntry(

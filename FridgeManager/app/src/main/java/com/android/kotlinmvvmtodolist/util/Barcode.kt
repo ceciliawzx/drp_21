@@ -86,10 +86,11 @@ object Barcode {
                         }
 
                         // TODO: extract unit
-                        val number = productUnit.split(Regex("\\D+"))
-                        val unit = productUnit.split(Regex("\\d+"))[0]
+//                        val number = productUnit.split(Regex("\\D+"))
+//                        val unit = productUnit.split(Regex("\\d+"))[0]
 
                         // Retrieve expiration date
+                        // expireDate in the entry should be in format: "yyyy-MM-dd"
                         val expirationDateString: String = try {
                             product.getString("expiration_date") ?: ""
                         } catch (e: JSONException) {
@@ -106,27 +107,28 @@ object Barcode {
                             Log.d("Requesting", "dateString = $expirationDateString")
                             try {
                                 var year: String = ""
-                                var month: Int = 0
+                                var month: String = ""
                                 var day: String = ""
 
                                 var times = expirationDateString.split(' ')
                                 // case 2 eg: 21 Jul 2023
                                 if (times.size == 3) {
-                                    day = times[0]
+                                    val dayValue = times[0].toInt()
+                                    day = if (dayValue < 10) "0$dayValue" else "$dayValue"
                                     month = when (times[1]) {
-                                        "Jan" -> 1
-                                        "Feb" -> 2
-                                        "Mar" -> 3
-                                        "Apr" -> 4
-                                        "May" -> 5
-                                        "Jun" -> 6
-                                        "Jul" -> 7
-                                        "Aug" -> 8
-                                        "Sep" -> 9
-                                        "Oct" -> 10
-                                        "Nov" -> 11
-                                        "Dec" -> 12
-                                        else -> 0
+                                        "Jan" -> "01"
+                                        "Feb" -> "02"
+                                        "Mar" -> "03"
+                                        "Apr" -> "04"
+                                        "May" -> "05"
+                                        "Jun" -> "06"
+                                        "Jul" -> "07"
+                                        "Aug" -> "08"
+                                        "Sep" -> "09"
+                                        "Oct" -> "10"
+                                        "Nov" -> "11"
+                                        "Dec" -> "12"
+                                        else -> "0"
                                     }
                                     year = expirationDateString.split(' ')[2]
                                     expirationDate = "$year-$month-$day"
@@ -136,8 +138,10 @@ object Barcode {
                                 if (times.size == 3) {
                                     year = times[0]
                                     if (year.length == 2) year = "20$year"
-                                    month = times[1].toInt()
-                                    day = times[2]
+                                    val monthValue = times[1].toInt()
+                                    month = if (monthValue < 10) "0$monthValue" else "$monthValue"
+                                    val dayValue = times[2].toInt()
+                                    day = if (dayValue < 10) "0$dayValue" else "$dayValue"
                                     expirationDate = "$year-$month-$day"
                                 }
 
