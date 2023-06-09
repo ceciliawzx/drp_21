@@ -15,12 +15,12 @@
         tools:context=".ui.add.AddItemFragment">
 
         <EditText
-            android:id="@+id/shop_list_food_name"
+            android:id="@+id/shop_list_item_name"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:ems="10"
-            android:hint="@string/enter_food_name"
+            android:hint="@string/enter_item_name"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -37,7 +37,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shop_list_food_name" />
+            app:layout_constraintTop_toBottomOf="@+id/shop_list_item_name" />
 
         <Button
             android:id="@+id/shop_list_btn_add"

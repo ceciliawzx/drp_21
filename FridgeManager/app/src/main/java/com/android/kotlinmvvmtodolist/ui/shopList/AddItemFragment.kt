@@ -66,7 +66,12 @@ class AddItemFragment : Fragment() {
             // Limits check
             shopListBtnAdd.setOnClickListener {
 
-                val titleTitle = shopListFoodName.text.toString()
+                if (TextUtils.isEmpty((shopListItemName.text))) {
+                    Toast.makeText(requireContext(), "Please enter item name!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val titleTitle = shopListItemName.text.toString()
                 val type = shopListSpinner.selectedItemPosition
 
                 val shopItemEntry = ShopItemEntry(

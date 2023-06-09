@@ -9,7 +9,7 @@
     <string name="update">Update</string>
     <string name="add_food">Add Food</string>
     <string name="choose_exp_date">Choose expiration date</string>
-    <string name="enter_food_name">Enter Food Name</string>
+    <string name="enter_item_name">Enter Item Name</string>
     <string name="enter_amount">Enter Amount</string>
     <string name="update_string">Update</string>
     <string name="scan_barcode">Scan</string>

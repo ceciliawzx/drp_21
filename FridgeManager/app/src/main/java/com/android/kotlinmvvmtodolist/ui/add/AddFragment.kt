@@ -132,18 +132,22 @@ class AddFragment : Fragment() {
             // Limits check
             btnAdd.setOnClickListener {
                 if (TextUtils.isEmpty((foodName.text)) && currentPhotoPath == "") {
-                    Toast.makeText(requireContext(), "Please enter food name or take a photo!", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), "Please enter item name or take a photo!", Toast.LENGTH_SHORT)
                         .show()
                     return@setOnClickListener
                 }
 
-                if (TextUtils.isEmpty((foodAmount.text))) {
-                    Toast.makeText(requireContext(), "Please enter the amount!", Toast.LENGTH_SHORT)
-                        .show()
-                    return@setOnClickListener
+                // default amount = 1
+                val foodAmountText: String = if (TextUtils.isEmpty((foodAmount.text))) {
+            //                    Toast.makeText(requireContext(), "Please enter the amount!", Toast.LENGTH_SHORT)
+            //                        .show()
+            //                    return@setOnClickListener
+                    "1"
+
+                } else {
+                    foodAmount.text.toString()
                 }
 
-                val foodAmountText = foodAmount.text.toString()
                 val amountNum = foodAmountText.toIntOrNull()
                 if (amountNum == null) {
                     Toast.makeText(requireContext(), "Please enter a number!", Toast.LENGTH_SHORT)
@@ -156,7 +160,7 @@ class AddFragment : Fragment() {
                 }
 
                 if (!dateChosen) {
-                    Toast.makeText(requireContext(), "Please Enter Date!", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), "Please choose an expiration date!", Toast.LENGTH_SHORT)
                         .show()
                     return@setOnClickListener
                 }
