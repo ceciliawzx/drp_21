@@ -197,7 +197,10 @@ class AddFragment : Fragment() {
                 val message1 = "Your $titleTitle will expire in $daysLeft days!"
                 // val message = "Your $titleTitle will expire tomorrow!!!"
                 val message = "Your $titleTitle will expire $days days later!!!"
-                scheduleNotification(requireContext(), title, message, notificationTime, notificationID)
+                activity?.let { it1 ->
+                    scheduleNotification(requireContext(),
+                        it1, title, message, notificationTime, notificationID)
+                }
                 Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
                 if (autofillType == -1) {
                     findNavController().navigate(R.id.action_addFragment_to_taskFragment)

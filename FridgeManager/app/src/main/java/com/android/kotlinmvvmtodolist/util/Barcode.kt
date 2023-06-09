@@ -66,7 +66,7 @@ object Barcode {
                     try {
                         // Retrieve the food name
                         val productName: String = try {
-                            product?.getString("product_name") ?: ""
+                            product.getString("product_name") ?: ""
                         } catch (e: JSONException) {
                             ""
                         }
@@ -74,13 +74,13 @@ object Barcode {
                         // Retrieve the serving quantity
 
                         val productAmount: Int = try {
-                            product?.getString("product_quantity")?.toInt() ?: 1
+                            product.getString("product_quantity").toInt()
                         } catch (e: JSONException) {
                             1
                         }
 
                         val productUnit: String = try {
-                            product?.getString("quantity") ?: ""
+                            product.getString("quantity") ?: ""
                         } catch (e: JSONException) {
                             ""
                         }
@@ -91,7 +91,7 @@ object Barcode {
 
                         // Retrieve expiration date
                         val expirationDateString: String = try {
-                            product?.getString("expiration_date") ?: ""
+                            product.getString("expiration_date") ?: ""
                         } catch (e: JSONException) {
                             ""
                         }
@@ -165,7 +165,7 @@ object Barcode {
                             val taskEntry = TaskEntry(
                                 0,
                                 productName,
-                                3, // TODO
+                                6, // TODO
                                 System.currentTimeMillis(),
                                 expirationDate,
                                 productAmount,
@@ -186,21 +186,17 @@ object Barcode {
                             // TODO: notify ? days before expiration
                             val message1 = "Your $productName will expire in $daysLeft days!"
                             val message = "Your $productName will expire tomorrow!!!"
+                            Log.d("Requesting", "schedule start")
+
                             NotificationAlert.scheduleNotification(
                                 binding.root.context,
+                                activity,
                                 title,
                                 message,
                                 notificationTime,
                                 notificationID
                             )
-                            activity.runOnUiThread {
-                                NotificationAlert.showAlert(
-                                    notificationTime,
-                                    title,
-                                    message,
-                                    binding.root.context
-                                )
-                            }
+
                             activity.runOnUiThread {
                                 Toast.makeText(
                                     binding.root.context,
@@ -208,15 +204,10 @@ object Barcode {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
+                            Log.d("Requesting", "Success")
                         }
-                    } catch (_: java.lang.Exception) {
-                        activity.runOnUiThread {
-                            Toast.makeText(
-                                binding.root.context,
-                                "Product not found",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                    } catch (e: java.lang.Exception) {
+                        Log.d("Requesting", "$e.message")
                     }
                 } else {
                     Log.d("Requesting", "Product not found")
