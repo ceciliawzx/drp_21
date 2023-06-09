@@ -19,6 +19,7 @@ class TaskViewModel @Inject constructor(
 
     val getAllTasks = repository.getAllTasks()
     val getAllPriorityTasks = repository.getAllPriorityTasks()
+    val getSortExpireTasks = repository.getSortExpireTasks()
 
     fun insert(taskEntry: TaskEntry) = viewModelScope.launch {
         repository.insert(taskEntry)

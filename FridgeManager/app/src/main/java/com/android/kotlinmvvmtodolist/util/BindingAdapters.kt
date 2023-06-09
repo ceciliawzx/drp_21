@@ -138,7 +138,6 @@ fun setDate(view: TextView, date: String?) {
 
         val differenceInMillis = date1.time - date2.time
         val differenceInDays = TimeUnit.MILLISECONDS.toDays(differenceInMillis)
-//        val sj = LocalDate.now()
 
         if (differenceInDays in 1..1) {
             view.text = "Expire in $differenceInDays day"

@@ -202,6 +202,15 @@ class TaskFragment : Fragment() {
                     }
                 }
             }
+            R.id.action_expire_date -> {
+                lifecycleScope.launch{
+                    repeatOnLifecycle(Lifecycle.State.STARTED){
+                        viewModel.getSortExpireTasks.collectLatest { tasks ->
+                            mAdapter.submitList(tasks)
+                        }
+                    }
+                }
+            }
             R.id.action_delete_all -> deleteAllItem()
         }
         return super.onOptionsItemSelected(item)

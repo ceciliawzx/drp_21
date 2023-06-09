@@ -51,20 +51,19 @@ object NotificationAlert {
         val times = expirationDate.split('-')
         val tempMonth = times[1].toInt()
         var construction = ""
-        if (tempMonth < 10) {
-            construction += times[0] + "-0" + tempMonth
-        } else {
-            construction += times[0] + "-" + tempMonth
-        }
-        val tempDays = times[2].toInt()
-        if (tempDays < 10) {
-            construction += "-0$tempDays"
-        } else {
-            construction += "-$tempDays"
-        }
+//        if (tempMonth < 10) {
+//            construction += times[0] + "-0" + tempMonth
+//        } else {
+//            construction += times[0] + "-" + tempMonth
+//        }
+//        val tempDays = times[2].toInt()
+//        if (tempDays < 10) {
+//            construction += "-0$tempDays"
+//        } else {
+//            construction += "-$tempDays"
+//        }
 
-//        construction += times[1]
-//        construction += times[2]
+        construction += times[0] + "-" + times[1] + "-" + times[2]
 
         val expiryDate = LocalDate.parse(construction)
         val notifyDate = expiryDate.minusDays(offset)

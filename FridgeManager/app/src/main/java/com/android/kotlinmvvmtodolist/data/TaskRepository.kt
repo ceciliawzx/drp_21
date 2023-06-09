@@ -21,6 +21,8 @@ class TaskRepository @Inject constructor(private val taskDao: TaskDao) {
 
     fun getAllPriorityTasks() = taskDao.getAllPriorityTasks()
 
+    fun getSortExpireTasks() = taskDao.getSortExpireTasks()
+
     fun searchDatabase(searchQuery: String): LiveData<List<TaskEntry>> {
         return taskDao.searchDatabase(searchQuery)
     }

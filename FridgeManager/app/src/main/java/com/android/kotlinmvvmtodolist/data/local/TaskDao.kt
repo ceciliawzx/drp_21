@@ -28,5 +28,6 @@ interface TaskDao {
     @Query("SELECT * FROM task_table WHERE title LIKE :searchQuery ORDER BY timestamp DESC")
     fun searchDatabase(searchQuery: String): LiveData<List<TaskEntry>>
 
-//    @Query("SELECT * FROM task_table ORDER BY expireDate ")
+    @Query("SELECT * FROM task_table ORDER BY expireDate ASC")
+    fun getSortExpireTasks(): Flow<List<TaskEntry>>
 }
