@@ -41,9 +41,9 @@ class ShopItemAdapter(
 
         holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                shopItemEntry.bought = 1
                 viewModel.update(shopItemEntry)
                 clickListener.onCheck(shopItemEntry)
+                shopItemEntry.bought = 1
             } else {
                 shopItemEntry.bought = 0
                 viewModel.update(shopItemEntry)
