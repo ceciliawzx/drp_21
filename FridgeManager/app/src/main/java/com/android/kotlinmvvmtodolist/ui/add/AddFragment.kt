@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,9 +20,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.android.kotlinmvvmtodolist.R
+import com.android.kotlinmvvmtodolist.data.local.ShopItemEntry
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentAddBinding
+import com.android.kotlinmvvmtodolist.ui.MainActivity
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.ui.camera.CameraFunc
 import com.android.kotlinmvvmtodolist.ui.shopList.ShopListViewModel
@@ -30,13 +37,14 @@ import com.android.kotlinmvvmtodolist.util.NotificationAlert.scheduleNotificatio
 import com.android.kotlinmvvmtodolist.util.ShopItemWorker
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
 class AddFragment : Fragment() {
 
     private val viewModel: TaskViewModel by activityViewModels()
-    private val shopListViewModel: ShopListViewModel by viewModels()
+    private val shopListViewModel: ShopListViewModel by activityViewModels()
 
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
@@ -193,17 +201,17 @@ class AddFragment : Fragment() {
                     days
                 )
 
-                // Automatically add the item to shopping list, if continuousBuying switched on
-//                if (continuousBuying) {
-//                    scheduleShopItem(
-//                        taskEntry.id,
-//                        taskEntry.expireDate,
-//                        taskEntry.title,
-//                        taskEntry.type
-//                    )
-//                }
-
                 viewModel.insert(taskEntry)
+
+                // If continuousBuying switched on, add a new ShopItemEntry to the database in a certain time.
+                if (continuousBuying) {
+                    scheduleShopItem(
+                        taskEntry.id,
+                        taskEntry.expireDate,
+                        taskEntry.title,
+                        taskEntry.type
+                    )
+                }
 
                 val notificationTime = getNotificationTime(expireDate, days)
                 val daysLeft = calculateDaysLeft(expireDate)
@@ -227,12 +235,6 @@ class AddFragment : Fragment() {
         return binding.root
     }
 
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     private fun scheduleShopItem(taskId: Int, expireDate: String, taskTitle: String, taskType: Int) {
         ShopItemWorker.scheduleShopItemEntry(
             requireContext(),
@@ -242,5 +244,10 @@ class AddFragment : Fragment() {
             taskType,
             shopListViewModel
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
