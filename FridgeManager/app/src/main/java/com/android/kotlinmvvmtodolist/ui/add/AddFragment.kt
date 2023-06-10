@@ -16,15 +16,18 @@ import android.widget.Toast
 import androidx.constraintlayout.helper.widget.MotionEffect.TAG
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentAddBinding
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.ui.camera.CameraFunc
+import com.android.kotlinmvvmtodolist.ui.shopList.ShopListViewModel
 import com.android.kotlinmvvmtodolist.util.NotificationAlert.calculateDaysLeft
 import com.android.kotlinmvvmtodolist.util.NotificationAlert.getNotificationTime
 import com.android.kotlinmvvmtodolist.util.NotificationAlert.scheduleNotification
+import com.android.kotlinmvvmtodolist.util.ShopItemWorker
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
@@ -33,6 +36,8 @@ import java.util.Calendar
 class AddFragment : Fragment() {
 
     private val viewModel: TaskViewModel by activityViewModels()
+    private val shopListViewModel: ShopListViewModel by viewModels()
+
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
 
@@ -113,8 +118,8 @@ class AddFragment : Fragment() {
                     val date = "$month/$day/$year"
                     val monthString = if (month < 10) "0$month" else "$month"
                     val dayString = if (day < 10) "0$day" else "$day"
+                    // expireDate format: "yyyy-MM-dd"
                     expireDate = "$year-$monthString-$dayString"
-//                    expireDate = "$year-$month-$day"
                     mDisplayDate!!.text = date
                     dateChosen = true
                 }
@@ -139,11 +144,7 @@ class AddFragment : Fragment() {
 
                 // default amount = 1
                 val foodAmountText: String = if (TextUtils.isEmpty((foodAmount.text))) {
-            //                    Toast.makeText(requireContext(), "Please enter the amount!", Toast.LENGTH_SHORT)
-            //                        .show()
-            //                    return@setOnClickListener
                     "1"
-
                 } else {
                     foodAmount.text.toString()
                 }
@@ -192,6 +193,16 @@ class AddFragment : Fragment() {
                     days
                 )
 
+                // Automatically add the item to shopping list, if continuousBuying switched on
+//                if (continuousBuying) {
+//                    scheduleShopItem(
+//                        taskEntry.id,
+//                        taskEntry.expireDate,
+//                        taskEntry.title,
+//                        taskEntry.type
+//                    )
+//                }
+
                 viewModel.insert(taskEntry)
 
                 val notificationTime = getNotificationTime(expireDate, days)
@@ -220,5 +231,16 @@ class AddFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun scheduleShopItem(taskId: Int, expireDate: String, taskTitle: String, taskType: Int) {
+        ShopItemWorker.scheduleShopItemEntry(
+            requireContext(),
+            taskId,
+            expireDate,
+            taskTitle,
+            taskType,
+            shopListViewModel
+        )
     }
 }

@@ -3,6 +3,7 @@ package com.android.kotlinmvvmtodolist.di
 import android.content.Context
 import androidx.room.Room
 import com.android.kotlinmvvmtodolist.data.local.ShopItemDao
+import com.android.kotlinmvvmtodolist.data.local.TaskDao
 import com.android.kotlinmvvmtodolist.data.local.TaskDatabase
 import com.android.kotlinmvvmtodolist.util.Constants.SHOPPING_TABLE
 import com.android.kotlinmvvmtodolist.util.Constants.TASK_DATABASE
@@ -19,21 +20,24 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideTaskDao(@ApplicationContext context: Context) =
-        Room.databaseBuilder(
+    fun provideTaskDatabase(@ApplicationContext context: Context): TaskDatabase {
+        return Room.databaseBuilder(
             context,
             TaskDatabase::class.java,
             TASK_DATABASE
-        ).build().taskDao()
-
+        ).build()
+    }
 
     @Singleton
     @Provides
-    fun provideShopItemDao(@ApplicationContext context: Context) =
-        Room.databaseBuilder(
-            context,
-            TaskDatabase::class.java,
-            SHOPPING_TABLE
-        ).build().shopItemDao()
+    fun provideTaskDao(taskDatabase: TaskDatabase): TaskDao {
+        return taskDatabase.taskDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideShopItemDao(taskDatabase: TaskDatabase): ShopItemDao {
+        return taskDatabase.shopItemDao()
+    }
 
 }

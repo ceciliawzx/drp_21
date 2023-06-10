@@ -81,6 +81,11 @@ dependencies {
     // Barcode scan
     implementation 'com.journeyapps:zxing-android-embedded:4.2.0'
 
+//    implementation 'androidx.work:work-runtime:2.7.1'
+
+    // For automatically run function later
+    implementation "androidx.work:work-runtime-ktx:2.7.0"
+
     // Food barcode database
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
 }

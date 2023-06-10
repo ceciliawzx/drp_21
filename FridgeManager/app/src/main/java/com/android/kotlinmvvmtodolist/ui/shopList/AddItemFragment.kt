@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.android.kotlinmvvmtodolist.R
@@ -18,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class AddItemFragment : Fragment() {
 
-    private val viewModel: ShopListViewModel by viewModels()
+    private val viewModel: ShopListViewModel by activityViewModels()
     private var _binding: FragmentAddItemBinding? = null
     private val binding get() = _binding!!
 
