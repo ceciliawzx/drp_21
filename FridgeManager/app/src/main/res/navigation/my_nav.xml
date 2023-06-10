@@ -59,6 +59,10 @@
             android:name="type"
             app:argType="integer"
             android:defaultValue="-1" />
+        <argument
+            android:name="continuous"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/updateFragment"

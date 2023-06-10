@@ -60,7 +60,8 @@ class ShopListFragment: Fragment() {
             ShopItemClickListener { shopItemEntry ->
                 val action = ShopListFragmentDirections.actionShopListFragmentToAddFragment(
                     shopItemEntry.title,
-                    shopItemEntry.type
+                    shopItemEntry.type,
+                    shopItemEntry.continuous
                 )
                 findNavController().navigate(action)
             },

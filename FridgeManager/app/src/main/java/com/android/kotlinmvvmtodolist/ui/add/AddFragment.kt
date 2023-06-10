@@ -60,6 +60,7 @@ class AddFragment : Fragment() {
         val args = AddFragmentArgs.fromBundle(requireArguments())
         val autofillTitle = args.title
         val autofillType = args.type
+        val autofillContinuous = args.continuous
 
         // fragment_add.xml binding
         _binding = FragmentAddBinding.inflate(inflater, container, false)
@@ -92,6 +93,7 @@ class AddFragment : Fragment() {
             if (autofillType != -1) {
                 foodName.setText(autofillTitle)
                 spinner.setSelection(autofillType)
+                buyingSwitch.isChecked = true
             }
 
             chooseDate.setOnClickListener {
@@ -111,8 +113,7 @@ class AddFragment : Fragment() {
                 dialog.show()
             }
 
-
-            var continuousBuying = false
+            var continuousBuying = autofillContinuous == 1
 
             buyingSwitch.setOnCheckedChangeListener { _, isChecked ->
                 continuousBuying = isChecked

@@ -87,7 +87,9 @@ class ShopItemWorker(
             val currentDate = LocalDate.now()
             val daysUntilNotification = ChronoUnit.DAYS.between(currentDate, notificationDate)
             val millisPerDay = 24 * 60 * 60 * 1000L
-            return daysUntilNotification * millisPerDay
+            // For test purpose, 5s
+            return 5000L
+//            return daysUntilNotification * millisPerDay
         }
     }
 }
