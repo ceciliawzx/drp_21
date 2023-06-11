@@ -19,6 +19,7 @@ import androidx.constraintlayout.helper.widget.MotionEffect.TAG
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
@@ -36,6 +37,7 @@ import com.android.kotlinmvvmtodolist.util.NotificationAlert.getNotificationTime
 import com.android.kotlinmvvmtodolist.util.NotificationAlert.scheduleNotification
 import com.android.kotlinmvvmtodolist.util.ShopItemWorker
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
@@ -61,6 +63,7 @@ class AddFragment : Fragment() {
         val autofillTitle = args.title
         val autofillType = args.type
         val autofillContinuous = args.continuous
+        val autofillId = args.shopItemEntryId
 
         // fragment_add.xml binding
         _binding = FragmentAddBinding.inflate(inflater, container, false)
@@ -229,7 +232,12 @@ class AddFragment : Fragment() {
                 if (autofillType == -1) {
                     findNavController().navigate(R.id.action_addFragment_to_taskFragment)
                 } else {
-                    findNavController().navigate(R.id.action_addFragment_to_shopListFragment)
+                    lifecycleScope.launch {
+                        val shopItemEntry = shopListViewModel.getItemById(autofillId)
+                        shopItemEntry.bought = 1
+                        shopListViewModel.update(shopItemEntry)
+                        findNavController().navigate(R.id.action_addFragment_to_shopListFragment)
+                    }
                 }
             }
         }
@@ -251,4 +259,5 @@ class AddFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
 }

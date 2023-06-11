@@ -42,4 +42,6 @@ class ShopListViewModel @Inject constructor(
         repository.deleteAllBought()
     }
 
+    suspend fun getItemById(id: Int): ShopItemEntry = repository.getItemById(id)
+
 }

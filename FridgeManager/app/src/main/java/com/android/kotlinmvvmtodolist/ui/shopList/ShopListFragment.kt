@@ -61,6 +61,7 @@ class ShopListFragment: Fragment() {
                 val action = ShopListFragmentDirections.actionShopListFragmentToAddFragment(
                     shopItemEntry.title,
                     shopItemEntry.type,
+                    shopItemEntry.id,
                     shopItemEntry.continuous
                 )
                 findNavController().navigate(action)
@@ -210,5 +211,4 @@ class ShopListFragment: Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
