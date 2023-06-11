@@ -12,10 +12,14 @@
         android:id="@+id/shoplist_sort_by_type"
         android:title="@string/sort_by_type"
         app:showAsAction="never"/>
+<!--    <item-->
+<!--        android:id="@+id/shoplist_delete_all_bought"-->
+<!--        android:title="@string/delete_all_bought"-->
+<!--        app:showAsAction="never" />-->
     <item
-        android:id="@+id/shoplist_delete_all_bought"
-        android:title="@string/delete_all_bought"
-        app:showAsAction="never" />
+        android:id="@+id/shoplist_sort_by_recently"
+        android:title="@string/recently_uploaded"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/shoplist_delete_all"
         android:title="@string/delete_all"

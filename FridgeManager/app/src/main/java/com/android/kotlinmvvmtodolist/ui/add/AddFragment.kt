@@ -96,7 +96,7 @@ class AddFragment : Fragment() {
             if (autofillType != -1) {
                 foodName.setText(autofillTitle)
                 spinner.setSelection(autofillType)
-                buyingSwitch.isChecked = true
+                buyingSwitch.isChecked = autofillContinuous == 1
             }
 
             chooseDate.setOnClickListener {
@@ -231,8 +231,11 @@ class AddFragment : Fragment() {
                     lifecycleScope.launch {
                         val shopItemEntry = shopListViewModel.getItemById(autofillId)
                         if (shopItemEntry != null) {
-                            shopItemEntry.bought = 1
-                            shopListViewModel.update(shopItemEntry)
+//                            shopItemEntry.bought = 1
+//                            shopListViewModel.update(shopItemEntry)
+                            // Delete the shopItemEntry after TaskEntry added succesfully.
+                            // This logic changes due to shopItemEntry auto add: addID must be unique
+                            shopListViewModel.delete(shopItemEntry)
                             findNavController().navigate(R.id.action_addFragment_to_shopListFragment)
                         }
                     }

@@ -19,7 +19,7 @@
     <string name="bought">Bought </string>
     <string name="add_item">Add item</string>
     <string name="delete_all_bought">Delete bought</string>
-    <string name="recently_uploaded">Recently Uploaded</string>
+    <string name="recently_uploaded">Recently Updated</string>
     <string name="sort_by_expire_date">Earliest Expire Date</string>
     <string-array name="priorities">
         <item>Meat</item>

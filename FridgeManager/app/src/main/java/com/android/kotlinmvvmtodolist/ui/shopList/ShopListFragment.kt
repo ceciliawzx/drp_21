@@ -175,24 +175,33 @@ class ShopListFragment: Fragment() {
                     }
                 }
             }
-            R.id.shoplist_delete_all_bought -> deleteAllBought()
+//            R.id.shoplist_delete_all_bought -> deleteAllBought()
+            R.id.shoplist_sort_by_recently -> {
+                lifecycleScope.launch{
+                    repeatOnLifecycle(Lifecycle.State.STARTED){
+                        viewModel.getAllItems.collectLatest { items ->
+                            mAdapter.submitList(items)
+                        }
+                    }
+                }
+            }
             R.id.shoplist_delete_all -> deleteAllItem()
         }
         return super.onContextItemSelected(item)
     }
 
 
-    private fun deleteAllBought() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Delete All Bought Items")
-            .setMessage("Are you sure?")
-            .setPositiveButton("Yes"){dialog, _ ->
-                viewModel.deleteAllBought()
-                dialog.dismiss()
-            }.setNegativeButton("No"){dialog, _ ->
-                dialog.dismiss()
-            }.create().show()
-    }
+//    private fun deleteAllBought() {
+//        AlertDialog.Builder(requireContext())
+//            .setTitle("Delete All Bought Items")
+//            .setMessage("Are you sure?")
+//            .setPositiveButton("Yes"){dialog, _ ->
+//                viewModel.deleteAllBought()
+//                dialog.dismiss()
+//            }.setNegativeButton("No"){dialog, _ ->
+//                dialog.dismiss()
+//            }.create().show()
+//    }
 
     private fun deleteAllItem() {
         AlertDialog.Builder(requireContext())
