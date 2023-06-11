@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -33,7 +34,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 @AndroidEntryPoint
 class TaskFragment : Fragment() {
 
-    private val viewModel: TaskViewModel by viewModels()
+    private val viewModel: TaskViewModel by activityViewModels()
     private lateinit var mAdapter: TaskAdapter
 
     private var _binding: FragmentTaskBinding? = null
@@ -107,7 +108,7 @@ class TaskFragment : Fragment() {
             }
 
             private fun swipeRightHelper(taskEntry: TaskEntry) {
-                Snackbar.make(binding.root, "Food Used!", Snackbar.LENGTH_LONG).apply {
+                Snackbar.make(binding.root, "Item Used!", Snackbar.LENGTH_LONG).apply {
                     // TODO: define another action for right swipe?
 //                    setActionTextColor(ContextCompat.getColor(context, R.color.white))
 //                    view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)

@@ -177,7 +177,8 @@ object Barcode {
                                 notificationID,
                                 0,
                                 "",
-                                "1"
+                                "1",
+                                viewModel.getNextAddRequestID()
                             )
 
                             viewModel.insert(taskEntry)

@@ -27,5 +27,8 @@ class ShopItemRepository @Inject constructor(private val shopItemDao: ShopItemDa
 
     fun getAllItems() = shopItemDao.getAllItems()
 
-    suspend fun getItemById(id: Int): ShopItemEntry = shopItemDao.getItemById(id)
+    suspend fun getItemById(id: Int): ShopItemEntry? = shopItemDao.getItemById(id)
+
+    suspend fun getItemByAddRequestId(addId: Int): ShopItemEntry? = shopItemDao.getItemByAddRequestId(addId)
+
 }

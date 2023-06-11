@@ -16,6 +16,7 @@ class TaskViewModel @Inject constructor(
 ) : ViewModel(){
 
     private var nextNotificationID = 1
+    private var nextAddRequestID = 1
 
     val getAllTasks = repository.getAllTasks()
     val getAllPriorityTasks = repository.getAllPriorityTasks()
@@ -45,4 +46,7 @@ class TaskViewModel @Inject constructor(
         return nextNotificationID++
     }
 
+    fun getNextAddRequestID(): Int {
+        return nextAddRequestID++
+    }
 }

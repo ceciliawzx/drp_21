@@ -188,8 +188,8 @@ class AddFragment : Fragment() {
 
                 // Ensure every notificationID is unique
                 val notificationID = viewModel.getNextNotificationID()
-
                 val continuous = if (continuousBuying) 1 else 0
+                val addRequestID = viewModel.getNextAddRequestID()
 
                 val taskEntry = TaskEntry(
                     0,
@@ -202,19 +202,15 @@ class AddFragment : Fragment() {
                     notificationID,
                     continuous,
                     currentPhotoPath,
-                    days
+                    days,
+                    addRequestID
                 )
 
                 viewModel.insert(taskEntry)
 
                 // If continuousBuying switched on, add a new ShopItemEntry to the database in a certain time.
                 if (continuousBuying) {
-                    scheduleShopItem(
-                        taskEntry.id,
-                        taskEntry.expireDate,
-                        taskEntry.title,
-                        taskEntry.type
-                    )
+                    scheduleShopItem(taskEntry)
                 }
 
                 val notificationTime = getNotificationTime(expireDate, days)
@@ -234,9 +230,11 @@ class AddFragment : Fragment() {
                 } else {
                     lifecycleScope.launch {
                         val shopItemEntry = shopListViewModel.getItemById(autofillId)
-                        shopItemEntry.bought = 1
-                        shopListViewModel.update(shopItemEntry)
-                        findNavController().navigate(R.id.action_addFragment_to_shopListFragment)
+                        if (shopItemEntry != null) {
+                            shopItemEntry.bought = 1
+                            shopListViewModel.update(shopItemEntry)
+                            findNavController().navigate(R.id.action_addFragment_to_shopListFragment)
+                        }
                     }
                 }
             }
@@ -244,10 +242,15 @@ class AddFragment : Fragment() {
         return binding.root
     }
 
-    private fun scheduleShopItem(taskId: Int, expireDate: String, taskTitle: String, taskType: Int) {
+    private fun scheduleShopItem(taskEntry: TaskEntry) {
+        val expireDate = taskEntry.expireDate
+        val taskTitle = taskEntry.title
+        val taskType = taskEntry.type
+        val addID = taskEntry.addRequestId
+
         ShopItemWorker.scheduleShopItemEntry(
             requireContext(),
-            taskId,
+            addID,
             expireDate,
             taskTitle,
             taskType,

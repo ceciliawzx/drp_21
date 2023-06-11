@@ -19,7 +19,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.helper.widget.MotionEffect
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.android.kotlinmvvmtodolist.R
@@ -27,6 +28,7 @@ import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentUpdateBinding
 import com.android.kotlinmvvmtodolist.ui.add.PreviewDialog
 import com.android.kotlinmvvmtodolist.ui.camera.CameraFunc
+import com.android.kotlinmvvmtodolist.ui.shopList.ShopListViewModel
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.util.Notification
 import com.android.kotlinmvvmtodolist.util.ShowImage.HORIZONTAL_PREVIEW_SCALE
@@ -38,12 +40,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 import com.android.kotlinmvvmtodolist.util.NotificationAlert.getNotificationTime
 import com.android.kotlinmvvmtodolist.util.NotificationAlert.showAlert
+import com.android.kotlinmvvmtodolist.util.ShopItemWorker
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class UpdateFragment : Fragment() {
 
-    private val viewModel: TaskViewModel by viewModels()
+    private val viewModel: TaskViewModel by activityViewModels()
+    private val shopListViewModel: ShopListViewModel by activityViewModels()
     private var _binding: FragmentUpdateBinding? = null
     private val binding get() = _binding!!
     private val args by navArgs<UpdateFragmentArgs>()
@@ -177,7 +182,9 @@ class UpdateFragment : Fragment() {
                 val type = updateSpinner.selectedItemPosition
                 val unit = updateUnitSpinner.selectedItemPosition
                 val amount = updateFoodAmount.text.toString().toInt()
-                var continuous = if (continuousBuying) 1 else 0
+                val continuous = if (continuousBuying) 1 else 0
+
+                Log.d("Adding", "update: ori id = ${args.task.id}")
 
                 val taskEntry = TaskEntry(
                     args.task.id,
@@ -190,20 +197,27 @@ class UpdateFragment : Fragment() {
                     args.task.notificationID,
                     continuous,
                     currentPhotoPath,
-                    days
+                    days,
+                    args.task.addRequestId
                 )
 
                 viewModel.update(taskEntry)
 
 
 
-                // If the expiration date changed, update the notification
+                // If the expiration date changed, update the notification and shopItemEntry adding
                 if (args.task.expireDate != expireDate || args.task.notifyDaysBefore != days) {
                     val notificationTime = getNotificationTime(expireDate, days)
                     val title = "$titleTitle expire soon"
                     // val message = "Your $titleTitle will expire tomorrow!!!"
                     val message = "Your $titleTitle will expire $days days later!!!"
-                    rescheduleNotification(title, message, notificationTime)
+                    rescheduleNotification(expireDate, title, message, notificationTime)
+                    // update the shopItemEntry
+                    if (continuousBuying) {
+                        lifecycleScope.launch {
+                            rescheduleShopItem(taskEntry)
+                        }
+                    }
                 }
 
                 Toast.makeText(requireContext(), "Updated!", Toast.LENGTH_SHORT).show()
@@ -218,7 +232,7 @@ class UpdateFragment : Fragment() {
         _binding = null
     }
 
-    private fun rescheduleNotification(title: String, message: String, notificationTime: Long) {
+    private fun rescheduleNotification(expireDate: String, title: String, message: String, notificationTime: Long) {
         val intent = Intent(requireContext(), Notification::class.java)
         intent.putExtra(titleExtra, title)
         intent.putExtra(messageExtra, message)
@@ -239,6 +253,35 @@ class UpdateFragment : Fragment() {
             pendingIntent
         )
         showAlert(notificationTime, title, message, requireContext())
+
+        // Schedule a new notification
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            notificationTime,
+            pendingIntent
+        )
+    }
+
+    private suspend fun rescheduleShopItem(taskEntry: TaskEntry) {
+        val expireDate = taskEntry.expireDate
+        val taskTitle = taskEntry.title
+        val taskType = taskEntry.type
+        val addID = taskEntry.addRequestId
+
+        Log.d("Adding", "reschedule: taskId = $id")
+
+        // If before the expireDate updated,
+        // the Entry is already in the shopping list, do not reschedule
+        if (shopListViewModel.getItemByAddRequestId(addID) == null) {
+            ShopItemWorker.scheduleShopItemEntry(
+                requireContext(),
+                addID,
+                expireDate,
+                taskTitle,
+                taskType,
+                shopListViewModel
+            )
+        }
     }
 
 }

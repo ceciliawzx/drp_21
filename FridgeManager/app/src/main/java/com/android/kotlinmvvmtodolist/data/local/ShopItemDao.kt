@@ -34,5 +34,8 @@ interface ShopItemDao {
     suspend fun deleteAllBought()
 
     @Query("SELECT * FROM shopping_list_table WHERE id = :id")
-    suspend fun getItemById(id: Int): ShopItemEntry
+    suspend fun getItemById(id: Int): ShopItemEntry?
+
+    @Query("SELECT * FROM shopping_list_table WHERE addRequestId = :addId")
+    suspend fun getItemByAddRequestId(addId: Int): ShopItemEntry?
 }

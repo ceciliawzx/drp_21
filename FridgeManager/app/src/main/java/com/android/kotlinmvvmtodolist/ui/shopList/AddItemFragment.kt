@@ -57,7 +57,8 @@ class AddItemFragment : Fragment() {
                     type,
                     System.currentTimeMillis(),
                     0,
-                    0
+                    0,
+                    -1
                 )
 
                 viewModel.insert(shopItemEntry)
