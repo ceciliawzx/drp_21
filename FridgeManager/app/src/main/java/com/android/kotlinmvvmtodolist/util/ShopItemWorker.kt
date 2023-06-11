@@ -100,6 +100,15 @@ class ShopItemWorker(
             Log.d("Adding", "requestId = ${request.id}")
         }
 
+        fun cancelRequest(context: Context, addId: Int) {
+            val workManager = WorkManager.getInstance(context)
+            val oriRequest = scheduledWorkRequests[addId]
+            if (oriRequest != null) {
+                workManager.cancelWorkById(oriRequest.id)
+                scheduledWorkRequests.remove(addId)
+            }
+        }
+
         private fun calculateDelay(notificationDate: LocalDate): Long {
             val currentDate = LocalDate.now()
             val daysUntilNotification = ChronoUnit.DAYS.between(currentDate, notificationDate)

@@ -24,6 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.android.kotlinmvvmtodolist.R
+import com.android.kotlinmvvmtodolist.data.local.ShopItemEntry
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.FragmentUpdateBinding
 import com.android.kotlinmvvmtodolist.ui.add.PreviewDialog
@@ -140,6 +141,7 @@ class UpdateFragment : Fragment() {
                 continuousBuying = isChecked
             }
 
+
             updateCamera.setOnClickListener {
                 currentPhotoPath = cameraUtils.takePhoto()
             }
@@ -182,6 +184,7 @@ class UpdateFragment : Fragment() {
                 val type = updateSpinner.selectedItemPosition
                 val unit = updateUnitSpinner.selectedItemPosition
                 val amount = updateFoodAmount.text.toString().toInt()
+
                 val continuous = if (continuousBuying) 1 else 0
 
                 Log.d("Adding", "update: ori id = ${args.task.id}")
@@ -203,6 +206,14 @@ class UpdateFragment : Fragment() {
 
                 viewModel.update(taskEntry)
 
+                // If continuous != original continuous, rescheduleShopItem
+                if (continuous != args.task.continuousBuying) {
+                    // If origin = 0, update = 1 -> schedule the auto add
+                    // Otherwise, cancel the job if not yet added
+                    lifecycleScope.launch {
+                        rescheduleShopItem(taskEntry, continuous == 0)
+                    }
+                }
 
 
                 // If the expiration date changed, update the notification and shopItemEntry adding
@@ -215,7 +226,7 @@ class UpdateFragment : Fragment() {
                     // update the shopItemEntry
                     if (continuousBuying) {
                         lifecycleScope.launch {
-                            rescheduleShopItem(taskEntry)
+                            rescheduleShopItem(taskEntry, false)
                         }
                     }
                 }
@@ -262,26 +273,35 @@ class UpdateFragment : Fragment() {
         )
     }
 
-    private suspend fun rescheduleShopItem(taskEntry: TaskEntry) {
+    // If cancel is true, cancel the request if not yet run
+    private suspend fun rescheduleShopItem(taskEntry: TaskEntry, cancel: Boolean) {
         val expireDate = taskEntry.expireDate
         val taskTitle = taskEntry.title
         val taskType = taskEntry.type
         val addID = taskEntry.addRequestId
 
-        Log.d("Adding", "reschedule: taskId = $id")
+        Log.d("Adding", "reschedule/cancel: taskId = $id")
 
-        // If before the expireDate updated,
-        // the Entry is already in the shopping list, do not reschedule
-        if (shopListViewModel.getItemByAddRequestId(addID) == null) {
-            ShopItemWorker.scheduleShopItemEntry(
-                requireContext(),
-                addID,
-                expireDate,
-                taskTitle,
-                taskType,
-                shopListViewModel
-            )
+        val existedShopItemEntry: ShopItemEntry? = shopListViewModel.getItemByAddRequestId(addID)
+        val notAdded = existedShopItemEntry == null
+
+        if (cancel) {
+            if (notAdded) {
+                ShopItemWorker.cancelRequest(requireContext(), addID)
+            }
+        } else {
+            if (notAdded) {
+                ShopItemWorker.scheduleShopItemEntry(
+                    requireContext(),
+                    addID,
+                    expireDate,
+                    taskTitle,
+                    taskType,
+                    shopListViewModel
+                )
+            }
         }
+
     }
 
 }
