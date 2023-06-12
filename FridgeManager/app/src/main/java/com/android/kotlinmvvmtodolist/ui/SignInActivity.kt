@@ -27,6 +27,8 @@ class SignInActivity: AppCompatActivity() {
 
         setContentView(binding.root)
 
+        supportActionBar?.title = getString(R.string.app_name)
+
         // Check if the user is already logged in
         if (firebaseAuth.currentUser != null) {
             val intent = Intent(this, MainActivity::class.java)

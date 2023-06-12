@@ -14,10 +14,10 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class TestUser(
-    val userName : String,
-    val friends : List<String>) {
-}
+//class TestUser(
+//    val userName : String,
+//    val friends : List<String>) {
+//}
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -30,14 +30,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.title = getString(R.string.storage)
-
-        // Firebase Database
-        val database = Firebase.database("https://drp21-def08-default-rtdb.europe-west1.firebasedatabase.app")
-        val myRef = database.reference
-
-        val testUser = TestUser("leoli", listOf("bob", "tim", "tom"))
-        myRef.child("TestUser").child("Leo").setValue(testUser)
-
 
         navController = findNavController(R.id.nav_host_fragment)
         bottomNavigationView = findViewById(R.id.bottom_bar)
