@@ -191,18 +191,6 @@ class ShopListFragment: Fragment() {
     }
 
 
-//    private fun deleteAllBought() {
-//        AlertDialog.Builder(requireContext())
-//            .setTitle("Delete All Bought Items")
-//            .setMessage("Are you sure?")
-//            .setPositiveButton("Yes"){dialog, _ ->
-//                viewModel.deleteAllBought()
-//                dialog.dismiss()
-//            }.setNegativeButton("No"){dialog, _ ->
-//                dialog.dismiss()
-//            }.create().show()
-//    }
-
     private fun deleteAllItem() {
         AlertDialog.Builder(requireContext())
             .setTitle("Delete All")

@@ -31,14 +31,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         supportActionBar?.title = getString(R.string.storage)
 
-        // Firebase Database
-//        val database = Firebase.database("https://drp21-def08-default-rtdb.europe-west1.firebasedatabase.app")
-//        val myRef = database.reference
-//
-//        val testUser = TestUser("leoli", listOf("bob", "tim", "tom"))
-//        myRef.child("TestUser").child("Leo").setValue(testUser)
-
-
         navController = findNavController(R.id.nav_host_fragment)
         bottomNavigationView = findViewById(R.id.bottom_bar)
 
