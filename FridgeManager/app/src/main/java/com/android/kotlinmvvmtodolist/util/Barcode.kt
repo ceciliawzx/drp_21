@@ -143,6 +143,10 @@ object Barcode {
                                     val dayValue = times[2].toInt()
                                     day = if (dayValue < 10) "0$dayValue" else "$dayValue"
                                     expirationDate = "$year-$month-$day"
+                                    // Limit check
+                                    if ((monthValue > 12) || (monthValue < 1) || (dayValue > 31) || (dayValue < 1)) {
+                                        expirationDate = defaultDateString.format(formatter)
+                                    }
                                 }
 
                             } catch (_: java.lang.Exception) {

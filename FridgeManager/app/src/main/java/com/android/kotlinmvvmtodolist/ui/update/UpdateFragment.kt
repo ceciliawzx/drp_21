@@ -211,6 +211,7 @@ class UpdateFragment : Fragment() {
                     // If origin = 0, update = 1 -> schedule the auto add
                     // Otherwise, cancel the job if not yet added
                     lifecycleScope.launch {
+                        Log.d("Adding", "continuous change: addId = ${args.task.addRequestId}, continuous = $continuous")
                         rescheduleShopItem(taskEntry, continuous == 0)
                     }
                 }
