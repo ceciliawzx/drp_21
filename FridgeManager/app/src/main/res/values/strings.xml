@@ -40,4 +40,5 @@
         <item>ml</item>
         <item>L</item>
     </string-array>
+    <string name="title_activity_sign_in">SignInActivity</string>
 </resources>
