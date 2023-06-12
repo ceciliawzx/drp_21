@@ -7,6 +7,9 @@ import androidx.navigation.findNavController
 import com.android.kotlinmvvmtodolist.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -18,6 +21,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.title = getString(R.string.storage)
+
+        // Firebase Database
+        val database = Firebase.database("https://drp21-def08-default-rtdb.europe-west1.firebasedatabase.app")
+        val myRef = database.reference
+        myRef.child("Hello").setValue(1)
 
 
         navController = findNavController(R.id.nav_host_fragment)
