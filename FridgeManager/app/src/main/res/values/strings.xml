@@ -41,4 +41,7 @@
         <item>L</item>
     </string-array>
     <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="profile">Profile</string>
+    <string name="log_out">Log Out</string>
+    <string name="username">Username</string>
 </resources>
