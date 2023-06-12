@@ -15,12 +15,15 @@
     <string name="scan_barcode">Scan</string>
     <string name="storage">Storage</string>
     <string name="shopping_list">Shopping List</string>
-    <string name="continuous_buying"><u>Want to buy continuously?</u>  </string>
+    <string name="continuous_buying"><u>Want to buy regularly?</u>  </string>
     <string name="bought">Bought </string>
     <string name="add_item">Add item</string>
     <string name="delete_all_bought">Delete bought</string>
     <string name="recently_uploaded">Recently Updated</string>
     <string name="sort_by_expire_date">Earliest Expire Date</string>
+    <string name="notify_text1">Notify</string>
+    <string name="notify_text2">days before</string>
+    <string name="enter_notify_days">Optional: Enter days</string>
     <string-array name="priorities">
         <item>Meat</item>
         <item>Vegetable</item>

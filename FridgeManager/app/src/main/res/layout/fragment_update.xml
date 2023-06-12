@@ -8,27 +8,15 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.update.UpdateFragment">
-
-        <ImageView
-            android:id="@+id/update_imagePreview"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="20dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_update"
-            app:srcCompat="@drawable/ic_launcher_background" />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.add.AddFragment">
 
         <EditText
             android:id="@+id/update_food_name"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="44dp"
             android:ems="10"
             android:hint="@string/enter_item_name"
             android:inputType="textPersonName"
@@ -76,62 +64,92 @@
             app:layout_constraintTop_toBottomOf="@+id/update_food_amount" />
 
 
-        <Button
-            android:id="@+id/update_choose_date"
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:background="@android:color/transparent"
-            android:text="@string/choose_exp_date"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@android:color/black"
-            app:layout_constraintBottom_toTopOf="@+id/btn_update"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/update_spinner"
-            app:layout_constraintVertical_bias="0.208" />
+            app:layout_constraintTop_toBottomOf="@+id/update_spinner">
 
-        <Button
-            android:id="@+id/btn_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="232dp"
-            android:text="@string/update"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/update_spinner" />
+            <Button
+                android:id="@+id/update_choose_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:clipToPadding="false"
+                android:elevation="400dp"
+                android:text="@string/choose_exp_date"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@android:color/black"
+                app:layout_constraintBottom_toTopOf="@+id/btn_update"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/update_spinner"
+                app:layout_constraintVertical_bias="0.208" />
 
-        <Switch
-            android:id="@+id/update_buying"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/continuous_buying"
-            android:textColor="#009688"
-            app:layout_constraintBottom_toTopOf="@+id/btn_update"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/update_choose_date"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+        </androidx.cardview.widget.CardView>
+
 
         <ImageButton
             android:id="@+id/update_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="36dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.828"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_menu_camera" />
 
+        <Button
+            android:id="@+id/btn_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="192dp"
+            android:text="@string/update"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/update_spinner" />
+
+
+        <Switch
+            android:id="@+id/update_buyingSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
+            android:text="@string/continuous_buying"
+            android:textColor="#009688"
+            app:layout_constraintBottom_toTopOf="@+id/btn_update"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.505"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="NotSibling,UseSwitchCompatOrMaterialXml" />
+
+        <ImageView
+            android:id="@+id/update_imagePreview"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_update"
+            app:srcCompat="@drawable/ic_launcher_background" />
+
         <TextView
             android:id="@+id/update_text_notify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="340dp"
-            android:text="Notify "
+            android:text="@string/notify_text1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.154"
             app:layout_constraintStart_toStartOf="parent"
@@ -142,7 +160,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="340dp"
-            android:text="days before"
+            android:text="@string/notify_text2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.934"
             app:layout_constraintStart_toStartOf="parent"
@@ -154,7 +172,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="328dp"
             android:ems="10"
-            android:hint="Optional: Enter days"
+            android:hint="@string/enter_notify_days"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
@@ -163,4 +181,5 @@
             tools:ignore="Autofill" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

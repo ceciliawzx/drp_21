@@ -94,7 +94,7 @@ class UpdateFragment : Fragment() {
             updateUnitSpinner.setSelection(args.task.unit)
             updateSpinner.setSelection(args.task.type)
             updateChooseDate.setText(args.task.expireDate)
-            updateBuying.isChecked = args.task.continuousBuying == 1
+            updateBuyingSwitch.isChecked = args.task.continuousBuying == 1
             updateNotifyDays.setText(args.task.notifyDaysBefore)
 
             // Show stored image preview
@@ -137,7 +137,7 @@ class UpdateFragment : Fragment() {
 
             var continuousBuying = args.task.continuousBuying == 1
 
-            updateBuying.setOnCheckedChangeListener { _, isChecked ->
+            updateBuyingSwitch.setOnCheckedChangeListener { _, isChecked ->
                 continuousBuying = isChecked
             }
 

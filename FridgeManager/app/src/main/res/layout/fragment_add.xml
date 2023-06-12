@@ -65,20 +65,37 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/food_amount" />
 
-        <Button
-            android:id="@+id/choose_date"
+
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:background="@android:color/transparent"
-            android:text="@string/choose_exp_date"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@android:color/black"
-            app:layout_constraintBottom_toTopOf="@+id/btn_add"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinner"
-            app:layout_constraintVertical_bias="0.208" />
+            app:layout_constraintTop_toBottomOf="@+id/spinner">
+
+            <Button
+                android:id="@+id/choose_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:clipToPadding="false"
+                android:elevation="400dp"
+                android:text="@string/choose_exp_date"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@android:color/black"
+                app:layout_constraintBottom_toTopOf="@+id/btn_add"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner"
+                app:layout_constraintVertical_bias="0.208" />
+
+        </androidx.cardview.widget.CardView>
 
         <ImageButton
             android:id="@+id/btn_camera"
@@ -102,20 +119,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
+
         <Switch
             android:id="@+id/buyingSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="80dp"
             android:text="@string/continuous_buying"
             android:textColor="#009688"
             app:layout_constraintBottom_toTopOf="@+id/btn_add"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.505"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/choose_date"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
-
+            tools:ignore="NotSibling,UseSwitchCompatOrMaterialXml" />
 
         <ImageView
             android:id="@+id/imagePreview"
@@ -134,7 +150,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="340dp"
-            android:text="Notify "
+            android:text="@string/notify_text1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.154"
             app:layout_constraintStart_toStartOf="parent"
@@ -145,7 +161,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="340dp"
-            android:text="days before"
+            android:text="@string/notify_text2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.934"
             app:layout_constraintStart_toStartOf="parent"
@@ -157,7 +173,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="328dp"
             android:ems="10"
-            android:hint="Optional: Enter days"
+            android:hint="@string/enter_notify_days"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.502"
