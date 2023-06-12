@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.databinding.ActivitySignUpBinding
+import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 import com.android.kotlinmvvmtodolist.util.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ktx.database
@@ -47,10 +48,16 @@ class SignUpActivity: AppCompatActivity() {
                         if (it.isSuccessful) {
                             val userID = registerUser.result.user!!.uid
                             // Add to database
-                            val database = Firebase.database("https://drp21-def08-default-rtdb.europe-west1.firebasedatabase.app")
-                            val myRef = database.reference
-                            val testUser = User(userID, userName, "", listOf("testUser1", "testUser2"))
-                            myRef.child("User").child(userID).setValue(testUser)
+                            val testUser = User(userID, userName, "")
+                            val userRef = USER_DATABASE_REFERENCE.child("User").child(userID)
+                            userRef.setValue(testUser)
+
+                            // For test purpose
+                            val contactList = listOf("User1", "User2")
+//                            val newContactRef = userRef.child("Contacts").push()
+//                            contact.userID = newContactRef.key
+//                            newContactRef.setValue(contact)
+                            userRef.child("Contacts").setValue(contactList)
                             val intent = Intent(this, SignInActivity::class.java)
                             startActivity(intent)
                         } else {

@@ -124,4 +124,19 @@
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
     </fragment>
+
+    <fragment
+        android:id="@+id/contactsFragment"
+        android:name="com.android.kotlinmvvmtodolist.ui.contacts.ContactsFragment"
+        android:label="Fridge Manager"
+        tools:layout="@layout/fragment_add_item" >
+        <action
+            android:id="@+id/action_addItemFragment_to_shopListFragment"
+            app:destination="@id/shopListFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+    </fragment>
+
 </navigation>
