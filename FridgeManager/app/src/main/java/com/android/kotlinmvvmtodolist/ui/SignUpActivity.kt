@@ -7,15 +7,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.databinding.ActivitySignUpBinding
+import com.android.kotlinmvvmtodolist.util.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class User(
-    val userName : String,
-    val friends : List<String>) {
-}
 
 class SignUpActivity: AppCompatActivity() {
 
@@ -39,21 +35,22 @@ class SignUpActivity: AppCompatActivity() {
         }
         binding.btnSignUp.setOnClickListener {
             val email = binding.emailEt.text.toString()
+            val userName = binding.userNameET.text.toString()
             val password = binding.passET.text.toString()
             val confirmPassword = binding.confirmPassEt.text.toString()
 
-            if (email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty()) {
+            if (email.isNotEmpty() && userName.isNotEmpty()
+                && password.isNotEmpty() && confirmPassword.isNotEmpty()) {
                 if (password == confirmPassword) {
-                    val testing = firebaseAuth.createUserWithEmailAndPassword(email, password)
-                    testing.addOnCompleteListener {
+                    val registerUser = firebaseAuth.createUserWithEmailAndPassword(email, password)
+                    registerUser.addOnCompleteListener {
                         if (it.isSuccessful) {
-                            val userID = testing.result.user?.uid.toString()
+                            val userID = registerUser.result.user!!.uid
                             // Add to database
                             val database = Firebase.database("https://drp21-def08-default-rtdb.europe-west1.firebasedatabase.app")
                             val myRef = database.reference
-                            val testUser = User(email, listOf())
+                            val testUser = User(userID, userName, "", listOf("testUser1", "testUser2"))
                             myRef.child("User").child(userID).setValue(testUser)
-
                             val intent = Intent(this, SignInActivity::class.java)
                             startActivity(intent)
                         } else {
@@ -61,7 +58,6 @@ class SignUpActivity: AppCompatActivity() {
                             Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
                         }
                     }
-                    // Log.d("Testing ID Result", hi.result.toString())
                 } else {
                     Toast.makeText(this, "Password not matching!", Toast.LENGTH_SHORT).show()
                 }
