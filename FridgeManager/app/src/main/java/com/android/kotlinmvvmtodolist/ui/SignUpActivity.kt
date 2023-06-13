@@ -44,25 +44,25 @@ class SignUpActivity: AppCompatActivity() {
                 && password.isNotEmpty() && confirmPassword.isNotEmpty()) {
                 if (password == confirmPassword) {
                     val registerUser = firebaseAuth.createUserWithEmailAndPassword(email, password)
-                    registerUser.addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            val userID = registerUser.result.user!!.uid
-                            // Add to database
-                            val testUser = User(userID, userName, "")
-                            val userRef = USER_DATABASE_REFERENCE.child("User").child(userID)
-                            userRef.setValue(testUser)
-
-                            // For test purpose
-                            val contactList = listOf("User1", "User2")
-//                            val newContactRef = userRef.child("Contacts").push()
-//                            contact.userID = newContactRef.key
-//                            newContactRef.setValue(contact)
-                            userRef.child("Contacts").setValue(contactList)
-                            val intent = Intent(this, SignInActivity::class.java)
-                            startActivity(intent)
+                    registerUser.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val userID = registerUser.result?.user?.uid
+                            if (userID != null) {
+                                // Add to database
+                                val testUser = User(userID, userName, "")
+                                val userRef = USER_DATABASE_REFERENCE.child("User").child(userID)
+                                userRef.setValue(testUser).addOnCompleteListener { databaseTask ->
+                                    if (databaseTask.isSuccessful) {
+                                        val intent = Intent(this, SignInActivity::class.java)
+                                        startActivity(intent)
+                                    } else {
+                                        Toast.makeText(this, "Failed to create user.", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
                         } else {
-                            Log.d("Logging", "error: ${it.exception.toString()}")
-                            Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                            Log.d("Logging", "error: ${task.exception.toString()}")
+                            Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else {
@@ -71,7 +71,6 @@ class SignUpActivity: AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Please fill all fields!", Toast.LENGTH_SHORT).show()
             }
-
         }
     }
 

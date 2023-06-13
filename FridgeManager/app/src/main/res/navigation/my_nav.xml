@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/taskFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.task.TaskFragment"
-        android:label="Fridge Manager"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_task" >
         <action
             android:id="@+id/action_taskFragment_to_addFragment"
@@ -94,7 +94,7 @@
     <fragment
         android:id="@+id/shopListFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.shopList.ShopListFragment"
-        android:label="Fridge Manager"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_shoplist" >
         <action
             android:id="@+id/action_shopListFragment_to_taskFragment"
@@ -121,7 +121,7 @@
     <fragment
         android:id="@+id/addItemFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.shopList.AddItemFragment"
-        android:label="Fridge Manager"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_add_item" >
         <action
             android:id="@+id/action_addItemFragment_to_shopListFragment"
@@ -135,14 +135,28 @@
     <fragment
         android:id="@+id/contactsFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.contacts.ContactsFragment"
-        android:label="Fridge Manager"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_contacts" >
+        <action
+            android:id="@+id/action_contactsFragment_to_addContactFragment"
+            app:destination="@id/addContactFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/addContactFragment"
+        android:name="com.android.kotlinmvvmtodolist.ui.contacts.AddContactFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_add_contact" >
     </fragment>
 
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.profile.ProfileFragment"
-        android:label="Fridge Manager"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profileFragment_to_taskFragment"

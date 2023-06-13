@@ -82,7 +82,6 @@ class ShopListFragment: Fragment() {
             floatingActionShopListButton.setOnClickListener {
                 findNavController().navigate(R.id.action_shopListFragment_to_addItemFragment)
             }
-
         }
 
         ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(0,

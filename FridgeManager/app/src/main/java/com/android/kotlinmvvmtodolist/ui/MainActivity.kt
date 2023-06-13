@@ -46,6 +46,11 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(R.id.shopListFragment)
                     true
                 }
+                R.id.action_contacts -> {
+                    supportActionBar?.title = getString(R.string.contacts)
+                    navController.navigate(R.id.contactsFragment)
+                    true
+                }
                 R.id.action_profile -> {
                     supportActionBar?.title = getString(R.string.profile)
                     navController.navigate(R.id.profileFragment)

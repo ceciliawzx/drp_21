@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="User"
+            name="contact"
             type="com.android.kotlinmvvmtodolist.util.User" />
     </data>
 
@@ -29,7 +29,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/gilroy_bold"
                 android:maxLines="1"
-                android:text="@{User.userName}"
+                android:text="@{contact.userName}"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -70,7 +70,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5"
-                app:setImageView="@{User.profileImage}"
+                app:setImageView="@{contact.profileImage}"
                 tools:srcCompat="@tools:sample/avatars" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
