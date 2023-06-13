@@ -40,22 +40,50 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.content.SharedPreferences
+import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
+    private lateinit var textUsername: TextView
+    private lateinit var databaseReference: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        val textUsername = binding.textUsername
+
+        val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
+        databaseReference = USER_DATABASE_REFERENCE
+
+        val userRef = databaseReference.child("User").child(currentUserID!!)
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val userName = dataSnapshot.child("userName").value.toString()
+                    textUsername.text = userName
+                    Log.d("username", "$userName")
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Handle the onCancelled event if needed
+            }
+        })
 
         // 给view绑定数据
         binding.apply {
-            // Limits check
+            textUid.text = "uid: $currentUserID"
+
             btnLogout.setOnClickListener {
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Confirm Logout")
