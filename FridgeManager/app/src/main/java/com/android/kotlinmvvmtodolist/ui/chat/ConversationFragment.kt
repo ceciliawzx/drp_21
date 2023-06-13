@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 
 
@@ -29,7 +30,10 @@ class ConversationFragment : Fragment() {
     private var _binding: FragmentConversationBinding? = null
     private val binding get() = _binding!!
 
-    val messageList: MutableList<Message> = mutableListOf()
+    // Message retrieve
+    private val messageList: MutableList<Message> = mutableListOf()
+    private lateinit var messageListener: ValueEventListener
+    private lateinit var messageRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,37 +52,37 @@ class ConversationFragment : Fragment() {
         messageBox = binding.messageBox
         sendButton = binding.sendButton
 
-        val messageRef = USER_DATABASE_REFERENCE
+        messageRef = USER_DATABASE_REFERENCE
             .child("User").child(myUid)
             .child("Contacts").child(oppUid)
             .child("Message")
 
-        val messageListener = messageRef.addListenerForSingleValueEvent(
-            (object : ValueEventListener {
+        messageListener = object : ValueEventListener {
 
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                    // Clear to fetch
-                    messageList.clear()
+                // Clear to fetch
+                messageList.clear()
 
-                    // Add new version of message list
-                    for (childSnapshot in dataSnapshot.children) {
-                        val message = childSnapshot.getValue(Message::class.java)
-                        message?.let { messageList.add(it) }
-                    }
-
-                    println("this is lydia")
-
-                    messageList.forEach { message ->
-                        println(message.message)
-                    }
+                // Add new version of message list
+                for (childSnapshot in dataSnapshot.children) {
+                    val message = childSnapshot.getValue(Message::class.java)
+                    message?.let { messageList.add(it) }
                 }
 
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
+                messageList.forEach { message ->
+                    println(message.message)
                 }
-            })
-        )
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        }
+
+        // Add listener to message
+        messageRef.addValueEventListener(messageListener)
+
 
         sendButton.setOnClickListener {
 
@@ -99,6 +103,7 @@ class ConversationFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        messageRef.removeEventListener(messageListener)
     }
 
     companion object {
