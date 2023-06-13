@@ -2,6 +2,7 @@ package com.android.kotlinmvvmtodolist.ui.profile
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -40,6 +41,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.content.SharedPreferences
+import androidx.core.content.ContextCompat.getSystemService
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -84,11 +86,18 @@ class ProfileFragment : Fragment() {
         binding.apply {
             textUid.text = "uid: $currentUserID"
 
+            btnCopyUid.setOnClickListener{
+                val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
+                val clip = android.content.ClipData.newPlainText("UID", currentUserID)
+                clipboard?.setPrimaryClip(clip)
+                showCopySuccessDialog()
+            }
+
             btnLogout.setOnClickListener {
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Confirm Logout")
                 builder.setMessage("Are you sure you want to log out?")
-                builder.setPositiveButton("Yes") { dialogInterface: DialogInterface, _: Int ->
+                builder.setPositiveButton("AYes") { dialogInterface: DialogInterface, _: Int ->
 
                     FirebaseAuth.getInstance().signOut()
 
@@ -118,6 +127,17 @@ class ProfileFragment : Fragment() {
         val intent = Intent(requireContext(), SignInActivity::class.java)
         startActivity(intent)
         requireActivity().finish()
+    }
+
+    private fun showCopySuccessDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Copy Successful")
+        builder.setMessage("The UID has been copied to the clipboard.")
+        builder.setPositiveButton("OK") { dialog: DialogInterface, _: Int ->
+            dialog.dismiss()
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
     override fun onDestroyView() {
