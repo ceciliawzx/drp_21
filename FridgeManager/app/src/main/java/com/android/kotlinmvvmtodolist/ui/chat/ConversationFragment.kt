@@ -47,7 +47,7 @@ class ConversationFragment : Fragment() {
         sendButton.setOnClickListener {
             if (myUid != null) {
 
-                val newMessage = Message(messageBox.text.toString(), myUid)
+                val newMessage = listOf(Message(messageBox.text.toString(), myUid), Message("Hello Bob", myUid))
 
                 USER_DATABASE_REFERENCE
                     .child("User").child(myUid)
