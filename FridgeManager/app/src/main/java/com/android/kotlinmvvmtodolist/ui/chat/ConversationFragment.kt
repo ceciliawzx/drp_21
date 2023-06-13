@@ -33,7 +33,8 @@ class ConversationFragment : Fragment() {
     // Message retrieve
     private val messageList: MutableList<Message> = mutableListOf()
     private lateinit var messageListener: ValueEventListener
-    private lateinit var messageRef: DatabaseReference
+    private lateinit var myMessageRef: DatabaseReference
+    private lateinit var oppMessageRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +53,14 @@ class ConversationFragment : Fragment() {
         messageBox = binding.messageBox
         sendButton = binding.sendButton
 
-        messageRef = USER_DATABASE_REFERENCE
+        myMessageRef = USER_DATABASE_REFERENCE
             .child("User").child(myUid)
             .child("Contacts").child(oppUid)
+            .child("Message")
+
+        oppMessageRef = USER_DATABASE_REFERENCE
+            .child("User").child(oppUid)
+            .child("Contacts").child(myUid)
             .child("Message")
 
         messageListener = object : ValueEventListener {
@@ -81,8 +87,7 @@ class ConversationFragment : Fragment() {
         }
 
         // Add listener to message
-        messageRef.addValueEventListener(messageListener)
-
+        myMessageRef.addValueEventListener(messageListener)
 
         sendButton.setOnClickListener {
 
@@ -91,10 +96,8 @@ class ConversationFragment : Fragment() {
             messageList.add(newMessage)
 
             // set new message list
-            USER_DATABASE_REFERENCE
-                .child("User").child(myUid)
-                .child("Contacts").child(oppUid)
-                .child("Message").setValue(messageList)
+            myMessageRef.setValue(messageList)
+            oppMessageRef.setValue(messageList)
 
             messageBox.setText("")
         }
@@ -105,7 +108,7 @@ class ConversationFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        messageRef.removeEventListener(messageListener)
+        myMessageRef.removeEventListener(messageListener)
     }
 
     companion object {
