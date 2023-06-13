@@ -105,7 +105,7 @@ class ProfileFragment : Fragment() {
 
         val addContactItem = menu.findItem(R.id.profile_message)
         addContactItem.setOnMenuItemClickListener {
-            findNavController().navigate(R.id.action_profileFragment_to_taskFragment)
+            findNavController().navigate(R.id.action_profileFragment_to_chatFragment)
             true
         }
     }

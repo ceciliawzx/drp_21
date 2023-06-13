@@ -13,7 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ContactsViewModel @Inject constructor(
+class ChatVIewModel @Inject constructor(
     private val database: DatabaseReference
 ) : ViewModel() {
 
