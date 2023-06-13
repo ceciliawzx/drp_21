@@ -7,10 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.R
+import com.android.kotlinmvvmtodolist.databinding.FragmentChatBinding
+import com.android.kotlinmvvmtodolist.databinding.FragmentConversationBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 
@@ -20,16 +21,16 @@ class ConversationFragment : Fragment() {
     private lateinit var messageBox: EditText
     private lateinit var sendButton: ImageView
     private val args by navArgs<ConversationFragmentArgs>()
-    private val oppUid = args.uid
+    private lateinit var oppUid: String
     private val myUid = FirebaseAuth.getInstance().currentUser?.uid
+
+    private var _binding: FragmentConversationBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        chatRecyclerView = view?.findViewById(R.id.chat_view)!!
-        messageBox = view?.findViewById(R.id.message_box)!!
-        sendButton = view?.findViewById(R.id.send_button)!!
-
+        oppUid = args.uid
     }
 
     override fun onCreateView(
@@ -37,17 +38,22 @@ class ConversationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val toReturn = inflater.inflate(R.layout.fragment_conversation, container, false)
+        _binding = FragmentConversationBinding.inflate(inflater, container, false)
+
+        chatRecyclerView = binding.chatView
+        messageBox = binding.messageBox
+        sendButton = binding.sendButton
 
         sendButton.setOnClickListener {
             if (myUid != null) {
                 USER_DATABASE_REFERENCE
-                    .child("User").child(myUid).child(oppUid).child("Message")
-                    .setValue("Hi")
+                    .child("User").child(myUid)
+                    .child("Contacts").child(oppUid)
+                    .child("Message").setValue("Bye")
             }
         }
 
-        return toReturn
+        return binding.root
     }
 
     companion object {

@@ -198,7 +198,7 @@
         <argument
             android:name="uid"
             app:argType="string"
-            android:defaultValue=" "
+            android:defaultValue=""
             />
     </fragment>
 </navigation>
