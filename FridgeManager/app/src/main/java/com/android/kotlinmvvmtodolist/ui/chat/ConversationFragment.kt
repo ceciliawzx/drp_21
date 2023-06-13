@@ -72,7 +72,7 @@ class ConversationFragment : Fragment() {
             .child("Contacts").child(oppUid)
 
         myMessageRef = myOppRef.child("Message")
-        myTimeStampRef = myOppRef.child("latestTimestamp")
+        myTimeStampRef = myOppRef.child("LatestTimestamp")
 
         oppMessageRef = USER_DATABASE_REFERENCE
             .child("User").child(oppUid)
@@ -93,14 +93,23 @@ class ConversationFragment : Fragment() {
             val message = childSnapshot.getValue(Message::class.java)
             message?.let { messageList.add(it) }
         }
+
+        if (messageList.isEmpty()) {
+            latestTimestamp = 0
+        } else {
+            latestTimestamp = messageList.last().timestamp
+        }
+
+        println("message num: " + messageList.size)
+        println("initial stamp: " + latestTimestamp)
         messageAdapter.notifyDataSetChanged()
+
 
         // Retrieve Timestamp
         timeStampListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                latestTimestamp = dataSnapshot.getValue(Long::class.java) ?: 0
+                latestTimestamp = dataSnapshot.getValue(Long::class.java) ?: latestTimestamp
                 println("timestamp: " + latestTimestamp)
-                messageAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -116,15 +125,17 @@ class ConversationFragment : Fragment() {
                     if (!firstIn) {
                         messageList.add(message)
                         messageAdapter.notifyDataSetChanged()
+
+                        latestTimestamp = message.timestamp
+
+                        println("Message: " + message.message)
+                        println("Timestamp: " + latestTimestamp)
                     } else {
                         firstIn = false
                     }
-
                 }
 
-                // Update the latest timestamp
-                latestTimestamp = message?.timestamp ?: latestTimestamp
-
+                myTimeStampRef.setValue(latestTimestamp)
             }
 
             override fun onChildChanged(
@@ -165,6 +176,9 @@ class ConversationFragment : Fragment() {
             // set new message list
             myMessageRef.setValue(messageList)
             oppMessageRef.setValue(messageList)
+
+            latestTimestamp = newMessage.timestamp
+            myTimeStampRef.setValue(latestTimestamp)
 
             messageBox.setText("")
         }
