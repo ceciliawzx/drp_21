@@ -26,7 +26,7 @@ class ContactsViewModel @Inject constructor(
         fetchContacts()
     }
 
-    private fun fetchContacts() {
+    fun fetchContacts() {
         val userID = FirebaseAuth.getInstance().currentUser?.uid
         if (userID != null) {
             val contactsRef = database.child("User").child(userID).child("Contacts")
@@ -70,9 +70,10 @@ class ContactsViewModel @Inject constructor(
     }
 
     fun deleteContact(userID: String, contact: User) {
-        contact.userID.let {
-            database.child("User").child(userID).child("Contacts").child(it).removeValue()
-        }
+        val contactID = contact.userID
+        val contactsRef = database.child("User").child(userID).child("Contacts")
+        val contactRef = contactsRef.child(contactID)
+        contactRef.removeValue()
     }
 
     fun fetchContact(userID: String, contactID: String) {
