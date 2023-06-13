@@ -2,12 +2,15 @@ package com.android.kotlinmvvmtodolist.ui.chat
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.ChatRowLayoutBinding
-import com.android.kotlinmvvmtodolist.databinding.ContactsRowLayoutBinding
+import com.android.kotlinmvvmtodolist.ui.task.TaskClickListener
 import com.android.kotlinmvvmtodolist.util.User
 
-class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+class ChatAdapter(private val clickListener: ChatClickListener) :
+    RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     private val contacts: MutableList<User> = mutableListOf()
 
@@ -24,17 +27,23 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-        holder.bind(contacts[position])
+        holder.bind(contacts[position], clickListener)
     }
+
 
     override fun getItemCount(): Int = contacts.size
 
     class ChatViewHolder(private val binding: ChatRowLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(contact: User) {
+        fun bind(contact: User, clickListener: ChatClickListener) {
             binding.contact = contact
+            binding.clickListener = clickListener
             binding.executePendingBindings()
         }
+    }
+
+    class ChatClickListener(val clickListener: (contact: User) -> Unit) {
+        fun onClick(contact: User) = clickListener(contact)
     }
 }

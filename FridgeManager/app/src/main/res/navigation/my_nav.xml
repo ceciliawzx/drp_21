@@ -167,7 +167,7 @@
             app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_profileFragment_to_chatFragment"
-            app:destination="@id/chatOverviewFragment"
+            app:destination="@id/chatFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
@@ -175,11 +175,19 @@
     </fragment>
 
     <fragment
-        android:id="@+id/chatOverviewFragment"
+        android:id="@+id/chatFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.chat.ChatFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_chat" >
+        <action
+            android:id="@+id/action_chatFragment_to_conversationFragment"
+            app:destination="@id/conversationFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
+            app:popEnterAnim="@anim/from_right"
+            app:popExitAnim="@anim/to_left" />
     </fragment>
+
     <fragment
         android:id="@+id/conversationFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.chat.ConversationFragment"

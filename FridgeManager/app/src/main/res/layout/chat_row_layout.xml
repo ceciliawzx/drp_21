@@ -7,6 +7,10 @@
         <variable
             name="contact"
             type="com.android.kotlinmvvmtodolist.util.User" />
+
+        <variable
+            name="clickListener"
+            type="com.android.kotlinmvvmtodolist.ui.chat.ChatAdapter.ChatClickListener" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -14,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="4dp">
+        app:cardElevation="4dp"
+        android:onClick="@{() -> clickListener.onClick(contact)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/row_background"
