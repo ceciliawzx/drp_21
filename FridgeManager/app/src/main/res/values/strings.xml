@@ -47,4 +47,5 @@
     <string name="contacts">Contacts</string>
     <string name="add_contact">Add Contact</string>
     <string name="contact_id_hint">Enter contact\'s ID</string>
+    <string name="type_your_user_name">Type Your User Name</string>
 </resources>

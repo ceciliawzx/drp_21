@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="200dp"
         app:boxStrokeColor="@color/teal_200"
         app:hintTextColor="@color/teal_700"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +44,7 @@
             android:id="@+id/userNameET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type Your Name"
+            android:hint="@string/type_your_user_name"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
