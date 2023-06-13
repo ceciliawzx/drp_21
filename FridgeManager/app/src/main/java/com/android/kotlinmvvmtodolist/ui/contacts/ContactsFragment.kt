@@ -10,8 +10,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.databinding.FragmentContactsBinding
+import com.android.kotlinmvvmtodolist.util.Constants.CUR_USER_ID
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -55,37 +59,35 @@ class ContactsFragment : Fragment() {
             recyclerContactsView.adapter = mAdapter
         }
 
-//        viewModel.filteredContactsLiveData.observe(viewLifecycleOwner) { filteredContacts ->
-//            mAdapter.submitList(filteredContacts)
-//        }
+        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
 
-        // TODO: delete contact?
-//        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-//            override fun onMove(
-//                recyclerView: RecyclerView,
-//                viewHolder: RecyclerView.ViewHolder,
-//                target: RecyclerView.ViewHolder
-//            ): Boolean {
-//                return false
-//            }
-//
-//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//                val position = viewHolder.adapterPosition
-//                val contact = mAdapter.contacts[position]
-//                viewModel.deleteContact(contact.userID, contact)
-//                mAdapter.deleteContact(contact)
-//                Snackbar.make(binding.root, "Deleted!", Snackbar.LENGTH_LONG).apply {
-//                    setAction("Undo") {
-//                        viewModel.addContact(contact.userID, contact)
-//                        mAdapter.submitList(viewModel.filteredContactsLiveData.value ?: emptyList())
-//                    }
-//                    show()
-//                }
-//            }
-//        }
-//
-//        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
-//        itemTouchHelper.attachToRecyclerView(binding.recyclerContactsView)
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val contact = mAdapter.contacts[position]
+                if (CUR_USER_ID != null) {
+                    // Delete friend from my contact
+                    viewModel.deleteContact(CUR_USER_ID, contact)
+                }
+                mAdapter.deleteContact(contact)
+                Snackbar.make(binding.root, "Deleted!", Snackbar.LENGTH_LONG).apply {
+                    setAction("Undo") {
+                        viewModel.addContact(contact.userID, contact)
+                        mAdapter.submitList(viewModel.filteredContactsLiveData.value ?: emptyList())
+                    }
+                    show()
+                }
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerContactsView)
 
         setHasOptionsMenu(true)
 
