@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.databinding.FragmentConversationBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -32,9 +33,11 @@ class ConversationFragment : Fragment() {
 
     // Message retrieve
     private val messageList: MutableList<Message> = mutableListOf()
-    private lateinit var messageListener: ValueEventListener
+    private lateinit var messageListener: ChildEventListener
     private lateinit var myMessageRef: DatabaseReference
     private lateinit var oppMessageRef: DatabaseReference
+
+    var latestTimestamp: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,36 +66,64 @@ class ConversationFragment : Fragment() {
             .child("Contacts").child(myUid)
             .child("Message")
 
-        messageListener = object : ValueEventListener {
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                // Clear to fetch
-                messageList.clear()
-
-                // Add new version of message list
-                for (childSnapshot in dataSnapshot.children) {
-                    val message = childSnapshot.getValue(Message::class.java)
-                    message?.let { messageList.add(it) }
+        // Retrieve Timestamp
+        USER_DATABASE_REFERENCE
+            .child("User").child(myUid)
+            .child("Contacts").child(oppUid)
+            .child("latestTimestamp")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    latestTimestamp = dataSnapshot.getValue(Long::class.java) ?: 0
                 }
 
-                messageList.forEach { message ->
-                    println(message.message)
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Handle the error
                 }
-            }
+            })
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        }
+        messageListener =
+            myMessageRef.orderByChild("timestamp")
+            .startAt(latestTimestamp.toDouble()) // Retrieve messages with a greater timestamp
+            .addChildEventListener(object : ChildEventListener {
+                override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                    val message = dataSnapshot.getValue(Message::class.java)
 
-        // Add listener to message
-        myMessageRef.addValueEventListener(messageListener)
+                    if (message != null) {
+                        messageList.add(message)
+                        println(message.message)
+                    }
+
+                    // Update the latest timestamp
+                    latestTimestamp = message?.timestamp ?: latestTimestamp
+
+                    println(latestTimestamp)
+                }
+
+                override fun onChildChanged(
+                    dataSnapshot: DataSnapshot,
+                    previousChildName: String?
+                ) {
+                    // Handle the case if a child message is changed (optional)
+                }
+
+                override fun onChildRemoved(dataSnapshot: DataSnapshot) {
+                    // Handle the case if a child message is removed (optional)
+                }
+
+                override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                    // Handle the case if a child message is moved (optional)
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Handle the error
+                }
+            })
 
         sendButton.setOnClickListener {
 
             // Add new message to origin list
             val newMessage = Message(messageBox.text.toString(), myUid)
+//            messageList.clear()
             messageList.add(newMessage)
 
             // set new message list
