@@ -83,6 +83,14 @@ class ConversationFragment : Fragment() {
         chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         chatRecyclerView.adapter = messageAdapter
 
+        val temp = myOppRef.child("Message").get()
+        while (!temp.isComplete) {}
+        val dataSnapshot = temp.result
+        for (childSnapshot in dataSnapshot.children) {
+            val message = childSnapshot.getValue(Message::class.java)
+            message?.let { messageList.add(it) }
+        }
+
         messageAdapter.notifyDataSetChanged()
 
         // Retrieve Timestamp
