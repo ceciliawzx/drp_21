@@ -55,6 +55,8 @@ class ContactsFragment : Fragment() {
 
         binding.apply {
             recyclerContactsView.adapter = mAdapter
+
+
         }
 
         viewModel.contactsLiveData.observe(viewLifecycleOwner) { contacts ->

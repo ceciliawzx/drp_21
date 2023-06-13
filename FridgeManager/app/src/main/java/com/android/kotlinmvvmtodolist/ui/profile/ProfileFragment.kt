@@ -40,6 +40,8 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.content.SharedPreferences
+import android.view.Menu
+import android.view.MenuInflater
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -76,6 +78,7 @@ class ProfileFragment : Fragment() {
                 dialog.show()
             }
         }
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -95,5 +98,15 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.profile_menu, menu)
+
+        val addContactItem = menu.findItem(R.id.profile_message)
+        addContactItem.setOnMenuItemClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_taskFragment)
+            true
+        }
     }
 }
