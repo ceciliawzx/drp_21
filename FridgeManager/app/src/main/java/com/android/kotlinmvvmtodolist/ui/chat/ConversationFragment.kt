@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.databinding.FragmentConversationBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -26,6 +27,10 @@ class ConversationFragment : Fragment() {
     private val args by navArgs<ConversationFragmentArgs>()
     private lateinit var oppUid: String
     private val myUid = FirebaseAuth.getInstance().currentUser?.uid!!
+    private lateinit var messageAdapter: MessageAdapter
+
+    var receiverRoom: String? = null
+    var senderRoom: String? = null
 
     private var _binding: FragmentConversationBinding? = null
     private val binding get() = _binding!!
@@ -48,6 +53,9 @@ class ConversationFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentConversationBinding.inflate(inflater, container, false)
 
+        senderRoom = oppUid + myUid
+        receiverRoom = myUid + oppUid
+
         chatRecyclerView = binding.chatView
         messageBox = binding.messageBox
         sendButton = binding.sendButton
@@ -56,6 +64,11 @@ class ConversationFragment : Fragment() {
             .child("User").child(myUid)
             .child("Contacts").child(oppUid)
             .child("Message")
+
+        messageAdapter = MessageAdapter(requireContext(), messageList)
+
+        chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        chatRecyclerView.adapter = messageAdapter
 
         messageListener = object : ValueEventListener {
 
@@ -70,9 +83,11 @@ class ConversationFragment : Fragment() {
                     message?.let { messageList.add(it) }
                 }
 
-                messageList.forEach { message ->
-                    println(message.message)
-                }
+                messageAdapter.notifyDataSetChanged()
+
+//                messageList.forEach { message ->
+//                    println(message.message)
+//                }
             }
 
             override fun onCancelled(error: DatabaseError) {
