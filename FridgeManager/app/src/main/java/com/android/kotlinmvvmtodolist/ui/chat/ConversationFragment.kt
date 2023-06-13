@@ -83,39 +83,43 @@ class ConversationFragment : Fragment() {
         chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         chatRecyclerView.adapter = messageAdapter
 
+
+        // Initialise pull message
         val temp = myOppRef.child("Message").get()
-        while (!temp.isComplete) {}
+        while (!temp.isComplete) {
+        }
         val dataSnapshot = temp.result
         for (childSnapshot in dataSnapshot.children) {
             val message = childSnapshot.getValue(Message::class.java)
             message?.let { messageList.add(it) }
         }
-
         messageAdapter.notifyDataSetChanged()
 
         // Retrieve Timestamp
         timeStampListener = object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    latestTimestamp = dataSnapshot.getValue(Long::class.java) ?: 0
-                    println("timestamp: " + latestTimestamp)
-                     messageAdapter.notifyDataSetChanged()
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                latestTimestamp = dataSnapshot.getValue(Long::class.java) ?: 0
+                println("timestamp: " + latestTimestamp)
+                messageAdapter.notifyDataSetChanged()
             }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        }
 
         messageListener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val message = dataSnapshot.getValue(Message::class.java)
 
-                if (message != null) {
-                    if (firstIn || message.senderId != myUid) {
+                if (message != null && message.senderId != myUid) {
+                    if (!firstIn) {
                         messageList.add(message)
                         messageAdapter.notifyDataSetChanged()
+                    } else {
                         firstIn = false
                     }
+
                 }
 
                 // Update the latest timestamp
@@ -174,7 +178,6 @@ class ConversationFragment : Fragment() {
         myTimeStampRef.removeEventListener(timeStampListener)
         myMessageRef.removeEventListener(messageListener)
         messageList.clear()
-        firstIn = true
     }
 
     companion object {
