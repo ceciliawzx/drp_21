@@ -14,18 +14,16 @@
         android:layout_height="match_parent"
         tools:context=".ui.profile.ProfileFragment">
 
-        <!--        android:visibility="gone"-->
-
         <ImageView
             android:id="@+id/profile_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginTop="100dp"
+            android:clickable="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_launcher_background"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteY="112dp" />
 
@@ -33,12 +31,37 @@
             android:id="@+id/text_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/username"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
+        <TextView
+            android:id="@+id/text_uid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/uid"
+            android:textColor="#7E8181"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_username" />
+
+        <ImageButton
+            android:id="@+id/btn_copy_uid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:src="@drawable/ic_baseline_content_copy_24"
+            app:layout_constraintTop_toBottomOf="@+id/text_username"
+            app:layout_constraintStart_toEndOf="@+id/text_uid" />
 
         <Button
             android:id="@+id/btn_logout"
