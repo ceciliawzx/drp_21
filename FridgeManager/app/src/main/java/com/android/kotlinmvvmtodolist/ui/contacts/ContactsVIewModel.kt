@@ -1,5 +1,6 @@
 package com.android.kotlinmvvmtodolist.ui.contacts
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -76,11 +77,28 @@ class ContactsViewModel @Inject constructor(
         val contactRef = database.child("User").child(contactID)
         contactRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                // Add friend to my contact
                 val contactName = snapshot.child("userName").value.toString()
                 val contactProfileImage = snapshot.child("profileImage").value.toString()
                 val contact = User(contactID, contactName, contactProfileImage)
                 addContact(userID, contact)
+
+                // Add me to friend's contact
+                val userRef = database.child("User").child(userID)
+                userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val userName = snapshot.child("userName").value.toString()
+                        val userProfileImage = snapshot.child("profileImage").value.toString()
+                        val user = User(userID, userName, userProfileImage)
+                        addContact(contactID, user)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        // Handle error
+                    }
+                })
             }
+
 
             override fun onCancelled(error: DatabaseError) {
                 // Handle error
