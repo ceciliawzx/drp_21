@@ -12,8 +12,7 @@ import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.RowLayoutBinding
 
 class TaskAdapter(
-    private val clickListener: TaskClickListener,
-    private val shareClickListener: TaskClickListener):
+    private val clickListener: TaskClickListener):
     ListAdapter<TaskEntry, TaskAdapter.ViewHolder>(TaskDiffCallback) {
 
     companion object TaskDiffCallback : DiffUtil.ItemCallback<TaskEntry>(){
@@ -23,10 +22,12 @@ class TaskAdapter(
 
     class ViewHolder(private val binding: RowLayoutBinding):
         RecyclerView.ViewHolder(binding.root) {
-        val btnShare: ImageButton = binding.btnShare
         fun bind(taskEntry: TaskEntry, clickListener: TaskClickListener){
             binding.taskEntry = taskEntry
             binding.clickListener = clickListener
+            binding.btnShare.setOnClickListener {
+                clickListener.onShareClick(taskEntry)
+            }
             binding.executePendingBindings()
         }
     }
@@ -37,18 +38,16 @@ class TaskAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val current = getItem(position)
-        if(current != null){
+        if (current != null) {
             holder.bind(current, clickListener)
-            holder.bind(current, shareClickListener)
         }
-
-        holder.btnShare.setOnClickListener {
-            shareClickListener.onClick(current)
-        }
-
     }
 }
 
-class TaskClickListener(val clickListener: (taskEntry: TaskEntry) -> Unit){
+class TaskClickListener(
+    val clickListener: (taskEntry: TaskEntry) -> Unit,
+    val shareClickListener: (taskEntry: TaskEntry) -> Unit
+){
     fun onClick(taskEntry: TaskEntry) = clickListener(taskEntry)
+    fun onShareClick(taskEntry: TaskEntry) = shareClickListener(taskEntry)
 }

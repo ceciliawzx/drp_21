@@ -41,6 +41,19 @@ class TaskFragment : Fragment() {
     private val binding get() = _binding!!
     private var savedInstanceState: Bundle? = null
 
+    private val clickListener: TaskClickListener = TaskClickListener(
+        { taskEntry ->
+            findNavController().navigate(
+                TaskFragmentDirections.actionTaskFragmentToUpdateFragment(taskEntry)
+            )
+        },
+        { taskEntry ->
+            findNavController().navigate(
+                TaskFragmentDirections.actionTaskFragmentToShareFragment(taskEntry)
+            )
+        }
+    )
+
 
     @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onCreateView(
@@ -55,13 +68,7 @@ class TaskFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        mAdapter = TaskAdapter(
-            TaskClickListener { taskEntry ->
-                findNavController().navigate(TaskFragmentDirections.actionTaskFragmentToUpdateFragment(taskEntry))
-                              },
-            TaskClickListener { taskEntry ->
-                findNavController().navigate(TaskFragmentDirections.actionTaskFragmentToShareFragment(taskEntry))
-            })
+        mAdapter = TaskAdapter(clickListener)
 
         lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -256,4 +263,5 @@ class TaskFragment : Fragment() {
             }
         }
     }
+
 }
