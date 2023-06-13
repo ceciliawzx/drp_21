@@ -1,4 +1,4 @@
-package com.android.kotlinmvvmtodolist.ui.contacts
+package com.android.kotlinmvvmtodolist.ui.chat
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
