@@ -19,6 +19,8 @@ class ContactsViewModel @Inject constructor(
 ) : ViewModel() {
 
     val contactsLiveData: LiveData<List<User>> = MutableLiveData()
+    val filteredContactsLiveData: MutableLiveData<List<User>> = MutableLiveData()
+
 
     init {
         fetchContacts()
@@ -104,6 +106,24 @@ class ContactsViewModel @Inject constructor(
                 // Handle error
             }
         })
+    }
+
+    fun searchDatabase(query: String) {
+        filterContacts(query)
+    }
+
+    private fun filterContacts(query: String) {
+        val contacts = contactsLiveData.value
+        if (contacts != null) {
+            val filteredContacts = if (query.isNotEmpty()) {
+                contacts.filter { user ->
+                    user.userName.contains(query, ignoreCase = true)
+                }
+            } else {
+                contacts
+            }
+            filteredContactsLiveData.value = filteredContacts
+        }
     }
 
 }
