@@ -22,12 +22,13 @@ class ShareViewModel @Inject constructor(
     private val _contactsLiveData: MutableLiveData<List<User>> = MutableLiveData()
     val contactsLiveData: LiveData<List<User>> get() = _contactsLiveData
     val filteredContactsLiveData: MutableLiveData<List<User>> = MutableLiveData()
-    private lateinit var mAdapter: ShareAdaptor
+    private lateinit var mAdapter: ShareAdaptor // Move mAdapter reference here
 
     // Set the adapter for the ViewModel
     fun setAdapter(adapter: ShareAdaptor) {
         mAdapter = adapter
     }
+
 
     fun fetchContacts() {
         val userID = FirebaseAuth.getInstance().currentUser?.uid
@@ -55,5 +56,81 @@ class ShareViewModel @Inject constructor(
             })
         }
     }
+
+
+    fun addContact(userID: String, contact: User) {
+        val contactID = contact.userID
+        val contactsRef = database.child("User").child(userID).child("Contacts")
+        val newContactRef = contactsRef.child(contactID)
+        newContactRef.setValue(contact)
+    }
+
+
+
+    fun updateContact(userID: String, contact: User) {
+        contact.userID.let {
+            database.child("User").child(userID).child("Contacts").child(it).setValue(contact)
+        }
+    }
+
+    fun deleteContact(userID: String, contact: User) {
+        val contactID = contact.userID
+        val contactsRef = database.child("User").child(userID).child("Contacts")
+        val contactRef = contactsRef.child(contactID)
+        contactRef.removeValue()
+    }
+
+    fun fetchContact(userID: String, contactID: String) {
+        val contactRef = database.child("User").child(contactID)
+        contactRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // Add friend to my contact
+                val contactName = snapshot.child("userName").value.toString()
+                val contactProfileImage = snapshot.child("profileImage").value.toString()
+                val contact = User(contactID, contactName, contactProfileImage)
+                addContact(userID, contact)
+
+                // Add me to friend's contact
+                val userRef = database.child("User").child(userID)
+                userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val userName = snapshot.child("userName").value.toString()
+                        val userProfileImage = snapshot.child("profileImage").value.toString()
+                        val user = User(userID, userName, userProfileImage)
+                        addContact(contactID, user)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        // Handle error
+                    }
+                })
+            }
+
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+            }
+        })
+
+    }
+
+    fun searchDatabase(query: String) {
+        filterContacts(query)
+    }
+
+    private fun filterContacts(query: String) {
+        val contacts = contactsLiveData.value
+        if (contacts != null) {
+            val filteredContacts = if (query.isNotEmpty()) {
+                contacts.filter { user ->
+                    user.userName.contains(query, ignoreCase = true)
+                }
+            } else {
+                contacts
+            }
+            filteredContactsLiveData.value = filteredContacts
+        }
+    }
+
 
 }

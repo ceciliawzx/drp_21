@@ -7,23 +7,29 @@ import com.android.kotlinmvvmtodolist.databinding.ShareRowLayoutBinding
 import com.android.kotlinmvvmtodolist.util.User
 
 
-class ShareAdaptor: RecyclerView.Adapter<ShareAdaptor.ShareViewHolder>() {
+class ShareAdaptor(private val shareFragment: ShareFragment):
+    RecyclerView.Adapter<ShareAdaptor.ShareViewHolder>() {
 
-    val contacts: MutableList<User> = mutableListOf()
+    val selectedContactsMap: MutableMap<User, Boolean> = mutableMapOf()
+
+    private var contacts: List<User> = emptyList()
 
     fun submitList(newContacts: List<User>) {
-        contacts.clear()
-        contacts.addAll(newContacts)
+        selectedContactsMap.clear()
+        for (contact in newContacts) {
+            selectedContactsMap[contact] = false
+        }
+        contacts = newContacts
         notifyDataSetChanged()
     }
 
-    fun deleteContact(contact: User) {
-        val position = contacts.indexOf(contact)
-        if (position != -1) {
-            contacts.removeAt(position)
-            notifyItemRemoved(position)
-        }
+    fun toggleContactSelection(contact: User) {
+        val isSelected = selectedContactsMap[contact] ?: false
+        selectedContactsMap[contact] = !isSelected
+        notifyDataSetChanged()
+        shareFragment.updateSelectedContacts()
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShareViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -32,17 +38,25 @@ class ShareAdaptor: RecyclerView.Adapter<ShareAdaptor.ShareViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ShareViewHolder, position: Int) {
-        holder.bind(contacts[position])
+        val contact = contacts[position]
+        holder.bind(contact, selectedContactsMap[contact] ?: false)
     }
 
     override fun getItemCount(): Int = contacts.size
 
-    class ShareViewHolder(private val binding: ShareRowLayoutBinding) :
+    inner class ShareViewHolder(private val binding: ShareRowLayoutBinding):
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(contact: User) {
+        private val shareCheckBox = binding.shareCheckBox
+
+        fun bind(contact: User, isSelected: Boolean) {
             binding.contact = contact
             binding.executePendingBindings()
+
+            shareCheckBox.isChecked = isSelected
+            shareCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                shareFragment.mAdapter.toggleContactSelection(contact)
+            }
         }
     }
 }
