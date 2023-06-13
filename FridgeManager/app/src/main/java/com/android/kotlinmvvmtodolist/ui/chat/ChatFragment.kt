@@ -36,9 +36,9 @@ class ChatFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        mAdapter = ChatAdapter(ChatAdapter.ChatClickListener {
+        mAdapter = ChatAdapter(ChatAdapter.ChatClickListener {uid ->
             findNavController().navigate(
-                ChatFragmentDirections.actionChatFragmentToConversationFragment("GvKT8WMY49PJdCspAFEOCTQ1weB2")
+                ChatFragmentDirections.actionChatFragmentToConversationFragment(uid.userID)
             )
         })
 

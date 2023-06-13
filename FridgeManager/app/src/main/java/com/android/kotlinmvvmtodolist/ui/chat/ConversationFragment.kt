@@ -46,10 +46,13 @@ class ConversationFragment : Fragment() {
 
         sendButton.setOnClickListener {
             if (myUid != null) {
+
+                val newMessage = Message("Hi", myUid)
+
                 USER_DATABASE_REFERENCE
                     .child("User").child(myUid)
                     .child("Contacts").child(oppUid)
-                    .child("Message").setValue("Bye")
+                    .child("Message").setValue(newMessage)
             }
         }
 
