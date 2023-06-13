@@ -24,11 +24,13 @@
         android:orientation="horizontal"
         android:weightSum="100">
         <EditText
+            android:id="@+id/message_box"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:hint="Type a message"
             android:layout_weight="85"/>
         <ImageView
+            android:id="@+id/send_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_send"

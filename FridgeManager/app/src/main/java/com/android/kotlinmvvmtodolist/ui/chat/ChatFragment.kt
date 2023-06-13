@@ -38,7 +38,7 @@ class ChatFragment : Fragment() {
 
         mAdapter = ChatAdapter(ChatAdapter.ChatClickListener {
             findNavController().navigate(
-                ChatFragmentDirections.actionChatFragmentToConversationFragment()
+                ChatFragmentDirections.actionChatFragmentToConversationFragment("GvKT8WMY49PJdCspAFEOCTQ1weB2")
             )
         })
 

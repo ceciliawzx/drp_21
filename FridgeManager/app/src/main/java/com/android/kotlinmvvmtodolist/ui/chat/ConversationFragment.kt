@@ -5,29 +5,31 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
+import androidx.databinding.DataBindingUtil.setContentView
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.R
+import com.google.firebase.auth.FirebaseAuth
+import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ConversationFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ConversationFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private lateinit var chatRecyclerView: RecyclerView
+    private lateinit var messageBox: EditText
+    private lateinit var sendButton: ImageView
+    private val args by navArgs<ConversationFragmentArgs>()
+    private val oppUid = args.uid
+    private val myUid = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
+        chatRecyclerView = view?.findViewById(R.id.chat_view)!!
+        messageBox = view?.findViewById(R.id.message_box)!!
+        sendButton = view?.findViewById(R.id.send_button)!!
+
     }
 
     override fun onCreateView(
@@ -35,26 +37,20 @@ class ConversationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_conversation, container, false)
+        val toReturn = inflater.inflate(R.layout.fragment_conversation, container, false)
+
+        sendButton.setOnClickListener {
+            if (myUid != null) {
+                USER_DATABASE_REFERENCE
+                    .child("User").child(myUid).child(oppUid).child("Message")
+                    .setValue("Hi")
+            }
+        }
+
+        return toReturn
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ConversationFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ConversationFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+
     }
 }

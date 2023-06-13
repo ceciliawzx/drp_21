@@ -39,6 +39,7 @@
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
     </fragment>
+
     <fragment
         android:id="@+id/addFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.add.AddFragment"
@@ -75,6 +76,7 @@
             app:argType="integer"
             android:defaultValue="0" />
     </fragment>
+
     <fragment
         android:id="@+id/updateFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.update.UpdateFragment"
@@ -192,5 +194,11 @@
         android:id="@+id/conversationFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.chat.ConversationFragment"
         android:label="fragment_conversation"
-        tools:layout="@layout/fragment_conversation" />
+        tools:layout="@layout/fragment_conversation">
+        <argument
+            android:name="uid"
+            app:argType="string"
+            android:defaultValue=" "
+            />
+    </fragment>
 </navigation>
