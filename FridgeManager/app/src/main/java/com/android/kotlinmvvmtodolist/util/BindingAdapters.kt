@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
+import android.util.Base64
 import android.view.View
 import android.view.ViewParent
 import android.widget.ImageView
@@ -17,6 +18,7 @@ import com.android.kotlinmvvmtodolist.ui.add.PreviewDialog
 import com.android.kotlinmvvmtodolist.util.ShowImage.HORIZONTAL_PREVIEW_SCALE
 import com.android.kotlinmvvmtodolist.util.ShowImage.VERTICLE_PREVIEW_SCALE
 import com.android.kotlinmvvmtodolist.util.ShowImage.showImage
+import com.android.kotlinmvvmtodolist.util.ShowImage.showProfileImage
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -168,6 +170,12 @@ fun setImageView(view: ImageView, imagePath: String) {
             dialogFragment.show(view.findFragment<Fragment>().parentFragmentManager, "ImageDialogFragment")
         }
     }
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("setProfileImageView")
+fun setProfileImageView(view: ImageView, imageBytes: String) {
+    showProfileImage(view, imageBytes, 0.01, 0.01)
 }
 
 
