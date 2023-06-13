@@ -95,6 +95,8 @@ class ConversationFragment : Fragment() {
                 .child("User").child(myUid)
                 .child("Contacts").child(oppUid)
                 .child("Message").setValue(messageList)
+
+            messageBox.setText("")
         }
 
         return binding.root
