@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "30450181002",
+    "project_id": "drp21-def08",
+    "storage_bucket": "drp21-def08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30450181002:android:9c1b22bc669ec3256a5e73",
+        "android_client_info": {
+          "package_name": "com.android.kotlinmvvmtodolist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnfnFAt6tJCtnlXbaGVY9phWY8vBbW408"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
