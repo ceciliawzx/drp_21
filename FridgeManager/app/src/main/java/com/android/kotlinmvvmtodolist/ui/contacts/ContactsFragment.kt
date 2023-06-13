@@ -10,11 +10,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.databinding.FragmentContactsBinding
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +24,17 @@ class ContactsFragment : Fragment() {
     private val binding get() = _binding!!
     private var savedInstanceState: Bundle? = null
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.fetchContacts()
+        viewModel.contactsLiveData.observe(viewLifecycleOwner) { contacts ->
+            mAdapter.submitList(contacts)
+        }
+        viewModel.filteredContactsLiveData.observe(viewLifecycleOwner) { filteredContacts ->
+            mAdapter.submitList(filteredContacts)
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,10 +46,6 @@ class ContactsFragment : Fragment() {
 
         _binding = FragmentContactsBinding.inflate(inflater, container, false)
 
-        if (viewModel.contactsLiveData.value == null) {
-            viewModel.fetchContacts()
-        }
-
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
@@ -51,9 +55,9 @@ class ContactsFragment : Fragment() {
             recyclerContactsView.adapter = mAdapter
         }
 
-        viewModel.filteredContactsLiveData.observe(viewLifecycleOwner) { filteredContacts ->
-            mAdapter.submitList(filteredContacts)
-        }
+//        viewModel.filteredContactsLiveData.observe(viewLifecycleOwner) { filteredContacts ->
+//            mAdapter.submitList(filteredContacts)
+//        }
 
         // TODO: delete contact?
 //        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {

@@ -18,23 +18,18 @@ class ContactsViewModel @Inject constructor(
     private val database: DatabaseReference
 ) : ViewModel() {
 
-    val contactsLiveData: LiveData<List<User>> = MutableLiveData()
+    val contactsLiveData: MutableLiveData<List<User>> = MutableLiveData()
     val filteredContactsLiveData: MutableLiveData<List<User>> = MutableLiveData()
-
-
-    init {
-        fetchContacts()
-    }
 
     fun fetchContacts() {
         val userID = FirebaseAuth.getInstance().currentUser?.uid
         if (userID != null) {
             val contactsRef = database.child("User").child(userID).child("Contacts")
-            contactsRef.addValueEventListener(object : ValueEventListener {
+            contactsRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val contacts: MutableList<User> = mutableListOf()
                     for (contactSnapshot in snapshot.children) {
-                        val contactID = contactSnapshot.key // Get the contact ID from the snapshot key
+                        val contactID = contactSnapshot.key
                         val contactName = contactSnapshot.child("userName").value.toString()
                         val contactProfileImage = contactSnapshot.child("profileImage").value.toString()
                         val contact = contactID?.let { User(it, contactName, contactProfileImage) }
@@ -42,7 +37,7 @@ class ContactsViewModel @Inject constructor(
                             contacts.add(contact)
                         }
                     }
-                    (contactsLiveData as MutableLiveData).value = contacts
+                    notifyContactsUpdated(contacts)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -51,7 +46,6 @@ class ContactsViewModel @Inject constructor(
             })
         }
     }
-
 
 
     fun addContact(userID: String, contact: User) {
@@ -125,6 +119,10 @@ class ContactsViewModel @Inject constructor(
             }
             filteredContactsLiveData.value = filteredContacts
         }
+    }
+
+    private fun notifyContactsUpdated(contacts: List<User>) {
+        contactsLiveData.postValue(contacts)
     }
 
 }
