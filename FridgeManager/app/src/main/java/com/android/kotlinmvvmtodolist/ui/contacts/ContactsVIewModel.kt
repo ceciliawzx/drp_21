@@ -18,14 +18,22 @@ class ContactsViewModel @Inject constructor(
     private val database: DatabaseReference
 ) : ViewModel() {
 
-    val contactsLiveData: MutableLiveData<List<User>> = MutableLiveData()
+    private val _contactsLiveData: MutableLiveData<List<User>> = MutableLiveData()
+    val contactsLiveData: LiveData<List<User>> get() = _contactsLiveData
     val filteredContactsLiveData: MutableLiveData<List<User>> = MutableLiveData()
+    private lateinit var mAdapter: ContactsAdapter // Move mAdapter reference here
+
+    // Set the adapter for the ViewModel
+    fun setAdapter(adapter: ContactsAdapter) {
+        mAdapter = adapter
+    }
+
 
     fun fetchContacts() {
         val userID = FirebaseAuth.getInstance().currentUser?.uid
         if (userID != null) {
             val contactsRef = database.child("User").child(userID).child("Contacts")
-            contactsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            contactsRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val contacts: MutableList<User> = mutableListOf()
                     for (contactSnapshot in snapshot.children) {
@@ -37,7 +45,8 @@ class ContactsViewModel @Inject constructor(
                             contacts.add(contact)
                         }
                     }
-                    notifyContactsUpdated(contacts)
+                    _contactsLiveData.value = contacts
+                    mAdapter.notifyDataSetChanged()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -101,6 +110,7 @@ class ContactsViewModel @Inject constructor(
                 // Handle error
             }
         })
+
     }
 
     fun searchDatabase(query: String) {
@@ -119,10 +129,6 @@ class ContactsViewModel @Inject constructor(
             }
             filteredContactsLiveData.value = filteredContacts
         }
-    }
-
-    private fun notifyContactsUpdated(contacts: List<User>) {
-        contactsLiveData.postValue(contacts)
     }
 
 }

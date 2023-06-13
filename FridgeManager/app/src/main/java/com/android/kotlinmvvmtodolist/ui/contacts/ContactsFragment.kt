@@ -28,17 +28,6 @@ class ContactsFragment : Fragment() {
     private val binding get() = _binding!!
     private var savedInstanceState: Bundle? = null
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.fetchContacts()
-        viewModel.contactsLiveData.observe(viewLifecycleOwner) { contacts ->
-            mAdapter.submitList(contacts)
-        }
-        viewModel.filteredContactsLiveData.observe(viewLifecycleOwner) { filteredContacts ->
-            mAdapter.submitList(filteredContacts)
-        }
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,10 +43,19 @@ class ContactsFragment : Fragment() {
         binding.viewModel = viewModel
 
         mAdapter = ContactsAdapter()
+        viewModel.setAdapter(mAdapter)
 
         binding.apply {
             recyclerContactsView.adapter = mAdapter
         }
+
+        viewModel.contactsLiveData.observe(viewLifecycleOwner) { contacts ->
+            mAdapter.submitList(contacts)
+        }
+        viewModel.filteredContactsLiveData.observe(viewLifecycleOwner) { filteredContacts ->
+            mAdapter.submitList(filteredContacts)
+        }
+
 
         val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
@@ -129,6 +127,11 @@ class ContactsFragment : Fragment() {
 
     fun runQuery(query: String) {
         viewModel.searchDatabase(query)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchContacts()
     }
 
 }
