@@ -180,4 +180,9 @@
         android:label="@string/app_name"
         tools:layout="@layout/fragment_chat" >
     </fragment>
+    <fragment
+        android:id="@+id/conversationFragment"
+        android:name="com.android.kotlinmvvmtodolist.ui.chat.ConversationFragment"
+        android:label="fragment_conversation"
+        tools:layout="@layout/fragment_conversation" />
 </navigation>
