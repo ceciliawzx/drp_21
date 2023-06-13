@@ -64,8 +64,8 @@ class ContactsFragment : Fragment() {
         inflater.inflate(R.menu.contacts_menu, menu)
 
         // TODO
-        val searchItem = menu.findItem(R.id.contacts_search)
-        val searchView = searchItem.actionView as SearchView
+//        val searchItem = menu.findItem(R.id.contacts_search)
+//        val searchView = searchItem.actionView as SearchView
 
         val addContactItem = menu.findItem(R.id.contacts_add)
         addContactItem.setOnMenuItemClickListener {
