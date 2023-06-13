@@ -3,26 +3,17 @@ package com.android.kotlinmvvmtodolist.util
 import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.os.Build
-import android.util.Base64
-import android.view.View
-import android.view.ViewParent
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.findFragment
 import com.android.kotlinmvvmtodolist.ui.add.PreviewDialog
 import com.android.kotlinmvvmtodolist.util.ShowImage.HORIZONTAL_PREVIEW_SCALE
 import com.android.kotlinmvvmtodolist.util.ShowImage.VERTICLE_PREVIEW_SCALE
 import com.android.kotlinmvvmtodolist.util.ShowImage.showImage
 import com.android.kotlinmvvmtodolist.util.ShowImage.showProfileImage
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -96,37 +87,6 @@ fun setAmount(view: TextView, amount: Int){
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("setDate")
-//fun setDate(view: TextView, date: String){
-//
-//    val currentDate = Calendar.getInstance().time.toString()
-//    val dateFormat1 = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
-//    val parsedDate = dateFormat1.parse(currentDate)
-//    // start date in the format yyyy-mm-dd
-//    val endDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(parsedDate)
-//
-//    val dateFormat2 = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-//
-//    val date1 = dateFormat2.parse(date)
-//    val date2 = dateFormat2.parse(endDate)
-//
-//    val differenceInMillis = date1.time - date2.time
-//    val differenceInDays = differenceInMillis / (1000 * 60 * 60 * 24)
-//
-//    if (differenceInDays in 1..1) {
-//        view.text = "Expire in $differenceInDays days"
-//        view.setTextColor(Color.RED)
-//    } else if (differenceInDays > 0){
-//        view.text = "Expire in $differenceInDays days"
-//    } else if (differenceInDays < 0) {
-//        val dif = abs(differenceInDays)
-//        view.text = "Expired $dif days ago!!!"
-//        view.setTextColor(Color.DKGRAY)
-//    } else {
-//        view.text = "Expire today!!!"
-//        view.setTextColor(Color.RED)
-//    }
-//
-//}
 fun setDate(view: TextView, date: String?) {
     if (date != null && date.isNotEmpty()) {
         val currentDate = Calendar.getInstance().time.toString()
@@ -176,10 +136,4 @@ fun setImageView(view: ImageView, imagePath: String) {
 @BindingAdapter("setProfileImageView")
 fun setProfileImageView(view: ImageView, imageBytes: String) {
     showProfileImage(view, imageBytes, 0.01, 0.01)
-}
-
-
-@BindingAdapter("setTimestamp")
-fun setTimestamp(view: TextView, timestamp: Long){
-    view.text = DateFormat.getInstance().format(timestamp)
 }

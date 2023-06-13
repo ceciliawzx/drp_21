@@ -55,9 +55,13 @@ class TaskFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        mAdapter = TaskAdapter(TaskClickListener { taskEntry ->
-            findNavController().navigate(TaskFragmentDirections.actionTaskFragmentToUpdateFragment(taskEntry))
-        })
+        mAdapter = TaskAdapter(
+            TaskClickListener { taskEntry ->
+                findNavController().navigate(TaskFragmentDirections.actionTaskFragmentToUpdateFragment(taskEntry))
+                              },
+            TaskClickListener { taskEntry ->
+                findNavController().navigate(TaskFragmentDirections.actionTaskFragmentToShareFragment(taskEntry))
+            })
 
         lifecycleScope.launch{
             repeatOnLifecycle(Lifecycle.State.STARTED){

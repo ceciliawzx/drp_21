@@ -2,13 +2,18 @@ package com.android.kotlinmvvmtodolist.ui.task
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.ImageButton
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.android.kotlinmvvmtodolist.data.local.ShopItemEntry
 import com.android.kotlinmvvmtodolist.data.local.TaskEntry
 import com.android.kotlinmvvmtodolist.databinding.RowLayoutBinding
 
-class TaskAdapter(private val clickListener: TaskClickListener):
+class TaskAdapter(
+    private val clickListener: TaskClickListener,
+    private val shareClickListener: TaskClickListener):
     ListAdapter<TaskEntry, TaskAdapter.ViewHolder>(TaskDiffCallback) {
 
     companion object TaskDiffCallback : DiffUtil.ItemCallback<TaskEntry>(){
@@ -18,6 +23,7 @@ class TaskAdapter(private val clickListener: TaskClickListener):
 
     class ViewHolder(private val binding: RowLayoutBinding):
         RecyclerView.ViewHolder(binding.root) {
+        val btnShare: ImageButton = binding.btnShare
         fun bind(taskEntry: TaskEntry, clickListener: TaskClickListener){
             binding.taskEntry = taskEntry
             binding.clickListener = clickListener
@@ -33,7 +39,13 @@ class TaskAdapter(private val clickListener: TaskClickListener):
         val current = getItem(position)
         if(current != null){
             holder.bind(current, clickListener)
+            holder.bind(current, shareClickListener)
         }
+
+        holder.btnShare.setOnClickListener {
+            shareClickListener.onClick(current)
+        }
+
     }
 }
 

@@ -50,4 +50,5 @@
     <string name="uid">UID</string>
     <string name="copy_uid">Copy Uid</string>
     <string name="type_your_user_name">Type Your User Name</string>
+    <string name="share">Share</string>
 </resources>

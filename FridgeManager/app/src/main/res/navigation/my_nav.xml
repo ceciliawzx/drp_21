@@ -38,6 +38,13 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_taskFragment_to_shareFragment"
+            app:destination="@id/shareFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/addFragment"
@@ -166,4 +173,16 @@
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
     </fragment>
+
+    <fragment
+        android:id="@+id/shareFragment"
+        android:name="com.android.kotlinmvvmtodolist.ui.share.ShareFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_share" >
+        <argument
+            android:name="task"
+            app:argType="com.android.kotlinmvvmtodolist.data.local.TaskEntry" />
+    </fragment>
+
+
 </navigation>
