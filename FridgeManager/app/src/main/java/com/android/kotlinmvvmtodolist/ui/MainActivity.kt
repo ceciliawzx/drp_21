@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.ui.chat.Message
 import com.android.kotlinmvvmtodolist.util.Constants
@@ -23,11 +24,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-
-//class TestUser(
-//    val userName : String,
-//    val friends : List<String>) {
-//}
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -43,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.title = getString(R.string.storage)
 
-        navController = findNavController(R.id.nav_host_fragment)
+        navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
         bottomNavigationView = findViewById(R.id.bottom_bar)
 
         val myRef = Constants.USER_DATABASE_REFERENCE
@@ -88,6 +84,49 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            // Update the title based on the destination fragment
+            when (destination.id) {
+                R.id.taskFragment -> {
+                    supportActionBar?.title = getString(R.string.storage)
+                }
+                R.id.addFragment -> {
+                    supportActionBar?.title = getString(R.string.add)
+                }
+                R.id.updateFragment -> {
+                    supportActionBar?.title = getString(R.string.update)
+                }
+                R.id.shopListFragment -> {
+                    supportActionBar?.title = getString(R.string.shopping_list)
+                }
+                R.id.addItemFragment -> {
+                    supportActionBar?.title = getString(R.string.add)
+                }
+                R.id.contactsFragment -> {
+                    supportActionBar?.title = getString(R.string.contacts)
+                }
+                R.id.addContactFragment -> {
+                    supportActionBar?.title = getString(R.string.add_contact)
+                }
+                R.id.shareFragment -> {
+                    supportActionBar?.title = getString(R.string.share)
+                }
+                R.id.chatFragment -> {
+                    supportActionBar?.title = getString(R.string.chat)
+                }
+                R.id.profileFragment -> {
+                    supportActionBar?.title = getString(R.string.profile)
+                }
+                R.id.conversationFragment -> {
+                    supportActionBar?.title = getString(R.string.profile)
+                }
+                else -> {
+                    // Handle other fragments if needed
+                }
+            }
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
