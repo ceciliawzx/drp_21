@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id= "@+id/chat_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <TextView
+            android:id="@+id/txt_receive_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/test"
+            android:text="11/11/2011 15:15:15"
+            android:paddingLeft="10dp"
+            android:textSize="12sp"/>
+
+        <RelativeLayout
+            android:id="@+id/test"
+            android:layout_width="wrap_content"
+            android:background="@drawable/message_receive_background"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/txt_receive_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="This is a sent message"
+                android:padding="10dp"
+                android:textSize="18sp"/>
+        </RelativeLayout>
+    </RelativeLayout>>
+
+
+
+</RelativeLayout>

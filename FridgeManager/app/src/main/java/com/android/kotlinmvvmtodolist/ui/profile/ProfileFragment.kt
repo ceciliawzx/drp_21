@@ -2,68 +2,38 @@ package com.android.kotlinmvvmtodolist.ui.profile
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.DatePickerDialog
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.helper.widget.MotionEffect
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.android.kotlinmvvmtodolist.R
-import com.android.kotlinmvvmtodolist.data.local.TaskEntry
-import com.android.kotlinmvvmtodolist.databinding.FragmentAddBinding
 import com.android.kotlinmvvmtodolist.databinding.FragmentProfileBinding
 import com.android.kotlinmvvmtodolist.ui.SignInActivity
-import com.android.kotlinmvvmtodolist.ui.add.AddFragmentArgs
-import com.android.kotlinmvvmtodolist.ui.add.PreviewDialog
-import com.android.kotlinmvvmtodolist.ui.camera.CameraFunc
-import com.android.kotlinmvvmtodolist.ui.shopList.ShopListViewModel
-import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
-import com.android.kotlinmvvmtodolist.util.NotificationAlert
-import com.android.kotlinmvvmtodolist.util.ShopItemWorker
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import java.util.Calendar
-import androidx.appcompat.app.AppCompatActivity
-import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
-import android.os.Environment
 import android.provider.MediaStore
 import android.util.Base64
 import android.widget.ImageView
 import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.FileProvider
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import java.io.File
-import java.io.IOException
 import java.io.InputStream
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import android.view.Menu
+import android.view.MenuInflater
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -160,6 +130,7 @@ class ProfileFragment : Fragment() {
                 dialog.show()
             }
         }
+        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -218,5 +189,15 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.profile_menu, menu)
+
+        val addContactItem = menu.findItem(R.id.profile_message)
+        addContactItem.setOnMenuItemClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_chatFragment)
+            true
+        }
     }
 }
