@@ -1,5 +1,8 @@
 package com.android.kotlinmvvmtodolist.ui.chat
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,10 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.databinding.FragmentConversationBinding
+import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 import com.google.firebase.database.DataSnapshot
@@ -28,6 +36,7 @@ class ConversationFragment : Fragment() {
     private lateinit var oppUid: String
     private val myUid = FirebaseAuth.getInstance().currentUser?.uid!!
     private lateinit var messageAdapter: MessageAdapter
+    private val viewModel: TaskViewModel by activityViewModels()
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -102,6 +111,9 @@ class ConversationFragment : Fragment() {
 
                 for (i in messageList.size until tempList.size) {
                     messageList.add(tempList[i])
+                    if (tempList[i].senderId != myUid) {
+                        createNotification(requireContext())
+                    }
                 }
 
 //                tempList.forEach { message ->
@@ -142,6 +154,28 @@ class ConversationFragment : Fragment() {
 
     }
 
+    fun createNotification(context: Context) {
+        val channelId = "my_channel_id"
+        val channelName = "My Channel"
+        val channelDescription = "My Channel Description"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelId, channelName, importance).apply {
+            description = channelDescription
+        }
+
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+
+        val notificationBuilder = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.ic_notification_icon)
+            .setContentTitle("New Message")
+            .setContentText("You have received a new message.")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+
+        val notificationId = 1
+        notificationManager.notify(notificationId, notificationBuilder.build())
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
