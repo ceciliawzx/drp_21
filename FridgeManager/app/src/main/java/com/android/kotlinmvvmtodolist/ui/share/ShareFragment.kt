@@ -16,7 +16,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.databinding.FragmentShareBinding
+import com.android.kotlinmvvmtodolist.ui.chat.ChatUtil.pullMessage
+import com.android.kotlinmvvmtodolist.ui.chat.Message
+import com.android.kotlinmvvmtodolist.ui.chat.MessageAdapter
+import com.android.kotlinmvvmtodolist.util.Constants
+import com.android.kotlinmvvmtodolist.util.Constants.CUR_USER_ID
 import com.android.kotlinmvvmtodolist.util.User
+import com.google.firebase.auth.FirebaseAuth
 
 class ShareFragment: Fragment() {
 
@@ -107,6 +113,37 @@ class ShareFragment: Fragment() {
             // alert the user of the message
             // TODO: send the message to all selected contacts
             showMessageAlert(message, requireContext())
+
+            // for every user selected
+//            for (opp in selectedContacts) {
+//                val messageList = mutableListOf<Message>()
+//                val messageAdapter = MessageAdapter(requireContext(), messageList)
+//
+//                val myRef = Constants.USER_DATABASE_REFERENCE
+//                    .child("User").child(CUR_USER_ID!!)
+//                    .child("Contacts").child(opp.userID)
+//                    .child("Message")
+//
+//                val oppRef = Constants.USER_DATABASE_REFERENCE
+//                    .child("User").child(opp.userID)
+//                    .child("Contacts").child(CUR_USER_ID!!)
+//                    .child("Message")
+//
+//                // pull message
+//                pullMessage(oppRef, messageList, messageAdapter)
+//                Log.d("Message", "messageList size = ${messageList.size}")
+//
+//                // create new message
+//                val newMessage = Message(message, CUR_USER_ID)
+//                messageList.add(newMessage)
+//
+//                messageAdapter.notifyDataSetChanged()
+//
+//                // set new message list
+//                myRef.setValue(messageList)
+//                oppRef.setValue(messageList)
+//            }
+
             true
         }
     }
@@ -146,6 +183,35 @@ class ShareFragment: Fragment() {
             .setTitle("Send to friends")
             .setMessage(message)
             .setPositiveButton("Send") {  _, _ ->
+                Log.d("Message", "contacts size = ${selectedContacts.size}")
+                for (opp in selectedContacts) {
+                    val messageList = mutableListOf<Message>()
+                    val messageAdapter = MessageAdapter(requireContext(), messageList)
+
+                    val myRef = Constants.USER_DATABASE_REFERENCE
+                        .child("User").child(CUR_USER_ID!!)
+                        .child("Contacts").child(opp.userID)
+                        .child("Message")
+
+                    val oppRef = Constants.USER_DATABASE_REFERENCE
+                        .child("User").child(opp.userID)
+                        .child("Contacts").child(CUR_USER_ID!!)
+                        .child("Message")
+
+                    // pull message
+                    pullMessage(oppRef, messageList, messageAdapter)
+                    Log.d("Message", "messageList size = ${messageList.size}")
+
+                    // create new message
+                    val newMessage = Message(message, CUR_USER_ID)
+                    messageList.add(newMessage)
+
+                    messageAdapter.notifyDataSetChanged()
+
+                    // set new message list
+                    myRef.setValue(messageList)
+                    oppRef.setValue(messageList)
+                }
                 if (isSharing) {
                     val action = ShareFragmentDirections.actionShareFragmentToTaskFragment()
                     findNavController().navigate(action)

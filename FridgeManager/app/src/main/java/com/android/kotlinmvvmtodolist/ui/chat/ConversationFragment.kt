@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.databinding.FragmentConversationBinding
+import com.android.kotlinmvvmtodolist.ui.chat.ChatUtil.pullMessage
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
@@ -86,16 +87,7 @@ class ConversationFragment : Fragment() {
         chatRecyclerView.adapter = messageAdapter
 
         // Initialise pull message
-        val temp = myOppRef.child("Message").get()
-        while (!temp.isComplete) {
-        }
-        val dataSnapshot = temp.result
-        for (childSnapshot in dataSnapshot.children) {
-            val message = childSnapshot.getValue(Message::class.java)
-            message?.let { messageList.add(it) }
-        }
-
-        messageAdapter.notifyDataSetChanged()
+        pullMessage(myOppRef.child("Message"), messageList, messageAdapter)
 
         messageListener = object : ValueEventListener {
 
@@ -115,12 +107,6 @@ class ConversationFragment : Fragment() {
                         createNotification(requireContext())
                     }
                 }
-
-//                tempList.forEach { message ->
-//                    if (message.timestamp > currentTimeStamp && message.senderId != myUid) {
-//                        messageList.add(message)
-//                    }
-//                }
 
                 messageAdapter.notifyDataSetChanged()
 
