@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
@@ -53,7 +54,24 @@ class ConversationFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         oppUid = args.uid
-        requireActivity()
+        val activity = requireActivity() as AppCompatActivity
+        val actionBar = activity.supportActionBar
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val oppUserRef = USER_DATABASE_REFERENCE.child("User").child(oppUid)
+        val oppNameListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val oppName = snapshot.child("userName").getValue(String::class.java)
+                oppName?.let {
+                    actionBar?.title = it
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle the error
+            }
+        }
+        oppUserRef.addValueEventListener(oppNameListener)
     }
 
     override fun onCreateView(
