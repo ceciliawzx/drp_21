@@ -221,6 +221,11 @@
             app:argType="string"
             android:defaultValue=""
             />
+        <argument
+            android:name="userName"
+            app:argType="string"
+            android:defaultValue=""
+            />
     </fragment>
 
     <fragment

@@ -114,36 +114,6 @@ class ShareFragment: Fragment() {
             // TODO: send the message to all selected contacts
             showMessageAlert(message, requireContext())
 
-            // for every user selected
-//            for (opp in selectedContacts) {
-//                val messageList = mutableListOf<Message>()
-//                val messageAdapter = MessageAdapter(requireContext(), messageList)
-//
-//                val myRef = Constants.USER_DATABASE_REFERENCE
-//                    .child("User").child(CUR_USER_ID!!)
-//                    .child("Contacts").child(opp.userID)
-//                    .child("Message")
-//
-//                val oppRef = Constants.USER_DATABASE_REFERENCE
-//                    .child("User").child(opp.userID)
-//                    .child("Contacts").child(CUR_USER_ID!!)
-//                    .child("Message")
-//
-//                // pull message
-//                pullMessage(oppRef, messageList, messageAdapter)
-//                Log.d("Message", "messageList size = ${messageList.size}")
-//
-//                // create new message
-//                val newMessage = Message(message, CUR_USER_ID)
-//                messageList.add(newMessage)
-//
-//                messageAdapter.notifyDataSetChanged()
-//
-//                // set new message list
-//                myRef.setValue(messageList)
-//                oppRef.setValue(messageList)
-//            }
-
             true
         }
     }

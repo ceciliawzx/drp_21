@@ -46,9 +46,12 @@ class ContactsFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        mAdapter = ContactsAdapter(ChatAdapter.ChatClickListener { uid ->
+        mAdapter = ContactsAdapter(ChatAdapter.ChatClickListener { user ->
             findNavController().navigate(
-                ContactsFragmentDirections.actionContactsFragmentToConversationFragment(uid.userID)
+                ContactsFragmentDirections.actionContactsFragmentToConversationFragment(
+                    user.userID,
+                    user.userName
+                )
             )
         })
         viewModel.setAdapter(mAdapter)
@@ -69,7 +72,8 @@ class ContactsFragment : Fragment() {
         }
 
 
-        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        val itemTouchCallback = object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,

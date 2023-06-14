@@ -58,20 +58,7 @@ class ConversationFragment : Fragment() {
         val actionBar = activity.supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val oppUserRef = USER_DATABASE_REFERENCE.child("User").child(oppUid)
-        val oppNameListener = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val oppName = snapshot.child("userName").getValue(String::class.java)
-                oppName?.let {
-                    actionBar?.title = it
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle the error
-            }
-        }
-        oppUserRef.addValueEventListener(oppNameListener)
+        actionBar?.title = args.userName
     }
 
     override fun onCreateView(
