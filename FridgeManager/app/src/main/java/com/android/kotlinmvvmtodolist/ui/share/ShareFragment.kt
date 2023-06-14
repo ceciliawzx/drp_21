@@ -22,7 +22,6 @@ import com.android.kotlinmvvmtodolist.ui.chat.MessageAdapter
 import com.android.kotlinmvvmtodolist.util.Constants
 import com.android.kotlinmvvmtodolist.util.Constants.CUR_USER_ID
 import com.android.kotlinmvvmtodolist.util.User
-import com.google.firebase.auth.FirebaseAuth
 
 class ShareFragment: Fragment() {
 
@@ -31,7 +30,7 @@ class ShareFragment: Fragment() {
     private val selectedContacts: MutableList<User> = mutableListOf()
 
     private var _binding: FragmentShareBinding? = null
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
     private var savedInstanceState: Bundle? = null
     private var message: String = ""
     private var isSharing: Boolean = true
@@ -39,7 +38,7 @@ class ShareFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val args = ShareFragmentArgs.fromBundle(requireArguments())
         // Generate message based on arguments
@@ -175,8 +174,6 @@ class ShareFragment: Fragment() {
                     // create new message
                     val newMessage = Message(message, CUR_USER_ID)
                     messageList.add(newMessage)
-
-                    messageAdapter.notifyDataSetChanged()
 
                     // set new message list
                     myRef.setValue(messageList)
