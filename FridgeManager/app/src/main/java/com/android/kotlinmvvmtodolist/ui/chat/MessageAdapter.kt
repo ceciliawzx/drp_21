@@ -49,19 +49,24 @@ class MessageAdapter(val context: Context, val messageList: MutableList<Message>
             // do the stuff for sent view holder
             val viewHolder = holder as SentViewHolder
             holder.sentMessage.text = currentMessage.message
+            holder.sentTime.text = currentMessage.sentTime
         } else {
             // do stuff for receive view holder
             val viewHolder = holder as ReceiveViewHolder
             holder.receiveMessage.text = currentMessage.message
+            holder.receiveTime.text = currentMessage.sentTime
         }
 
     }
 
     class SentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val sentMessage = itemView.findViewById<TextView>(R.id.txt_sent_message)
+        val sentTime = itemView.findViewById<TextView>(R.id.txt_sent_time)
     }
+
 
     class ReceiveViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val receiveMessage = itemView.findViewById<TextView>(R.id.txt_receive_message)
+        val receiveTime = itemView.findViewById<TextView>(R.id.txt_sent_time)
     }
 }

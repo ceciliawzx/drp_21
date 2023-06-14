@@ -41,8 +41,6 @@ class ConversationFragment : Fragment() {
     private lateinit var myMessageRef: DatabaseReference
     private lateinit var oppMessageRef: DatabaseReference
 
-    private var currentTimeStamp: Long = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -78,7 +76,6 @@ class ConversationFragment : Fragment() {
         chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         chatRecyclerView.adapter = messageAdapter
 
-
         // Initialise pull message
         val temp = myOppRef.child("Message").get()
         while (!temp.isComplete) {
@@ -88,11 +85,8 @@ class ConversationFragment : Fragment() {
             val message = childSnapshot.getValue(Message::class.java)
             message?.let { messageList.add(it) }
         }
-        if (!messageList.isEmpty()) {
-            currentTimeStamp = messageList.last().timestamp
-        }
-        messageAdapter.notifyDataSetChanged()
 
+        messageAdapter.notifyDataSetChanged()
 
         messageListener = object : ValueEventListener {
 
@@ -117,9 +111,6 @@ class ConversationFragment : Fragment() {
 //                }
 
                 messageAdapter.notifyDataSetChanged()
-                if (!messageList.isEmpty()) {
-                    currentTimeStamp = messageList.last().timestamp
-                }
 
             }
 
@@ -135,14 +126,14 @@ class ConversationFragment : Fragment() {
 
             // Add new message to origin list
             val newMessage = Message(messageBox.text.toString(), myUid)
+            println("Time: " + newMessage.sentTime)
+
             messageList.add(newMessage)
             messageAdapter.notifyDataSetChanged()
 
             // set new message list
             myMessageRef.setValue(messageList)
             oppMessageRef.setValue(messageList)
-
-            currentTimeStamp = newMessage.timestamp
 
             messageBox.setText("")
         }
