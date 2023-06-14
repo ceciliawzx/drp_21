@@ -51,6 +51,6 @@
     <string name="copy_uid">Copy Uid</string>
     <string name="type_your_user_name">Type Your User Name</string>
     <string name="share">Share</string>
-    <string name="request">Request</string>
     <string name="chat">Chat</string>
+    <string name="request">Request Item</string>
 </resources>

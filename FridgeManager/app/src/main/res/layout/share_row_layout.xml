@@ -49,6 +49,7 @@
                 android:layout_width="64dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="4dp"
+                android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.131"
