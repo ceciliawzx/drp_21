@@ -37,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
+            app:icon="@drawable/ic_folded"
             android:clickable="true"
             android:text="@string/request"
             android:textAlignment="center"
