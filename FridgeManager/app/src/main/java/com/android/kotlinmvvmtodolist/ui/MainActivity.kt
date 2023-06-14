@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private var notificationID = 1
 
     private var messageMap = hashMapOf<String, Int>()
+    private var firstIn = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,14 +65,18 @@ class MainActivity : AppCompatActivity() {
                     pullMessage(myRef.child(contact.key!!).child("Message"), messageList, null)
 
                     // size not same, and other's send, update on this channel
-                    if (messageList.last().senderId != myUid &&
-                        messageList.size != messageMap.get(contact.key!!)
-                    ) {
-                        messageMap.set(contact.key!!, messageList.size)
-                        createNotification(baseContext, contact.key!!)
+                    if (messageList.isNotEmpty()) {
+                        if (firstIn) {
+                            messageMap[contact.key!!] = messageList.size
+                        } else if (messageList.last().senderId != myUid &&
+                            messageList.size != messageMap.get(contact.key!!)
+                        ) {
+                            messageMap[contact.key!!] = messageList.size
+                            createNotification(baseContext, contact.key!!)
+                        }
                     }
-
                 }
+                firstIn = false
             }
 
             override fun onCancelled(error: DatabaseError) {
