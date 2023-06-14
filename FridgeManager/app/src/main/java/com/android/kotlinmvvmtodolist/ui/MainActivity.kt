@@ -9,12 +9,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.ui.chat.ChatUtil.pullMessage
 import com.android.kotlinmvvmtodolist.ui.chat.Message
+import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.util.Constants
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -34,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
     private var activeFragment: Fragment? = null
     private lateinit var messageListener: ValueEventListener
+    private var notificationID = 1
 
     private var messageMap = hashMapOf<String, Int>()
 
@@ -190,7 +193,8 @@ class MainActivity : AppCompatActivity() {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
 
-        val notificationId = 1
+        val notificationId = notificationID
+        notificationID++
         notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
