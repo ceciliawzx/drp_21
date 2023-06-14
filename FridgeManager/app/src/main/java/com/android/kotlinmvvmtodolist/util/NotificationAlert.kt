@@ -76,10 +76,10 @@ object NotificationAlert {
         val timeFormat = DateFormat.getTimeFormat(context)
         AlertDialog.Builder(context)
             .setTitle("Notification scheduled")
-            .setMessage(
-                "Title: " + title
-                        + "\nMessage: " + message
-                        + "\nAt: " + dateFormat.format(date) + " " + timeFormat.format(date)
+            .setMessage( ""
+//                "Title: " + title
+//                        + "\nMessage: " + message
+//                        + "\nAt: " + dateFormat.format(date) + " " + timeFormat.format(date)
             )
             .setPositiveButton("Okay") { _, _ -> }
             .show()
