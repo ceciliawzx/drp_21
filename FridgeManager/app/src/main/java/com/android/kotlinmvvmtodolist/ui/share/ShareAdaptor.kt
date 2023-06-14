@@ -20,14 +20,24 @@ class ShareAdaptor(private val shareFragment: ShareFragment):
             selectedContactsMap[contact] = false
         }
         contacts = newContacts
-        notifyDataSetChanged()
     }
+
+//    fun toggleContactSelection(contact: User) {
+//        val isSelected = selectedContactsMap[contact] ?: false
+//        selectedContactsMap[contact] = !isSelected
+//        notifyDataSetChanged()
+//        shareFragment.updateSelectedContacts()
+//    }
 
     fun toggleContactSelection(contact: User) {
         val isSelected = selectedContactsMap[contact] ?: false
         selectedContactsMap[contact] = !isSelected
-        notifyDataSetChanged()
         shareFragment.updateSelectedContacts()
+
+        // Post a task to be run after the RecyclerView has finished computing the layout
+        shareFragment.binding.recyclerShareView.post {
+            notifyDataSetChanged()
+        }
     }
 
 
