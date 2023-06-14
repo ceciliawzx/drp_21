@@ -7,7 +7,7 @@ object ChatUtil {
 
     fun pullMessage(pullFrom: DatabaseReference,
                     messageList: MutableList<Message>,
-                    messageAdapter: MessageAdapter) {
+                    messageAdapter: MessageAdapter?) {
         val temp = pullFrom.get()
         while (!temp.isComplete) {
         }
@@ -16,6 +16,8 @@ object ChatUtil {
             val message = childSnapshot.getValue(Message::class.java)
             message?.let { messageList.add(it) }
         }
-        messageAdapter.notifyDataSetChanged()
+
+        messageAdapter?.notifyDataSetChanged()
+
     }
 }
