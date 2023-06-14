@@ -114,7 +114,7 @@ class ProfileFragment : Fragment() {
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Confirm Logout")
                 builder.setMessage("Are you sure you want to log out?")
-                builder.setPositiveButton("AYes") { dialogInterface: DialogInterface, _: Int ->
+                builder.setPositiveButton("Yes") { dialogInterface: DialogInterface, _: Int ->
 
                     FirebaseAuth.getInstance().signOut()
 
