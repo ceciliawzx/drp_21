@@ -11,11 +11,16 @@ import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.android.kotlinmvvmtodolist.R
+import com.android.kotlinmvvmtodolist.ui.chat.ChatFragmentDirections
 import com.android.kotlinmvvmtodolist.ui.chat.ChatUtil.pullMessage
 import com.android.kotlinmvvmtodolist.ui.chat.Message
+import com.android.kotlinmvvmtodolist.ui.profile.ProfileFragment
+import com.android.kotlinmvvmtodolist.ui.profile.ProfileFragmentDirections
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.util.Constants
 import com.android.kotlinmvvmtodolist.util.Constants.CUR_USER_ID
@@ -86,6 +91,37 @@ class MainActivity : AppCompatActivity() {
 
         myRef.addValueEventListener(messageListener)
 
+        var userName = ""
+        var profileImage = ""
+        val databaseReference = USER_DATABASE_REFERENCE
+
+        // Retrieve userName
+        val userRef = databaseReference.child("User").child(CUR_USER_ID)
+        userRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    userName = dataSnapshot.child("userName").value.toString()
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Handle the onCancelled event if needed
+            }
+        })
+
+        // Retrieve profileImage
+        databaseReference.child("User").child(CUR_USER_ID).child("profileImage")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    profileImage = dataSnapshot.value.toString()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Handle any errors
+                }
+            })
+
+
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_storage -> {
@@ -108,7 +144,14 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.action_profile -> {
                     supportActionBar?.title = getString(R.string.profile)
-                    navController.navigate(R.id.profileFragment)
+
+                    val bundle = Bundle().apply {
+                        putString("userName", userName)
+                        putString("profileImage", profileImage)
+                    }
+
+                    navController.navigate(R.id.profileFragment, bundle)
+
                     true
                 }
 
@@ -171,7 +214,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        activeFragment?.onCreateOptionsMenu(menu, menuInflater) ?: super.onCreateOptionsMenu(menu)
+        activeFragment?.onCreateOptionsMenu(menu, menuInflater) ?: super.onCreateOptionsMenu(
+            menu
+        )
         return true
     }
 
@@ -184,7 +229,8 @@ class MainActivity : AppCompatActivity() {
             description = channelDescription
         }
 
-        val userTask = USER_DATABASE_REFERENCE.child("User").child(senderID).child("userName").get()
+        val userTask =
+            USER_DATABASE_REFERENCE.child("User").child(senderID).child("userName").get()
         while (!userTask.isComplete) {
         }
         val userName = userTask.result.value.toString()

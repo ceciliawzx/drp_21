@@ -8,7 +8,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +33,8 @@ import com.google.firebase.database.ValueEventListener
 import java.io.InputStream
 import android.view.Menu
 import android.view.MenuInflater
+import androidx.navigation.fragment.navArgs
+import com.android.kotlinmvvmtodolist.ui.chat.ConversationFragmentArgs
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -44,66 +45,45 @@ class ProfileFragment : Fragment() {
     private lateinit var databaseReference: DatabaseReference
     private val PICK_IMAGE_REQUEST = 1
     private val CAMERA_REQUEST = 2
+
     private val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
     private lateinit var profileImage: ImageView
+
+    private val args by navArgs<ProfileFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
+
+        val userName = args.userName
+        val encodedImage = args.profileImage
+
+        // Show userName
         textUsername = binding.textUsername
-        databaseReference = USER_DATABASE_REFERENCE
+        textUsername.text = userName
 
-        val userRef = databaseReference.child("User").child(currentUserID!!)
-        userRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    val userName = dataSnapshot.child("userName").value.toString()
-                    textUsername.text = userName
-                    Log.d("username", "$userName")
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Handle the onCancelled event if needed
-            }
-        })
-
+        // Show profileImage
         this.profileImage = binding.profileImage
+        val imageData: ByteArray = Base64.decode(encodedImage, Base64.DEFAULT)
+        // Convert the byte array to a bitmap and set it as the profile photo
+        val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+        profileImage.setImageBitmap(bitmap)
+
+        // Set click listener on the profile image
+        profileImage.setOnClickListener {
+            // Open the image gallery to select a photo
+            val galleryIntent =
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST)
+        }
 
         // 给view绑定数据
         binding.apply {
-
-            databaseReference.child("User").child(currentUserID).child("profileImage").addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val encodedImage = dataSnapshot.value.toString()
-                    encodedImage?.let {
-                        // Convert the string back to a byte array
-                        val imageData: ByteArray = Base64.decode(encodedImage, Base64.DEFAULT)
-
-                        // Convert the byte array to a bitmap and set it as the profile photo
-                        val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
-                        profileImage.setImageBitmap(bitmap)
-                    }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Handle any errors
-                }
-            })
-
-            // Set click listener on the profile image
-            profileImage.setOnClickListener {
-                // Open the image gallery to select a photo
-                val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST)
-            }
-
-
             textUid.text = "uid: $currentUserID"
 
-            btnCopyUid.setOnClickListener{
+            btnCopyUid.setOnClickListener {
                 val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
                 val clip = android.content.ClipData.newPlainText("UID", currentUserID)
                 clipboard?.setPrimaryClip(clip)
@@ -130,12 +110,14 @@ class ProfileFragment : Fragment() {
                 dialog.show()
             }
         }
+
         setHasOptionsMenu(true)
         return binding.root
     }
 
     private fun clearLoginCredentials() {
-        val sharedPreferences = requireContext().getSharedPreferences("login_credentials", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("login_credentials", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.clear()
         editor.apply()
@@ -156,7 +138,8 @@ class ProfileFragment : Fragment() {
 
             // Convert the selected image to a byte array
             selectedImageUri?.let { imageUri ->
-                val inputStream: InputStream? = requireActivity().contentResolver.openInputStream(imageUri)
+                val inputStream: InputStream? =
+                    requireActivity().contentResolver.openInputStream(imageUri)
                 val imageData: ByteArray? = inputStream?.readBytes()
 
                 // Convert the byte array to a string
@@ -170,7 +153,8 @@ class ProfileFragment : Fragment() {
 
     private fun updateProfilePhoto(encodedImage: String) {
         // Update the profile photo in the Firebase Realtime Database
-        databaseReference.child("User").child(currentUserID!!).child("profileImage").setValue(encodedImage)
+        databaseReference.child("User").child(currentUserID!!).child("profileImage")
+            .setValue(encodedImage)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     // Profile photo updated successfully
