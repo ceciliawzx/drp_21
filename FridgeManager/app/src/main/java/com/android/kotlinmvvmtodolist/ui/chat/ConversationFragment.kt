@@ -104,7 +104,7 @@ class ConversationFragment : Fragment() {
                 for (i in messageList.size until tempList.size) {
                     messageList.add(tempList[i])
                     if (tempList[i].senderId != myUid) {
-                        createNotification(requireContext())
+                        context?.let { createNotification(it.applicationContext) }
                     }
                 }
 
