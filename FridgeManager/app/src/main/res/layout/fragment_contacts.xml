@@ -39,7 +39,7 @@
             android:layout_marginBottom="24dp"
             android:clickable="true"
             android:text="@string/request"
-            app:icon="@drawable/ic_add"
+            android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="ContentDescription,KeyboardInaccessibleWidget" />
