@@ -3,16 +3,23 @@ package com.android.kotlinmvvmtodolist.util
 import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
 import com.android.kotlinmvvmtodolist.ui.add.PreviewDialog
+import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 import com.android.kotlinmvvmtodolist.util.ShowImage.HORIZONTAL_PREVIEW_SCALE
 import com.android.kotlinmvvmtodolist.util.ShowImage.VERTICLE_PREVIEW_SCALE
 import com.android.kotlinmvvmtodolist.util.ShowImage.showImage
 import com.android.kotlinmvvmtodolist.util.ShowImage.showProfileImage
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.childEvents
+import com.google.firebase.database.ktx.values
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -134,6 +141,16 @@ fun setImageView(view: ImageView, imagePath: String) {
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("setProfileImageView")
-fun setProfileImageView(view: ImageView, imageBytes: String) {
-    showProfileImage(view, imageBytes, 0.01, 0.01)
+fun setProfileImageView(view: ImageView, userID: String) {
+      USER_DATABASE_REFERENCE.child("User").child(userID).child("profileImage").addValueEventListener(object :
+        ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            val profileImageValue = dataSnapshot.value.toString()
+            showProfileImage(view, profileImageValue, 0.01, 0.01)
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Handle the error
+        }
+    })
 }
