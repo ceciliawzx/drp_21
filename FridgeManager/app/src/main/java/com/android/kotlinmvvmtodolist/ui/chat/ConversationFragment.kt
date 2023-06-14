@@ -37,7 +37,6 @@ class ConversationFragment : Fragment() {
     private lateinit var oppUid: String
     private val myUid = FirebaseAuth.getInstance().currentUser?.uid!!
     private lateinit var messageAdapter: MessageAdapter
-    private val viewModel: TaskViewModel by activityViewModels()
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -56,8 +55,6 @@ class ConversationFragment : Fragment() {
         oppUid = args.uid
         val activity = requireActivity() as AppCompatActivity
         val actionBar = activity.supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-
         actionBar?.title = args.userName
     }
 

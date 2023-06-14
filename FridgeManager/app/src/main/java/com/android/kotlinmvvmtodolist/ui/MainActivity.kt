@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         supportActionBar?.title = getString(R.string.storage)
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         navController =
             (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
         bottomNavigationView = findViewById(R.id.bottom_bar)
