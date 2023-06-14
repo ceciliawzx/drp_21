@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/taskFragment"
         android:name="com.android.kotlinmvvmtodolist.ui.task.TaskFragment"
-        android:label="@string/app_name"
+        android:label="@string/add"
         tools:layout="@layout/fragment_task" >
         <action
             android:id="@+id/action_taskFragment_to_addFragment"
@@ -151,6 +151,13 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right"/>
+        <action
+            android:id="@+id/action_contactsFragment_to_requestFragment"
+            app:destination="@id/requestFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
 
     <fragment
@@ -179,9 +186,54 @@
         android:name="com.android.kotlinmvvmtodolist.ui.share.ShareFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_share" >
+        <action
+            android:id="@+id/action_shareFragment_to_taskFragment"
+            app:destination="@id/taskFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_shareFragment_to_contactsFragment"
+            app:destination="@id/contactsFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <argument
-            android:name="task"
-            app:argType="com.android.kotlinmvvmtodolist.data.local.TaskEntry" />
+            android:name="taskName"
+            app:argType="string"
+            android:defaultValue=""/>
+        <argument
+            android:name="expireDate"
+            app:argType="string"
+            android:defaultValue=""/>
+        <argument
+            android:name="amount"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+        <argument
+            android:name="unit"
+            app:argType="string"
+            android:defaultValue=""/>
+        <argument
+            android:name="request_name"
+            app:argType="string"
+            android:defaultValue=""/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/requestFragment"
+        android:name="com.android.kotlinmvvmtodolist.ui.request.RequestFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_request" >
+        <action
+            android:id="@+id/action_requestFragment_to_shareFragment"
+            app:destination="@id/shareFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
 
 

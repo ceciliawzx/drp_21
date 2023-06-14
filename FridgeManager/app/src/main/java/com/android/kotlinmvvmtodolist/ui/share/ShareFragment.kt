@@ -1,5 +1,7 @@
 package com.android.kotlinmvvmtodolist.ui.share
 
+import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +13,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.databinding.FragmentShareBinding
 import com.android.kotlinmvvmtodolist.util.User
@@ -21,17 +24,37 @@ class ShareFragment: Fragment() {
     lateinit var mAdapter: ShareAdaptor
     private val selectedContacts: MutableList<User> = mutableListOf()
 
-
     private var _binding: FragmentShareBinding? = null
     private val binding get() = _binding!!
     private var savedInstanceState: Bundle? = null
-
+    private var message: String = ""
+    private var isSharing: Boolean = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val args = ShareFragmentArgs.fromBundle(requireArguments())
+        // Generate message based on arguments
+        val taskName = args.taskName
+        val expireDate = args.expireDate
+        val amount = args.amount
+        val unit = args.unit
+
+        val requestName = args.requestName
+
+        // Sharing
+        if (taskName != "") {
+            message = "I have $amount $unit of $taskName which will expire on $expireDate, do you want?"
+        }
+        // Request
+        else if (requestName != "") {
+            isSharing = false
+            message = "I need some $requestName, do you have?"
+        }
+
+        // TODO: send this message to all selected contacts, and jump back
 
         this.savedInstanceState = savedInstanceState
 
@@ -81,8 +104,9 @@ class ShareFragment: Fragment() {
 
         val sharTo = menu.findItem(R.id.share_to)
         sharTo.setOnMenuItemClickListener {
-            // TODO: Jump to the chat fragment
-//            findNavController().navigate(R.id.)
+            // alert the user of the message
+            // TODO: send the message to all selected contacts
+            showMessageAlert(message, requireContext())
             true
         }
     }
@@ -114,6 +138,23 @@ class ShareFragment: Fragment() {
         }
         Log.d("Sharing", "checked size = ${selectedContacts.size}")
         // TODO: Update your selected contacts list based on selectedContacts
+    }
+
+    private fun showMessageAlert(message: String, context: Context) {
+        // after alert, jump back to fragment
+        AlertDialog.Builder(context)
+            .setTitle("Send to friends")
+            .setMessage(message)
+            .setPositiveButton("Send") {  _, _ ->
+                if (isSharing) {
+                    val action = ShareFragmentDirections.actionShareFragmentToTaskFragment()
+                    findNavController().navigate(action)
+                } else {
+                    val action = ShareFragmentDirections.actionShareFragmentToContactsFragment()
+                    findNavController().navigate(action)
+                }
+            }
+            .show()
     }
 
 }

@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -49,7 +50,13 @@ class TaskFragment : Fragment() {
         },
         { taskEntry ->
             findNavController().navigate(
-                TaskFragmentDirections.actionTaskFragmentToShareFragment(taskEntry)
+                TaskFragmentDirections.actionTaskFragmentToShareFragment(
+                    taskEntry.title,
+                    taskEntry.expireDate,
+                    taskEntry.amount,
+                    intToUnit(taskEntry.unit),
+                    ""
+                )
             )
         }
     )
@@ -120,10 +127,6 @@ class TaskFragment : Fragment() {
 
             private fun swipeRightHelper(taskEntry: TaskEntry) {
                 Snackbar.make(binding.root, "Item Used!", Snackbar.LENGTH_LONG).apply {
-                    // TODO: define another action for right swipe?
-//                    setActionTextColor(ContextCompat.getColor(context, R.color.white))
-//                    view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-//                        .setTextColor(ContextCompat.getColor(context, R.color.white))
                     setAction("Undo"){
                         viewModel.insert(taskEntry)
                     }
@@ -264,4 +267,21 @@ class TaskFragment : Fragment() {
         }
     }
 
+}
+
+fun intToUnit(unitInt: Int): String {
+    return when(unitInt){
+        0 -> {
+            "Unit(s)"
+        }
+        1 -> {
+            "g"
+        }
+        2 -> {
+            "ml"
+        }
+        else -> {
+            "L"
+        }
+    }
 }

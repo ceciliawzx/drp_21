@@ -49,6 +49,10 @@ class ContactsFragment : Fragment() {
 
         binding.apply {
             recyclerContactsView.adapter = mAdapter
+            btnRequest.setOnClickListener {
+                // TODO: Jump to request fragment
+                findNavController().navigate(R.id.action_contactsFragment_to_requestFragment)
+            }
         }
 
         viewModel.contactsLiveData.observe(viewLifecycleOwner) { contacts ->
