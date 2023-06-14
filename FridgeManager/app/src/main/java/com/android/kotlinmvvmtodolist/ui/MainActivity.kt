@@ -16,6 +16,7 @@ import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.ui.chat.ChatUtil.pullMessage
 import com.android.kotlinmvvmtodolist.ui.chat.Message
 import com.android.kotlinmvvmtodolist.util.Constants
+import com.android.kotlinmvvmtodolist.util.Constants.CUR_USER_ID
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         val myRef = Constants.USER_DATABASE_REFERENCE
             .child("User").child(FirebaseAuth.getInstance().currentUser?.uid!!)
             .child("Contacts")
+        val myUid = CUR_USER_ID!!
 
         messageListener = object : ValueEventListener {
 
@@ -58,15 +60,15 @@ class MainActivity : AppCompatActivity() {
                     val messageList = mutableListOf<Message>()
                     pullMessage(myRef.child(contact.key!!).child("Message"), messageList, null)
 
-                    // size not same, update on this channel
-                    if (messageList.size != messageMap.get(contact.key!!)) {
+                    // size not same, and other's send, update on this channel
+                    if (messageList.last().senderId != myUid &&
+                        messageList.size != messageMap.get(contact.key!!)
+                    ) {
                         messageMap.set(contact.key!!, messageList.size)
                         createNotification(baseContext, contact.key!!)
                     }
 
                 }
-
-
             }
 
             override fun onCancelled(error: DatabaseError) {
