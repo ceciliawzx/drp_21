@@ -106,11 +106,15 @@ class ConversationFragment : Fragment() {
                     message?.let { tempList.add(it) }
                 }
 
-                tempList.forEach { message ->
-                    if (message.timestamp > currentTimeStamp && message.senderId != myUid) {
-                        messageList.add(message)
-                    }
+                for (i in messageList.size until tempList.size) {
+                    messageList.add(tempList[i])
                 }
+
+//                tempList.forEach { message ->
+//                    if (message.timestamp > currentTimeStamp && message.senderId != myUid) {
+//                        messageList.add(message)
+//                    }
+//                }
 
                 messageAdapter.notifyDataSetChanged()
                 if (!messageList.isEmpty()) {
