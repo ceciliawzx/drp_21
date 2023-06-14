@@ -1,16 +1,26 @@
 package com.android.kotlinmvvmtodolist.ui
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.android.kotlinmvvmtodolist.R
+import com.android.kotlinmvvmtodolist.ui.chat.Message
+import com.android.kotlinmvvmtodolist.util.Constants
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import dagger.hilt.android.AndroidEntryPoint
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -25,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var bottomNavigationView: BottomNavigationView
     private var activeFragment: Fragment? = null
+    private lateinit var messageListener: ValueEventListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +45,23 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment)
         bottomNavigationView = findViewById(R.id.bottom_bar)
+
+        val myRef = Constants.USER_DATABASE_REFERENCE
+            .child("User").child(FirebaseAuth.getInstance().currentUser?.uid!!)
+            .child("Contacts")
+
+        messageListener = object : ValueEventListener {
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                createNotification(baseContext)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        }
+
+        myRef.addValueEventListener(messageListener)
 
         bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -65,6 +93,29 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         activeFragment?.onCreateOptionsMenu(menu, menuInflater) ?: super.onCreateOptionsMenu(menu)
         return true
+    }
+
+    fun createNotification(context: Context) {
+        val channelId = "my_channel_id"
+        val channelName = "My Channel"
+        val channelDescription = "My Channel Description"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelId, channelName, importance).apply {
+            description = channelDescription
+        }
+
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+
+        val notificationBuilder = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.ic_notification_icon)
+            .setContentTitle("New Message")
+            .setContentText("You have received a new message.")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+
+        val notificationId = 1
+        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
     override fun onSupportNavigateUp(): Boolean {
