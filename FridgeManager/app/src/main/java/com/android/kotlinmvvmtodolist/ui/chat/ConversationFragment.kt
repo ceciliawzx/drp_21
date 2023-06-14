@@ -120,9 +120,6 @@ class ConversationFragment : Fragment() {
 
                 for (i in messageList.size until tempList.size) {
                     messageList.add(tempList[i])
-                    if (tempList[i].senderId != myUid) {
-                        context?.let { createNotification(it.applicationContext) }
-                    }
                 }
 
                 messageAdapter.notifyDataSetChanged()
@@ -155,29 +152,6 @@ class ConversationFragment : Fragment() {
 
         return binding.root
 
-    }
-
-    fun createNotification(context: Context) {
-        val channelId = "my_channel_id"
-        val channelName = "My Channel"
-        val channelDescription = "My Channel Description"
-        val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(channelId, channelName, importance).apply {
-            description = channelDescription
-        }
-
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-
-        val notificationBuilder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_notification_icon)
-            .setContentTitle("New Message")
-            .setContentText("You have received a new message.")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
-
-        val notificationId = 1
-        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
     override fun onDestroyView() {
