@@ -115,6 +115,12 @@ class ShareFragment: Fragment() {
 
             true
         }
+
+        val sendShare = binding.btnSendShare
+        sendShare.setOnClickListener {
+            showMessageAlert(message, requireContext())
+        }
+
     }
 
 
