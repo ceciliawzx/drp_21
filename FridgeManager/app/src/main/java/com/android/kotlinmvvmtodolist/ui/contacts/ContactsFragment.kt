@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.databinding.FragmentContactsBinding
+import com.android.kotlinmvvmtodolist.ui.chat.ChatAdapter
+import com.android.kotlinmvvmtodolist.ui.chat.ChatFragmentDirections
 import com.android.kotlinmvvmtodolist.util.Constants.CUR_USER_ID
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 import com.android.kotlinmvvmtodolist.util.User
@@ -44,7 +46,11 @@ class ContactsFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        mAdapter = ContactsAdapter()
+        mAdapter = ContactsAdapter(ChatAdapter.ChatClickListener { uid ->
+            findNavController().navigate(
+                ContactsFragmentDirections.actionContactsFragmentToConversationFragment(uid.userID)
+            )
+        })
         viewModel.setAdapter(mAdapter)
 
         binding.apply {

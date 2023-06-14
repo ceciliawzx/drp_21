@@ -4,9 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.databinding.ContactsRowLayoutBinding
+import com.android.kotlinmvvmtodolist.ui.chat.ChatAdapter
 import com.android.kotlinmvvmtodolist.util.User
 
-class ContactsAdapter : RecyclerView.Adapter<ContactsAdapter.ContactViewHolder>() {
+class ContactsAdapter(private val clickListener: ChatAdapter.ChatClickListener) :
+    RecyclerView.Adapter<ContactsAdapter.ContactViewHolder>() {
 
     val contacts: MutableList<User> = mutableListOf()
 
@@ -31,7 +33,7 @@ class ContactsAdapter : RecyclerView.Adapter<ContactsAdapter.ContactViewHolder>(
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
-        holder.bind(contacts[position])
+        holder.bind(contacts[position], clickListener)
     }
 
     override fun getItemCount(): Int = contacts.size
@@ -39,8 +41,9 @@ class ContactsAdapter : RecyclerView.Adapter<ContactsAdapter.ContactViewHolder>(
     class ContactViewHolder(private val binding: ContactsRowLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(contact: User) {
+        fun bind(contact: User, clickListener: ChatAdapter.ChatClickListener) {
             binding.contact = contact
+            binding.clickListener = clickListener
             binding.executePendingBindings()
         }
     }
