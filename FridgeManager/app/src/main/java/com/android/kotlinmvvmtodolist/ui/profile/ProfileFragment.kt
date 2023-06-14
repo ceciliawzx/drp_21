@@ -178,8 +178,8 @@ class ProfileFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.profile_menu, menu)
 
-        val addContactItem = menu.findItem(R.id.profile_message)
-        addContactItem.setOnMenuItemClickListener {
+        val messageButton = menu.findItem(R.id.profile_message)
+        messageButton.setOnMenuItemClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_chatFragment)
             true
         }
