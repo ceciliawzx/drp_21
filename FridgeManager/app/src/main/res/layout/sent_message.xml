@@ -33,9 +33,10 @@
                 android:id="@+id/txt_sent_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="This is a sent message"
+                android:text="This is a long long long sent message"
                 android:padding="10dp"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:maxWidth="260dp" />
         </RelativeLayout>
     </RelativeLayout>>
 
