@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.databinding.FragmentConversationBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
-import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -38,14 +37,11 @@ class ConversationFragment : Fragment() {
 
     // Message retrieve
     private val messageList: MutableList<Message> = mutableListOf()
-    private lateinit var timeStampListener: ValueEventListener
-    private lateinit var messageListener: ChildEventListener
-    private lateinit var myTimeStampRef: DatabaseReference
+    private lateinit var messageListener: ValueEventListener
     private lateinit var myMessageRef: DatabaseReference
     private lateinit var oppMessageRef: DatabaseReference
 
-    var latestTimestamp: Long = 0
-    var firstIn = true
+    private var currentTimeStamp: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +68,6 @@ class ConversationFragment : Fragment() {
             .child("Contacts").child(oppUid)
 
         myMessageRef = myOppRef.child("Message")
-        myTimeStampRef = myOppRef.child("LatestTimestamp")
 
         oppMessageRef = USER_DATABASE_REFERENCE
             .child("User").child(oppUid)
@@ -93,23 +88,35 @@ class ConversationFragment : Fragment() {
             val message = childSnapshot.getValue(Message::class.java)
             message?.let { messageList.add(it) }
         }
-
-        if (messageList.isEmpty()) {
-            latestTimestamp = 0
-        } else {
-            latestTimestamp = messageList.last().timestamp
+        if (!messageList.isEmpty()) {
+            currentTimeStamp = messageList.last().timestamp
         }
-
-        println("message num: " + messageList.size)
-        println("initial stamp: " + latestTimestamp)
         messageAdapter.notifyDataSetChanged()
 
 
-        // Retrieve Timestamp
-        timeStampListener = object : ValueEventListener {
+        messageListener = object : ValueEventListener {
+
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                latestTimestamp = dataSnapshot.getValue(Long::class.java) ?: latestTimestamp
-                println("timestamp: " + latestTimestamp)
+
+                val tempList: MutableList<Message> = mutableListOf()
+
+                // Add new version of message list
+                for (childSnapshot in dataSnapshot.children) {
+                    val message = childSnapshot.getValue(Message::class.java)
+                    message?.let { tempList.add(it) }
+                }
+
+                tempList.forEach { message ->
+                    if (message.timestamp > currentTimeStamp && message.senderId != myUid) {
+                        messageList.add(message)
+                    }
+                }
+
+                messageAdapter.notifyDataSetChanged()
+                if (!messageList.isEmpty()) {
+                    currentTimeStamp = messageList.last().timestamp
+                }
+
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -117,54 +124,8 @@ class ConversationFragment : Fragment() {
             }
         }
 
-        messageListener = object : ChildEventListener {
-            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                val message = dataSnapshot.getValue(Message::class.java)
-
-                if (message != null && message.senderId != myUid) {
-                    if (!firstIn) {
-                        messageList.add(message)
-                        messageAdapter.notifyDataSetChanged()
-
-                        latestTimestamp = message.timestamp
-
-                        println("Message: " + message.message)
-                        println("Timestamp: " + latestTimestamp)
-                    } else {
-                        firstIn = false
-                    }
-                }
-
-                myTimeStampRef.setValue(latestTimestamp)
-            }
-
-            override fun onChildChanged(
-                dataSnapshot: DataSnapshot,
-                previousChildName: String?
-            ) {
-                // Handle the case if a child message is changed (optional)
-            }
-
-            override fun onChildRemoved(dataSnapshot: DataSnapshot) {
-                // Handle the case if a child message is removed (optional)
-            }
-
-            override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                // Handle the case if a child message is moved (optional)
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Handle the error
-            }
-        }
-
-        // Bind listener
-        myTimeStampRef.addListenerForSingleValueEvent(timeStampListener)
-
-        // Retrieve messages with a greater timestamp
-        myMessageRef.orderByChild("timestamp")
-            .startAt(latestTimestamp.toDouble())
-            .addChildEventListener(messageListener)
+        // Add listener to message
+        myMessageRef.addValueEventListener(messageListener)
 
         sendButton.setOnClickListener {
 
@@ -177,20 +138,20 @@ class ConversationFragment : Fragment() {
             myMessageRef.setValue(messageList)
             oppMessageRef.setValue(messageList)
 
-            latestTimestamp = newMessage.timestamp
-            myTimeStampRef.setValue(latestTimestamp)
+            currentTimeStamp = newMessage.timestamp
 
             messageBox.setText("")
         }
 
         return binding.root
+
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        myTimeStampRef.removeEventListener(timeStampListener)
-        myMessageRef.removeEventListener(messageListener)
+
         messageList.clear()
     }
 
