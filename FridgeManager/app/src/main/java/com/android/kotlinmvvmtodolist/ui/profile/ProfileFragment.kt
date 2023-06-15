@@ -42,7 +42,7 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var textUsername: TextView
-    private lateinit var databaseReference: DatabaseReference
+    private val databaseReference = USER_DATABASE_REFERENCE
     private val PICK_IMAGE_REQUEST = 1
     private val CAMERA_REQUEST = 2
 
