@@ -2,7 +2,9 @@ package com.android.kotlinmvvmtodolist.ui
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.viewModels
@@ -214,6 +216,37 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        handleIntentAction(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntentAction(intent)
+    }
+
+    private fun handleIntentAction(intent: Intent?) {
+        val fragmentId = intent?.getIntExtra("fragmentId", 0)
+        if (fragmentId != 0) {
+            // Navigate to the desired fragment based on fragmentId
+                // Replace the following line with your actual navigation logic
+            when (fragmentId) {
+                R.id.taskFragment -> {
+                    val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_bar)
+                    bottomNavigationView.menu.findItem(R.id.action_storage).isChecked = true
+                    navController.navigate(fragmentId)
+                }
+                R.id.conversationFragment -> {
+                    val uid = intent.getStringExtra("uid")
+                    val userName = intent.getStringExtra("userName")
+                    val bundle = Bundle().apply {
+                        putString("uid", uid)
+                        putString("userName", userName)
+                    }
+                    navController.navigate(fragmentId, bundle)
+                    bottomNavigationView.menu.findItem(R.id.action_profile).isChecked = true
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -242,11 +275,25 @@ class MainActivity : AppCompatActivity() {
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
 
+        val notificationIntent = Intent(context, MainActivity::class.java)
+        notificationIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        notificationIntent.putExtra("fragmentId", R.id.conversationFragment)
+        notificationIntent.putExtra("uid", senderID)
+        notificationIntent.putExtra("userName", userName)
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            notificationID,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.ic_notification_icon)
             .setContentTitle("New Message")
             .setContentText("You have received a new message from " + userName + ".")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
         val notificationId = notificationID
