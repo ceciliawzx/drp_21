@@ -193,6 +193,10 @@ class MainActivity : AppCompatActivity() {
                     supportActionBar?.title = getString(R.string.share)
                 }
 
+                R.id.requestFragment -> {
+                    supportActionBar?.title = getString(R.string.request)
+                }
+
                 R.id.chatFragment -> {
                     supportActionBar?.title = getString(R.string.chat)
                 }
