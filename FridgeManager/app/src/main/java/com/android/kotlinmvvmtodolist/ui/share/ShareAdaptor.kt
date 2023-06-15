@@ -20,6 +20,7 @@ class ShareAdaptor(private val shareFragment: ShareFragment):
             selectedContactsMap[contact] = false
         }
         contacts = newContacts
+        notifyDataSetChanged()
     }
 
 //    fun toggleContactSelection(contact: User) {
