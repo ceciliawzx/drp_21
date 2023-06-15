@@ -23,7 +23,6 @@ import com.android.kotlinmvvmtodolist.ui.profile.ProfileFragment
 import com.android.kotlinmvvmtodolist.ui.profile.ProfileFragmentDirections
 import com.android.kotlinmvvmtodolist.ui.task.TaskViewModel
 import com.android.kotlinmvvmtodolist.util.Constants
-import com.android.kotlinmvvmtodolist.util.Constants.CUR_USER_ID
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -57,10 +56,10 @@ class MainActivity : AppCompatActivity() {
             (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
         bottomNavigationView = findViewById(R.id.bottom_bar)
 
+        val myUid = FirebaseAuth.getInstance().currentUser?.uid!!
         val myRef = Constants.USER_DATABASE_REFERENCE
-            .child("User").child(FirebaseAuth.getInstance().currentUser?.uid!!)
+            .child("User").child(myUid)
             .child("Contacts")
-        val myUid = CUR_USER_ID!!
 
         messageListener = object : ValueEventListener {
 
@@ -96,11 +95,11 @@ class MainActivity : AppCompatActivity() {
         val databaseReference = USER_DATABASE_REFERENCE
 
         // Retrieve userName
-        val userRef = databaseReference.child("User").child(CUR_USER_ID)
-        userRef.addValueEventListener(object : ValueEventListener {
+        val userRef = databaseReference.child("User").child(myUid).child("userName")
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    userName = dataSnapshot.child("userName").value.toString()
+                    userName = dataSnapshot.value.toString()
                 }
             }
 
@@ -110,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         // Retrieve profileImage
-        databaseReference.child("User").child(CUR_USER_ID).child("profileImage")
+        databaseReference.child("User").child(myUid).child("profileImage")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     profileImage = dataSnapshot.value.toString()

@@ -20,8 +20,8 @@ import com.android.kotlinmvvmtodolist.ui.chat.ChatUtil.pullMessage
 import com.android.kotlinmvvmtodolist.ui.chat.Message
 import com.android.kotlinmvvmtodolist.ui.chat.MessageAdapter
 import com.android.kotlinmvvmtodolist.util.Constants
-import com.android.kotlinmvvmtodolist.util.Constants.CUR_USER_ID
 import com.android.kotlinmvvmtodolist.util.User
+import com.google.firebase.auth.FirebaseAuth
 
 class ShareFragment: Fragment() {
 
@@ -153,6 +153,8 @@ class ShareFragment: Fragment() {
     }
 
     private fun showMessageAlert(message: String, context: Context) {
+        val myUid = FirebaseAuth.getInstance().currentUser?.uid!!
+
         // after alert, jump back to fragment
         AlertDialog.Builder(context)
             .setTitle("Send to friends")
@@ -164,13 +166,13 @@ class ShareFragment: Fragment() {
                     val messageAdapter = MessageAdapter(requireContext(), messageList)
 
                     val myRef = Constants.USER_DATABASE_REFERENCE
-                        .child("User").child(CUR_USER_ID!!)
+                        .child("User").child(myUid)
                         .child("Contacts").child(opp.userID)
                         .child("Message")
 
                     val oppRef = Constants.USER_DATABASE_REFERENCE
                         .child("User").child(opp.userID)
-                        .child("Contacts").child(CUR_USER_ID!!)
+                        .child("Contacts").child(myUid)
                         .child("Message")
 
                     // pull message
@@ -178,7 +180,7 @@ class ShareFragment: Fragment() {
                     Log.d("Message", "messageList size = ${messageList.size}")
 
                     // create new message
-                    val newMessage = Message(message, CUR_USER_ID)
+                    val newMessage = Message(message, myUid)
                     messageList.add(newMessage)
 
                     // set new message list

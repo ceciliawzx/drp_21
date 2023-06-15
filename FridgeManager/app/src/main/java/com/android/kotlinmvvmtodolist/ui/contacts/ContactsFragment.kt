@@ -15,11 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.kotlinmvvmtodolist.R
 import com.android.kotlinmvvmtodolist.databinding.FragmentContactsBinding
 import com.android.kotlinmvvmtodolist.ui.chat.ChatAdapter
-import com.android.kotlinmvvmtodolist.ui.chat.ChatFragmentDirections
-import com.android.kotlinmvvmtodolist.util.Constants.CUR_USER_ID
 import com.android.kotlinmvvmtodolist.util.Constants.USER_DATABASE_REFERENCE
 import com.android.kotlinmvvmtodolist.util.User
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -85,14 +84,14 @@ class ContactsFragment : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val contact = mAdapter.contacts[position]
-                if (CUR_USER_ID != null) {
+                val myUid = FirebaseAuth.getInstance().currentUser?.uid!!
+                if (myUid != null) {
                     // Delete friend from my contact
-                    viewModel.deleteContact(CUR_USER_ID, contact)
-                    val userID = CUR_USER_ID
-                    val myRef = USER_DATABASE_REFERENCE.child("User").child(userID)
+                    viewModel.deleteContact(myUid, contact)
+                    val myRef = USER_DATABASE_REFERENCE.child("User").child(myUid)
                     val userName = myRef.child("userName").get().toString()
                     val userProfileImage = myRef.child("profileImage").get().toString()
-                    val user = User(userID, userName, userProfileImage)
+                    val user = User(myUid, userName, userProfileImage)
                     viewModel.deleteContact(contact.userID, user)
                 }
                 mAdapter.deleteContact(contact)
