@@ -30,7 +30,7 @@
 
         <EditText
             android:id="@+id/food_amount"
-            android:layout_width="120dp"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:ems="10"
@@ -152,7 +152,7 @@
             android:layout_marginTop="340dp"
             android:text="@string/notify_text1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.154"
+            app:layout_constraintHorizontal_bias="0.251"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -163,20 +163,22 @@
             android:layout_marginTop="340dp"
             android:text="@string/notify_text2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.934"
+            app:layout_constraintHorizontal_bias="0.785"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/notify_days"
-            android:layout_width="200dp"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="328dp"
             android:ems="10"
             android:hint="@string/enter_notify_days"
             android:inputType="textPersonName"
+            android:textAlignment="center"
+            android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintHorizontal_bias="0.452"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="Autofill" />
