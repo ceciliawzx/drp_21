@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.text.format.DateFormat
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -71,18 +72,19 @@ object NotificationAlert {
     // Show an alert to users that a notification has been scheduled
     // TODO: maybe delete this later, based on user feedback
     fun showAlert(time: Long, title: String, message: String, context: Context) {
-        val date = Date(time)
-        val dateFormat = DateFormat.getLongDateFormat(context)
-        val timeFormat = DateFormat.getTimeFormat(context)
-        AlertDialog.Builder(context)
-            .setTitle("Notification scheduled")
-            .setMessage( ""
+//        val date = Date(time)
+//        val dateFormat = DateFormat.getLongDateFormat(context)
+//        val timeFormat = DateFormat.getTimeFormat(context)
+//        AlertDialog.Builder(context)
+//            .setTitle("Notification scheduled")
+//            .setMessage(
 //                "Title: " + title
 //                        + "\nMessage: " + message
 //                        + "\nAt: " + dateFormat.format(date) + " " + timeFormat.format(date)
-            )
-            .setPositiveButton("Okay") { _, _ -> }
-            .show()
+//            )
+//            .setPositiveButton("Okay") { _, _ -> }
+//            .show()
+        Toast.makeText(context, "Notification Scheduled", Toast.LENGTH_SHORT).show()
     }
 
     // Calculate days left between now and expirationDate
